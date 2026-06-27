@@ -95,6 +95,7 @@ export interface Ticket {
   createdAt: string;
   updatedAt: string;
   createdBy: string;
+  isOnBoard?: boolean;
 }
 
 // ─── Form Types ───

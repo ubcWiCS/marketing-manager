@@ -23,7 +23,7 @@ function groupByMember(tickets: Ticket[]) {
 const priorityOrder: Record<string, number> = { Urgent: 4, High: 3, Medium: 2, Low: 1 };
 
 export default function BoardPage() {
-  const { tickets, moveTicket } = useTickets();
+  const { tickets, moveTicket, addToBoard } = useTickets();
   const [draggingId, setDraggingId] = useState<string | null>(null);
 
   const handleDragStart = (e: React.DragEvent, id: string) => {
@@ -36,7 +36,11 @@ export default function BoardPage() {
     e.preventDefault();
     const id = e.dataTransfer.getData("text/plain");
     if (!id) return;
+    const source = e.dataTransfer.getData("source");
     moveTicket(id, targetMember);
+    if (source === "sidebar") {
+      addToBoard(id);
+    }
     setDraggingId(null);
   };
 

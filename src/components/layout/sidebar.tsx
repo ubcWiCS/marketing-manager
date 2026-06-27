@@ -13,10 +13,12 @@ import { Portfolio } from "@/types";
 export function Sidebar() {
   const pathname = usePathname();
   const { tickets } = useTickets();
+  const sidebarTickets = tickets.filter((t) => !t.isOnBoard);
 
   const handleDragStart = (e: React.DragEvent, id: string) => {
     e.dataTransfer.effectAllowed = "move";
     e.dataTransfer.setData("text/plain", id);
+    e.dataTransfer.setData("source", "sidebar");
   };
 
   return (
@@ -38,7 +40,7 @@ export function Sidebar() {
           Tickets ({tickets.length})
         </div>
         <div className="flex-1 overflow-y-auto px-2 pb-2 space-y-0.5">
-          {tickets.map((ticket) => (
+          {sidebarTickets.map((ticket) => (
             <div
               key={ticket.id}
               draggable

@@ -25,6 +25,7 @@ export const mockTickets: Ticket[] = [
     createdAt: "2025-06-15T10:30:00Z",
     updatedAt: "2025-06-20T14:22:00Z",
     createdBy: "Sarah Chen",
+    isOnBoard: false,
   },
   {
     id: "REQ-002",
@@ -50,6 +51,7 @@ export const mockTickets: Ticket[] = [
     createdAt: "2025-06-18T09:15:00Z",
     updatedAt: "2025-06-18T09:15:00Z",
     createdBy: "Marcus Johnson",
+    isOnBoard: false,
   },
   {
     id: "REQ-003",
@@ -75,8 +77,8 @@ export const mockTickets: Ticket[] = [
     createdAt: "2025-06-12T16:45:00Z",
     updatedAt: "2025-06-22T11:00:00Z",
     createdBy: "Priya Patel",
+    isOnBoard: false,
   },
-
   {
     id: "REQ-005",
     title: "Internal Meeting Presentation Template",
@@ -101,6 +103,7 @@ export const mockTickets: Ticket[] = [
     createdAt: "2025-06-19T13:00:00Z",
     updatedAt: "2025-06-19T13:00:00Z",
     createdBy: "David Kim",
+    isOnBoard: false,
   },
   {
     id: "REQ-006",
@@ -126,6 +129,7 @@ export const mockTickets: Ticket[] = [
     createdAt: "2025-06-10T11:20:00Z",
     updatedAt: "2025-06-21T09:45:00Z",
     createdBy: "Maya Rodriguez",
+    isOnBoard: false,
   },
   {
     id: "REQ-007",
@@ -152,6 +156,7 @@ export const mockTickets: Ticket[] = [
     createdAt: "2025-06-17T14:30:00Z",
     updatedAt: "2025-06-17T14:30:00Z",
     createdBy: "James Liu",
+    isOnBoard: false,
   },
   {
     id: "REQ-008",
@@ -204,6 +209,7 @@ export const mockTickets: Ticket[] = [
     createdAt: "2025-05-20T08:00:00Z",
     updatedAt: "2025-06-10T15:30:00Z",
     createdBy: "Emily Watson",
+    isOnBoard: false,
   },
 ];
 

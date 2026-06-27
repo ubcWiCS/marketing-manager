@@ -7,6 +7,7 @@ import { mockTickets } from "@/lib/mock-data";
 interface TicketContextType {
   tickets: Ticket[];
   moveTicket: (id: string, targetMember: string) => void;
+  addToBoard: (id: string) => void;
 }
 
 const TicketContext = createContext<TicketContextType | undefined>(undefined);
@@ -20,8 +21,15 @@ export function TicketProvider({ children }: { children: ReactNode }) {
       )
     );
   };
+  const addToBoard = (id: string) => {
+    setTickets((prev) =>
+      prev.map((t) =>
+        t.id === id ? { ...t, isOnBoard: true } : t
+      )
+    );
+  };
   return (
-    <TicketContext.Provider value={{ tickets, moveTicket }}>
+    <TicketContext.Provider value={{ tickets, moveTicket, addToBoard }}>
       {children}
     </TicketContext.Provider>
   );
