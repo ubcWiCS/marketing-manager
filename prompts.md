@@ -25,3 +25,107 @@ Lets do two things. The first is that I want you to write my prompts into a .md 
 - HTML5 drag and drop for moving tickets between member columns
 - Minimal ticket cards (ID, title, portfolio dot, priority indicator)
 - Removed stat cards, activity feed, and list/table view complexity
+
+## Prompt 3 — Sidebar Drag-to-Remove
+
+**User Request:**
+when we drag from the side bar on the left, the objects need to get removed from that bar
+
+**Result:**
+- Added `isOnBoard` flag to Ticket type
+- Tickets dragged from sidebar to board get marked as "on board"
+- Sidebar filters to show only unassigned tickets (`!ticket.isOnBoard`)
+- Board uses team members context for columns instead of deriving from ticket data
+
+## Prompt 4 — Fix View State Error
+
+**User Request:**
+the all tickets button is currently giving me this error: Unhandled Runtime Error ReferenceError: view is not defined
+
+**Result:**
+- Added missing `view` state variable with `useState<"list" | "board">("list")`
+- Fixed imports to include `List` and `Columns` icons from lucide-react
+- Build passes successfully
+
+## Prompt 5 — Fix PlusCircle Import Error
+
+**User Request:**
+i am now getting Unhandled Runtime Error ReferenceError: PlusCircle is not defined
+
+**Result:**
+- Added `PlusCircle` to the lucide-react imports in requests/page.tsx
+- Fixed build error
+
+## Prompt 6 — Team Member Management
+
+**User Request:**
+we need a way to manage the members on the team. i want to be add or remove team memebers, and give them names
+
+**Result:**
+- Created TeamContext for managing team members
+- Added ManageMembersDialog component with add/remove/rename functionality
+- Added "Manage Team" button in sidebar footer
+- Wrapped app with TeamProvider
+- Board shows all team members as columns (even empty ones)
+
+## Prompt 7 — Remove Redundant UI Elements
+
+**User Request:**
+get rid of the following redundant items: where it says ellie lan at the bottom, the top most search bar and the top most new button. it's repeating features that are not needed.
+
+**Result:**
+- Removed user avatar/name block from sidebar footer
+- Removed search bar from topbar
+- Removed "New" button from topbar (kept board page button)
+- Cleaned up unused imports (Avatar, mockUser, Search, PlusCircle)
+
+## Prompt 8 — Fix Member Deletion & Update Sidebar Label
+
+**User Request:**
+when i remove a team member, it's now deleting their tickets. make sure they get added back to the drag and drop sidebar when a member is deleted. where it currently says tickets (number) make it say unassigned tickets
+
+**Result:**
+- Added `unassignMember()` function to ticket context
+- When member is deleted, their tickets are unassigned (pointOfContact cleared, isOnBoard set to false)
+- Tickets reappear in sidebar drag pool
+- Changed sidebar header from "Tickets (count)" to "Unassigned Tickets"
+
+## Prompt 9 — Remove Top Navigation & Logo
+
+**User Request:**
+get rid of the all tickets toggle in the top banner and the place where it says PM with the icon.
+
+**Result:**
+- Removed "All Tickets" link from topbar
+- Topbar reduced to empty header element
+- Removed PM logo block (Layers icon + "PM" text) from sidebar
+- Removed unused Layers icon import
+
+## Prompt 10 — Redesign Ticket Detail Page
+
+**User Request:**
+I want to work on the request tickets. We need to make the details that are important easy to understand upon first glance. Get rid of any reference to a request number, like REQ-001, across the whole application. When the ticket is expanded so we can see the details, make sure the type of content that needs to be made, like if it's a post or a Tiktok, is highlighted with more emphasis at the top of the ticket. Get rid of the comments. Allow the details of the tickets to be editable from inside of the ticket itself.
+
+**Result:**
+- Removed all REQ-001 ID displays from board, sidebar, and requests list
+- Redesigned ticket detail page with graphic types as prominent toggle buttons at top
+- Removed entire comments section
+- Made all fields inline-editable (title, event details, summary, creative vision, deadline, status, priority)
+- Added EditableField and EditableSection components
+- Removed ID column from requests table
+- Updated search to exclude ID field
+- IDs kept internally for routing but never displayed
+
+## Prompt 11 — Add Edit Button with Full Workflow
+
+**User Request:**
+i want the edit button to come back. to edit the ticket, let me go through the entire workflow of the survey sheet again
+
+**Result:**
+- Restored Edit button to ticket detail page header
+- Edit button links to `/requests/new?edit=${ticket.id}`
+- New request page detects edit mode via URL parameter
+- Pre-populates entire 6-step form with existing ticket data
+- Submit button changes to "Update Request" when editing
+- Calls `updateTicket()` to save changes
+- Form title changes to "Edit Request" in edit mode
