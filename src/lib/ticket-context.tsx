@@ -8,6 +8,7 @@ interface TicketContextType {
   tickets: Ticket[];
   moveTicket: (id: string, targetMember: string) => void;
   addToBoard: (id: string) => void;
+  updateTicket: (id: string, updates: Partial<Ticket>) => void;
 }
 
 const TicketContext = createContext<TicketContextType | undefined>(undefined);
@@ -28,8 +29,24 @@ export function TicketProvider({ children }: { children: ReactNode }) {
       )
     );
   };
+  const updateTicket = (id: string, updates: Partial<Ticket>) => {
+    setTickets((prev) =>
+      prev.map((t) =>
+        t.id === id ? { ...t, ...updates } : t
+      )
+    );
+  };
+  const unassignMember = (memberName: string) => {
+    setTickets((prev) =>
+      prev.map((t) =>
+        t.pointOfContact === memberName
+          ? { ...t, pointOfContact: "", isOnBoard: false }
+          : t
+      )
+    );
+  };
   return (
-    <TicketContext.Provider value={{ tickets, moveTicket, addToBoard }}>
+    <TicketContext.Provider value={{ tickets, moveTicket, addToBoard, updateTicket, unassignMember }}>
       {children}
     </TicketContext.Provider>
   );

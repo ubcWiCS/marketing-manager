@@ -7,18 +7,8 @@ import { cn } from "@/lib/utils";
 import { Avatar } from "@/components/ui/avatar";
 import { PortfolioDot } from "@/components/ui/portfolio-dot";
 import { useTickets } from "@/lib/ticket-context";
+import { useTeamMembers } from "@/lib/team-context";
 import { Ticket, Portfolio } from "@/types";
-
-// Group tickets by point of contact
-function groupByMember(tickets: Ticket[]) {
-  const map = new Map<string, Ticket[]>();
-  tickets.forEach((t) => {
-    const member = t.pointOfContact;
-    if (!map.has(member)) map.set(member, []);
-    map.get(member)!.push(t);
-  });
-  return Array.from(map.entries()).sort(([a], [b]) => a.localeCompare(b));
-}
 
 const priorityOrder: Record<string, number> = { Urgent: 4, High: 3, Medium: 2, Low: 1 };
 
@@ -49,7 +39,11 @@ export default function BoardPage() {
     e.dataTransfer.dropEffect = "move";
   };
 
-  const columns = groupByMember(tickets);
+  const { members } = useTeamMembers();
+  const columns = members.map((m) => [
+    m.name,
+    tickets.filter((t) => t.pointOfContact === m.name),
+  ]) as [string, Ticket[]][];
 
   return (
     <div className="h-full flex flex-col">

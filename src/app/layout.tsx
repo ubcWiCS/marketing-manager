@@ -3,6 +3,7 @@ import "./globals.css";
 import { Sidebar } from "@/components/layout/sidebar";
 import { Topbar } from "@/components/layout/topbar";
 import { TicketProvider } from "@/lib/ticket-context";
+import { TeamProvider } from "@/lib/team-context";
 
 export const metadata: Metadata = {
   title: "Portfolio Manager",
@@ -26,11 +27,13 @@ export default function RootLayout({
       </head>
       <body className="flex h-screen overflow-hidden">
         <TicketProvider>
-          <Sidebar />
-          <div className="flex flex-col flex-1 min-w-0">
-            <Topbar />
-            <main className="flex-1 overflow-y-auto">{children}</main>
-          </div>
+          <TeamProvider>
+            <Sidebar />
+            <div className="flex flex-col flex-1 min-w-0">
+              <Topbar />
+              <main className="flex-1 overflow-y-auto">{children}</main>
+            </div>
+          </TeamProvider>
         </TicketProvider>
       </body>
     </html>

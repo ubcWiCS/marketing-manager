@@ -116,6 +116,12 @@ export interface NewTicketForm {
   additionalRequests: string;
 }
 
+// ─── Team Member ───
+export interface TeamMember {
+  id: string;
+  name: string;
+}
+
 // ─── Dashboard Stats ───
 export interface DashboardStats {
   total: number;
