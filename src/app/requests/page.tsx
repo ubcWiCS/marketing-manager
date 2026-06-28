@@ -2,7 +2,7 @@
 
 import { useState, useMemo } from "react";
 import Link from "next/link";
-import { Search } from "lucide-react";
+import { Search, List, Columns, PlusCircle } from "lucide-react";
 import { mockTickets } from "@/lib/mock-data";
 import { cn } from "@/lib/utils";
 import { PortfolioDot } from "@/components/ui/portfolio-dot";
@@ -15,6 +15,7 @@ export default function RequestsPage() {
   const [search, setSearch] = useState("");
   const [filterPortfolio, setFilterPortfolio] = useState<Portfolio | "All">("All");
   const [filterStatus, setFilterStatus] = useState<RequestStatus | "All">("All");
+  const [view, setView] = useState<"list" | "board">("list");
 
   const filtered = useMemo(() => {
     let items = [...mockTickets];
