@@ -74,7 +74,7 @@ export const PRIORITIES: Priority[] = ["Low", "Medium", "High", "Urgent"];
 
 // ─── Request / Ticket ───
 export interface Ticket {
-  id: string;
+  id: string; // internal use only, not displayed
   title: string;
   portfolio: Portfolio;
   pointOfContact: string;

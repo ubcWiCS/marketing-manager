@@ -1,8 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import {
   ChevronLeft, ChevronRight, Check, Upload,
   X, ArrowLeft, Send, Image,
@@ -11,9 +12,10 @@ import { cn } from "@/lib/utils";
 import {
   Portfolio, PORTFOLIOS, PORTFOLIO_COLORS,
   GraphicType, GRAPHIC_TYPES,
-  NewTicketForm,
+  NewTicketForm, Ticket,
 } from "@/types";
-import { defaultFormValues } from "@/lib/mock-data";
+import { defaultFormValues, mockTickets } from "@/lib/mock-data";
+import { useTickets } from "@/lib/ticket-context";
 
 const STEPS = [
   { num: 1, label: "Portfolio", desc: "Select portfolio & contact" },
@@ -26,8 +28,37 @@ const STEPS = [
 
 export default function NewRequestPage() {
   const router = useRouter();
+  const searchParams = useSearchParams();
+  const editId = searchParams.get("edit");
   const [step, setStep] = useState(1);
   const [form, setForm] = useState<NewTicketForm>({ ...defaultFormValues });
+  const [isEditing, setIsEditing] = useState(false);
+
+  // Load ticket data if editing
+  useEffect(() => {
+    if (editId) {
+      const ticket = mockTickets.find((t) => t.id === editId);
+      if (ticket) {
+        setIsEditing(true);
+        setForm({
+          portfolio: ticket.portfolio,
+          pointOfContact: ticket.pointOfContact,
+          isCollaboration: ticket.isCollaboration,
+          collaborators: ticket.collaborators,
+          graphicTypes: ticket.graphicTypes,
+          eventName: ticket.eventName,
+          eventDate: ticket.eventDate,
+          eventTime: ticket.eventTime,
+          eventLocation: ticket.eventLocation,
+          summary: ticket.summary,
+          deadline: ticket.deadline,
+          creativeVision: ticket.creativeVision,
+          references: ticket.references,
+          additionalRequests: ticket.additionalRequests,
+        });
+      }
+    }
+  }, [editId]);
 
   const update = (partial: Partial<NewTicketForm>) => {
     setForm((prev) => ({ ...prev, ...partial }));

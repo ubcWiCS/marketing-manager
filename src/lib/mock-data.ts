@@ -2,7 +2,6 @@ import { DashboardStats, Activity, Ticket, NewTicketForm } from "@/types";
 
 export const mockTickets: Ticket[] = [
   {
-    id: "REQ-001",
     title: "Fall Recruitment Instagram Campaign",
     portfolio: "Marketing",
     pointOfContact: "Sarah Chen",

@@ -23,7 +23,6 @@ export default function RequestsPage() {
       const q = search.toLowerCase();
       items = items.filter((t) =>
         t.title.toLowerCase().includes(q) ||
-        t.id.toLowerCase().includes(q) ||
         t.pointOfContact.toLowerCase().includes(q)
       );
     }
@@ -60,7 +59,7 @@ export default function RequestsPage() {
           <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-surface-400" />
           <input
             type="text"
-            placeholder="Search by title, ID, or contact..."
+            placeholder="Search by title or contact..."
             className="input-field pl-8 text-xs py-1.5"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
@@ -92,7 +91,7 @@ export default function RequestsPage() {
         <table className="w-full">
           <thead>
             <tr className="border-b border-surface-100">
-              <th className="text-left text-[10px] font-semibold text-surface-400 uppercase tracking-wider px-4 py-2.5">ID / Title</th>
+              <th className="text-left text-[10px] font-semibold text-surface-400 uppercase tracking-wider px-4 py-2.5">Title</th>
               <th className="text-left text-[10px] font-semibold text-surface-400 uppercase tracking-wider px-4 py-2.5">Portfolio</th>
               <th className="text-left text-[10px] font-semibold text-surface-400 uppercase tracking-wider px-4 py-2.5">Contact</th>
               <th className="text-left text-[10px] font-semibold text-surface-400 uppercase tracking-wider px-4 py-2.5">Priority</th>
@@ -109,7 +108,6 @@ export default function RequestsPage() {
                       <PortfolioDot portfolio={ticket.portfolio} />
                       <span className="text-xs font-medium text-surface-800 group-hover:text-accent-600 transition-colors">{ticket.title}</span>
                     </div>
-                    <span className="text-[10px] font-mono text-surface-400">{ticket.id}</span>
                   </Link>
                 </td>
                 <td className="px-4 py-2.5">

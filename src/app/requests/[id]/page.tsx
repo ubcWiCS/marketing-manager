@@ -5,8 +5,7 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import {
   ArrowLeft, Clock, Calendar, MapPin, User,
-  MessageSquare, Paperclip, ExternalLink,
-  Edit3,
+  Paperclip, Edit3,
 } from "lucide-react";
 import { mockTickets } from "@/lib/mock-data";
 import { cn, formatDate, formatDateTime, timeAgo, getDeadlineColor, isOverdue } from "@/lib/utils";
@@ -53,18 +52,16 @@ export default function RequestDetailPage() {
       {/* Header */}
       <div className="card p-6 mb-6">
         <div className="flex items-start justify-between mb-4">
-          <div>
-            <div className="flex items-center gap-3 mb-2">
-              <span className="text-xs font-mono text-surface-400 bg-surface-100 px-2 py-1 rounded-md">{ticket.id}</span>
-              <PortfolioBadge portfolio={ticket.portfolio} />
-              <PriorityBadge priority={ticket.priority} />
-            </div>
+          <div className="flex-1">
             <h1 className="text-xl font-bold text-surface-900">{ticket.title}</h1>
           </div>
-          <button className="btn-secondary text-xs">
+          <Link 
+            href={`/requests/new?edit=${ticket.id}`}
+            className="btn-secondary text-xs"
+          >
             <Edit3 className="w-3.5 h-3.5" />
             Edit
-          </button>
+          </Link>
         </div>
 
         <div className="flex items-center gap-6 flex-wrap">
@@ -157,47 +154,7 @@ export default function RequestDetailPage() {
             </div>
           )}
 
-          {/* Comments */}
-          <div className="card p-5">
-            <div className="flex items-center gap-2 mb-4">
-              <MessageSquare className="w-4 h-4 text-surface-500" />
-              <h2 className="text-sm font-semibold text-surface-900">Comments</h2>
-            </div>
-            <div className="space-y-4">
-              <div className="flex gap-3">
-                <Avatar name="Alex Rivera" size="sm" />
-                <div className="flex-1">
-                  <div className="bg-surface-50 rounded-xl p-3">
-                    <div className="flex items-center gap-2 mb-1">
-                      <span className="text-xs font-medium text-surface-800">Alex Rivera</span>
-                      <span className="text-[10px] text-surface-400">2h ago</span>
-                    </div>
-                    <p className="text-sm text-surface-600">Looking good! I&apos;ll have the first draft ready by end of day.</p>
-                  </div>
-                </div>
-              </div>
-              <div className="flex gap-3">
-                <Avatar name={ticket.pointOfContact} size="sm" />
-                <div className="flex-1">
-                  <div className="bg-accent-50 rounded-xl p-3">
-                    <div className="flex items-center gap-2 mb-1">
-                      <span className="text-xs font-medium text-surface-800">{ticket.pointOfContact}</span>
-                      <span className="text-[10px] text-surface-400">1d ago</span>
-                    </div>
-                    <p className="text-sm text-surface-600">Thanks! I added some reference images in the creative brief.</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="mt-4 flex gap-3">
-              <Avatar name="You" size="sm" />
-              <input
-                type="text"
-                placeholder="Write a comment..."
-                className="input-field flex-1"
-              />
-            </div>
-          </div>
+
         </div>
 
         {/* Sidebar */}

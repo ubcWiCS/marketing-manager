@@ -98,7 +98,6 @@ export default function BoardPage() {
                     )}
                   >
                     <div className="flex items-center gap-1.5 mb-1">
-                      <span className="text-[10px] font-mono text-surface-400">{ticket.id}</span>
                       <span className={cn(
                         "text-[10px] font-medium px-1 py-0.5 rounded",
                         ticket.priority === "Urgent" && "bg-red-50 text-red-600",

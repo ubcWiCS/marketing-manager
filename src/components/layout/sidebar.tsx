@@ -43,7 +43,6 @@ export function Sidebar() {
               className="flex items-center gap-2 px-2 py-1.5 rounded-md hover:bg-surface-100 cursor-grab active:cursor-grabbing transition-colors text-xs group"
             >
               <PortfolioDot portfolio={ticket.portfolio as Portfolio} />
-              <span className="font-mono text-surface-400 shrink-0 text-[10px]">{ticket.id}</span>
               <Link
                 href={`/requests/${ticket.id}`}
                 className="text-surface-600 truncate hover:text-accent-600 transition-colors flex-1 min-w-0"
