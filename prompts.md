@@ -221,3 +221,21 @@ i want there to be an archive tab bellow all tickets, where you can visit the ar
 - Restore button (RotateCcw icon) appears next to deadline for archived tickets
 - Confirmation dialog for restore action
 - Complete archive workflow: Archive → View in tab → Restore or Delete
+
+## Prompt 19 — Connect to Supabase Database
+
+**User Request:**
+i want to connect this to a supabase database, how do i do it
+
+**Result:**
+- Installed Supabase dependencies (@supabase/supabase-js, @supabase/ssr)
+- Created environment variable configuration (.env.local.example)
+- Set up Supabase client in src/lib/supabase/client.ts
+- Created complete database schema in src/lib/supabase/schema.sql
+- Updated TeamContext to use Supabase for all team member operations
+- Updated TicketContext to use Supabase for all ticket operations
+- Added loading and error states to both contexts
+- Created SUPABASE_SETUP.md guide with step-by-step instructions
+- All CRUD operations now connected to Supabase database
+- Proper field name mapping between frontend and database
+- Note: User needs to run SQL schema in Supabase dashboard and configure .env.local with their credentials

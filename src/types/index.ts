@@ -81,8 +81,8 @@ export interface Ticket {
   isCollaboration: boolean;
   collaborators: string[];
   graphicTypes: GraphicType[];
+  otherGraphicType: string;
   eventName: string;
-  eventDate: string;
   eventTime: string;
   eventLocation: string;
   summary: string;

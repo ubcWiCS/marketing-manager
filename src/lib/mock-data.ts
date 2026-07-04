@@ -9,8 +9,8 @@ export const mockTickets: Ticket[] = [
     isCollaboration: true,
     collaborators: ["Presidential"],
     graphicTypes: ["Instagram Post", "Instagram Carousel"],
+    otherGraphicType: "",
     eventName: "Summer Recap",
-    eventDate: "2026-09-03",
     eventTime: "12:00 PM",
     eventLocation: "Instagram",
     summary:
@@ -36,8 +36,8 @@ export const mockTickets: Ticket[] = [
     isCollaboration: true,
     collaborators: ["Data Team"],
     graphicTypes: ["Instagram Post", "LinkedIn Post"],
+    otherGraphicType: "",
     eventName: "DataFest",
-    eventDate: "2026-07-10",
     eventTime: "5:00 PM",
     eventLocation: "Online",
     summary:
@@ -63,8 +63,8 @@ export const mockTickets: Ticket[] = [
     isCollaboration: false,
     collaborators: [],
     graphicTypes: ["Instagram Reel/TikTok"],
+    otherGraphicType: "",
     eventName: "September Social Content",
-    eventDate: "2026-08-28",
     eventTime: "6:00 PM",
     eventLocation: "TikTok",
     summary:
@@ -90,8 +90,8 @@ export const mockTickets: Ticket[] = [
     isCollaboration: false,
     collaborators: [],
     graphicTypes: ["Instagram Reel/TikTok"],
+    otherGraphicType: "",
     eventName: "September Social Content",
-    eventDate: "2026-09-04",
     eventTime: "6:00 PM",
     eventLocation: "TikTok",
     summary:
@@ -116,8 +116,8 @@ export const mockTickets: Ticket[] = [
     isCollaboration: false,
     collaborators: [],
     graphicTypes: ["Instagram Reel/TikTok"],
+    otherGraphicType: "",
     eventName: "September Social Content",
-    eventDate: "2026-09-11",
     eventTime: "6:00 PM",
     eventLocation: "TikTok",
     summary:
@@ -143,8 +143,8 @@ export const mockTickets: Ticket[] = [
     isCollaboration: true,
     collaborators: ["Internal"],
     graphicTypes: ["Instagram Carousel", "Instagram Story"],
+    otherGraphicType: "",
     eventName: "Meet the Team",
-    eventDate: "2026-09-08",
     eventTime: "12:00 PM",
     eventLocation: "Instagram",
     summary:
