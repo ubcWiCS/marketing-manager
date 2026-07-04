@@ -1,9 +1,8 @@
 "use client";
 
-import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { Suspense, useState, useEffect } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
 import {
   ChevronLeft, ChevronRight, Check, Upload,
   X, ArrowLeft, Send, Image, CheckCircle,
@@ -14,7 +13,6 @@ import {
   GraphicType, GRAPHIC_TYPES,
   NewTicketForm, Ticket,
 } from "@/types";
-import { defaultFormValues, mockTickets } from "@/lib/mock-data";
 import { useTickets } from "@/lib/ticket-context";
 
 const STEPS = [
@@ -27,10 +25,34 @@ const STEPS = [
 ];
 
 export default function NewRequestPage() {
+  return (
+    <Suspense fallback={<div className="p-6 max-w-3xl mx-auto animate-fade-in"><div className="card p-8">Loading...</div></div>}>
+      <NewRequestForm />
+    </Suspense>
+  );
+}
+
+function NewRequestForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const editId = searchParams.get("edit");
+  const { tickets } = useTickets();
   const [step, setStep] = useState(1);
+  const defaultFormValues: NewTicketForm = {
+    portfolio: null,
+    pointOfContact: "",
+    graphicTypes: [],
+    otherGraphicType: "",
+    eventName: "",
+    eventTime: "",
+    eventLocation: "",
+    summary: "",
+    deadline: "",
+    creativeVision: "",
+    references: [],
+    additionalRequests: "",
+  };
+
   const [form, setForm] = useState<NewTicketForm>({ 
     ...defaultFormValues,
     deadline: new Date().toISOString().split('T')[0] // Auto-set to today's date
@@ -41,7 +63,7 @@ export default function NewRequestPage() {
   // Load ticket data if editing
   useEffect(() => {
     if (editId) {
-      const ticket = mockTickets.find((t) => t.id === editId);
+      const ticket = tickets.find((t) => t.id === editId);
       if (ticket) {
         setIsEditing(true);
         setForm({

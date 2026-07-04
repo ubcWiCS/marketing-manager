@@ -13,6 +13,7 @@ interface TicketContextType {
   deleteTicket: (id: string) => Promise<void>;
   restoreTicket: (id: string) => Promise<void>;
   unassignMember: (memberName: string) => Promise<void>;
+  unassignFromBoard: (id: string) => Promise<void>;
   loading: boolean;
   error: string | null;
 }
@@ -55,7 +56,7 @@ export function TicketProvider({ children }: { children: ReactNode }) {
           summary: t.summary,
           deadline: t.deadline,
           creativeVision: t.creative_vision,
-          references: t.references || [],
+          references: t.reference_urls || [],
           additionalRequests: t.additional_requests || "",
           status: t.status,
           priority: t.priority,
@@ -129,7 +130,7 @@ export function TicketProvider({ children }: { children: ReactNode }) {
       if (updates.deadline !== undefined) dbUpdates.deadline = updates.deadline;
       if (updates.summary !== undefined) dbUpdates.summary = updates.summary;
       if (updates.creativeVision !== undefined) dbUpdates.creative_vision = updates.creativeVision;
-      if (updates.references !== undefined) dbUpdates.references = updates.references;
+      if (updates.references !== undefined) dbUpdates.reference_urls = updates.references;
       if (updates.additionalRequests !== undefined) dbUpdates.additional_requests = updates.additionalRequests;
       if (updates.status !== undefined) dbUpdates.status = updates.status;
       if (updates.priority !== undefined) dbUpdates.priority = updates.priority;
@@ -170,6 +171,26 @@ export function TicketProvider({ children }: { children: ReactNode }) {
       );
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to unassign member');
+      throw err;
+    }
+  };
+
+  const unassignFromBoard = async (id: string) => {
+    try {
+      setError(null);
+      const { error } = await supabase
+        .from('tickets')
+        .update({ point_of_contact: '', is_on_board: false })
+        .eq('id', id);
+
+      if (error) throw error;
+      setTickets((prev) =>
+        prev.map((t) =>
+          t.id === id ? { ...t, pointOfContact: "", isOnBoard: false } : t
+        )
+      );
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to unassign ticket');
       throw err;
     }
   };
@@ -231,7 +252,7 @@ export function TicketProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <TicketContext.Provider value={{ tickets, moveTicket, addToBoard, updateTicket, archiveTicket, deleteTicket, restoreTicket, unassignMember, loading, error }}>
+    <TicketContext.Provider value={{ tickets, moveTicket, addToBoard, updateTicket, archiveTicket, deleteTicket, restoreTicket, unassignMember, unassignFromBoard, loading, error }}>
       {children}
     </TicketContext.Provider>
   );

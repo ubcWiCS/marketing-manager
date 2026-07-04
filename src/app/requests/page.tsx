@@ -3,7 +3,6 @@
 import { useState, useMemo } from "react";
 import Link from "next/link";
 import { Search, List, Columns, PlusCircle, RotateCcw } from "lucide-react";
-import { mockTickets } from "@/lib/mock-data";
 import { useTickets } from "@/lib/ticket-context";
 import { cn } from "@/lib/utils";
 import { PortfolioDot } from "@/components/ui/portfolio-dot";
@@ -14,6 +13,7 @@ import {
 } from "@/types";
 
 export default function RequestsPage() {
+  const { tickets, restoreTicket } = useTickets();
   const [search, setSearch] = useState("");
   const [filterPortfolio, setFilterPortfolio] = useState<Portfolio | "All">("All");
   const [filterStatus, setFilterStatus] = useState<RequestStatus | "All">("All");
@@ -21,10 +21,9 @@ export default function RequestsPage() {
   const [activeTab, setActiveTab] = useState<"active" | "archived">("active");
   const [restoreDialogOpen, setRestoreDialogOpen] = useState(false);
   const [ticketToRestore, setTicketToRestore] = useState<string | null>(null);
-  const { restoreTicket } = useTickets();
 
   const filtered = useMemo(() => {
-    let items = [...mockTickets];
+    let items = [...tickets];
     
     // Filter by active/archived tab
     if (activeTab === "archived") {
@@ -43,7 +42,7 @@ export default function RequestsPage() {
     if (filterPortfolio !== "All") items = items.filter((t) => t.portfolio === filterPortfolio);
     if (filterStatus !== "All") items = items.filter((t) => t.status === filterStatus);
     return items.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
-  }, [search, filterPortfolio, filterStatus, activeTab]);
+  }, [search, filterPortfolio, filterStatus, activeTab, tickets]);
 
   return (
     <div className="p-6 max-w-5xl mx-auto animate-fade-in">
@@ -198,4 +197,3 @@ export default function RequestsPage() {
     </div>
   );
 }
-

@@ -7,7 +7,6 @@ import {
   ArrowLeft, Clock, Calendar, MapPin, User,
   Paperclip, Edit3, Archive, Trash2,
 } from "lucide-react";
-import { mockTickets } from "@/lib/mock-data";
 import { useTickets } from "@/lib/ticket-context";
 import { cn, formatDate, formatDateTime, timeAgo, getDeadlineColor, isOverdue } from "@/lib/utils";
 import { PortfolioBadge } from "@/components/ui/portfolio-badge";
@@ -19,8 +18,8 @@ import { RequestStatus, REQUEST_STATUSES, Priority, PRIORITIES, PORTFOLIO_COLORS
 
 export default function RequestDetailPage() {
   const params = useParams();
-  const ticket = mockTickets.find((t) => t.id === params.id);
-  const { archiveTicket, deleteTicket } = useTickets();
+  const { tickets, archiveTicket, deleteTicket } = useTickets();
+  const ticket = tickets.find((t) => t.id === params.id);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
   if (!ticket) {

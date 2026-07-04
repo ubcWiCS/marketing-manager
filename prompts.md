@@ -239,3 +239,74 @@ i want to connect this to a supabase database, how do i do it
 - All CRUD operations now connected to Supabase database
 - Proper field name mapping between frontend and database
 - Note: User needs to run SQL schema in Supabase dashboard and configure .env.local with their credentials
+
+## Prompt 20 — Fix Runtime Error & Install Supabase
+
+**User Request:**
+when i go to use it, im getting Unhandled Runtime Error TypeError: Cannot read properties of null (reading 'from')
+
+**Result:**
+- Installed @supabase/supabase-js (was missing, causing null client)
+- Fixed supabase client.ts to use proper ESM import instead of fragile require()
+- Fixed type error: added "Instagram Carousel" to GraphicType union
+- Fixed build errors: added Suspense boundary around useSearchParams(), fixed duplicate imports
+- Build passes successfully
+
+## Prompt 21 — Fix Empty Sidebar (Mock Data Fallback)
+
+**User Request:**
+all the tickets are now not showing correctly in the unassigned panel on the side
+
+**Result:**
+- Identified root cause: Supabase database had no tickets, so fetchTickets() returned empty array
+- Added mock data fallback in ticket-context.tsx when Supabase returns no data
+- All 6 sample tickets display correctly in the Unassigned Tickets panel
+
+## Prompt 22 — Seed Supabase & Remove Mock Data
+
+**User Request:**
+please add the mock data to supabase, and get rid of the mock data files
+
+**Result:**
+- Created scripts/seed-supabase.mjs to insert mock data into Supabase
+- Ran seed script — successfully seeded 6 tickets
+- Removed src/lib/mock-data.ts file
+- Updated all pages to read from Supabase via useTickets() context instead of mockTickets
+- Removed mock data fallback from ticket-context.tsx
+- Build passes successfully
+
+## Prompt 23 — Delete Fall Recruitment Ticket
+
+**User Request:**
+delete the fall recuitment ticket
+
+**Result:**
+- Queried Supabase to find the "Fall Recruitment Instagram Campaign" ticket (from original schema.sql sample data)
+- Deleted it from the database via Supabase delete query
+- Remaining: 6 seeded tickets
+
+## Prompt 24 — Drag Ticket Back to Unassigned
+
+**User Request:**
+i want to be able to move a ticket back to being unassigned by dragging it to the left hand side
+
+**Result:**
+- Added `unassignFromBoard(id)` function to ticket context
+  - Clears point_of_contact and sets is_on_board to false in Supabase
+- Made sidebar unassigned tickets area a drop target
+  - Shows dashed ring highlight when dragging over it
+  - Drops call unassignFromBoard(id) to move ticket back to unassigned
+- Build passes successfully
+
+## Prompt 25 — Secure Credentials & Update Prompts
+
+**User Request:**
+update the prompts.md and the .gitignore to make sure the prompts are all tracked and no information is leajed
+
+**Result:**
+- Updated scripts/seed-supabase.mjs to read credentials from .env.local instead of hardcoding them
+  - Added dotenv dependency for loading .env.local
+  - Script now exits with error if credentials are missing
+- Verified .gitignore already ignores .env.local and all .env.*.local files
+- Added all missing prompt entries to prompts.md
+- No sensitive information is tracked in the repository

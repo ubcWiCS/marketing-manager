@@ -18,7 +18,7 @@ CREATE TABLE IF NOT EXISTS tickets (
   deadline DATE NOT NULL,
   summary TEXT NOT NULL,
   creative_vision TEXT NOT NULL,
-  references TEXT[] DEFAULT '{}',
+  reference_urls TEXT[] DEFAULT '{}',
   additional_requests TEXT,
   status TEXT DEFAULT 'Open' CHECK (status IN ('Open', 'In Progress', 'In Review', 'Completed', 'Archived')),
   priority TEXT DEFAULT 'Medium' CHECK (priority IN ('Low', 'Medium', 'High', 'Urgent')),

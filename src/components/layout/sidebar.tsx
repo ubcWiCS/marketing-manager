@@ -12,14 +12,33 @@ import { ManageMembersDialog } from "./manage-members-dialog";
 
 export function Sidebar() {
   const pathname = usePathname();
-  const { tickets } = useTickets();
+  const { tickets, unassignFromBoard } = useTickets();
   const sidebarTickets = tickets.filter((t) => !t.isOnBoard);
   const [manageOpen, setManageOpen] = useState(false);
+  const [draggingOver, setDraggingOver] = useState(false);
 
   const handleDragStart = (e: React.DragEvent, id: string) => {
     e.dataTransfer.effectAllowed = "move";
     e.dataTransfer.setData("text/plain", id);
     e.dataTransfer.setData("source", "sidebar");
+  };
+
+  const handleDragOver = (e: React.DragEvent) => {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = "move";
+    setDraggingOver(true);
+  };
+
+  const handleDragLeave = () => {
+    setDraggingOver(false);
+  };
+
+  const handleDrop = (e: React.DragEvent) => {
+    e.preventDefault();
+    setDraggingOver(false);
+    const id = e.dataTransfer.getData("text/plain");
+    if (!id) return;
+    unassignFromBoard(id);
   };
 
   return (
@@ -34,7 +53,15 @@ export function Sidebar() {
         <div className="px-4 py-2 text-[10px] font-semibold text-surface-400 uppercase tracking-wider">
           Unassigned Tickets
         </div>
-        <div className="flex-1 overflow-y-auto px-2 pb-2 space-y-0.5">
+        <div
+          onDragOver={handleDragOver}
+          onDragLeave={handleDragLeave}
+          onDrop={handleDrop}
+          className={cn(
+            "flex-1 overflow-y-auto px-2 pb-2 space-y-0.5 transition-colors duration-150",
+            draggingOver && "bg-accent-50/50 rounded-lg ring-2 ring-dashed ring-accent-300"
+          )}
+        >
           {sidebarTickets.map((ticket) => (
             <div
               key={ticket.id}

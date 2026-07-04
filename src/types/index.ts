@@ -35,6 +35,7 @@ export const PORTFOLIO_COLORS: Record<Portfolio, string> = {
 export type GraphicType =
   | "Instagram Post"
   | "Instagram Story"
+  | "Instagram Carousel"
   | "Instagram Reel/TikTok"
   | "LinkedIn Post"
   | "Award Certificate"
@@ -44,6 +45,7 @@ export type GraphicType =
 export const GRAPHIC_TYPES: GraphicType[] = [
   "Instagram Post",
   "Instagram Story",
+  "Instagram Carousel",
   "Instagram Reel/TikTok",
   "LinkedIn Post",
   "Award Certificate",
