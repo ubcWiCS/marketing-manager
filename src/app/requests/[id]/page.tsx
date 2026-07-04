@@ -90,126 +90,83 @@ export default function RequestDetailPage() {
         </div>
       </div>
 
-      <div className="grid grid-cols-3 gap-6">
-        {/* Main Content */}
-        <div className="col-span-2 space-y-6">
-          {/* Event Details */}
-          <div className="card p-5">
-            <h2 className="text-sm font-semibold text-surface-900 mb-4">Event Details</h2>
-            <div className="grid grid-cols-2 gap-4">
+      <div className="space-y-6">
+        {/* Graphic Types - Prominent Central Card */}
+        <div className="card p-6 bg-gradient-to-br from-accent-50 to-white border-accent-200">
+          <h2 className="text-sm font-semibold text-surface-900 mb-4">What Needs to be Made</h2>
+          <div className="flex flex-wrap gap-2">
+            {ticket.graphicTypes.map((g, i) => (
+              <span key={i} className="chip bg-accent-500 text-white text-sm px-4 py-2 font-medium">
+                {g}
+              </span>
+            ))}
+          </div>
+        </div>
+
+        {/* Details Card */}
+        <div className="card p-5">
+          <h2 className="text-sm font-semibold text-surface-900 mb-4">Details</h2>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="col-span-2">
+              <p className="text-xs text-surface-400 font-medium">Name / Title</p>
+              <p className="text-sm text-surface-800 mt-0.5">{ticket.eventName}</p>
+            </div>
+            {ticket.eventTime && (
               <div>
-                <p className="text-xs text-surface-400 font-medium">Event Name</p>
-                <p className="text-sm text-surface-800 mt-0.5">{ticket.eventName}</p>
+                <p className="text-xs text-surface-400 font-medium">Time</p>
+                <p className="text-sm text-surface-800 mt-0.5">{ticket.eventTime}</p>
               </div>
-              <div>
-                <p className="text-xs text-surface-400 font-medium">Date & Time</p>
-                <p className="text-sm text-surface-800 mt-0.5">{ticket.eventDate} at {ticket.eventTime}</p>
-              </div>
+            )}
+            {ticket.eventLocation && (
               <div>
                 <p className="text-xs text-surface-400 font-medium">Location</p>
                 <p className="text-sm text-surface-800 mt-0.5">{ticket.eventLocation}</p>
               </div>
-              <div>
-                <p className="text-xs text-surface-400 font-medium">Deadline</p>
-                <p className={cn("text-sm mt-0.5 font-medium", getDeadlineColor(ticket.deadline))}>
-                  {formatDate(ticket.deadline)}
-                  {isOverdue(ticket.deadline) && " (Overdue)"}
-                </p>
-              </div>
-            </div>
-          </div>
-
-          {/* Summary */}
-          <div className="card p-5">
-            <h2 className="text-sm font-semibold text-surface-900 mb-3">Summary</h2>
-            <p className="text-sm text-surface-600 leading-relaxed">{ticket.summary}</p>
-          </div>
-
-          {/* Creative Vision */}
-          <div className="card p-5">
-            <h2 className="text-sm font-semibold text-surface-900 mb-3">Creative Vision</h2>
-            <p className="text-sm text-surface-600 leading-relaxed whitespace-pre-wrap">{ticket.creativeVision}</p>
-          </div>
-
-          {/* References */}
-          {ticket.references.length > 0 && (
-            <div className="card p-5">
-              <h2 className="text-sm font-semibold text-surface-900 mb-3">References</h2>
-              <div className="space-y-2">
-                {ticket.references.map((ref, i) => (
-                  <div key={i} className="flex items-center gap-2 p-3 bg-surface-50 rounded-lg">
-                    <Paperclip className="w-4 h-4 text-surface-400" />
-                    <span className="text-sm text-surface-600">{ref}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* Additional Requests */}
-          {ticket.additionalRequests && (
-            <div className="card p-5">
-              <h2 className="text-sm font-semibold text-surface-900 mb-3">Additional Requests</h2>
-              <p className="text-sm text-surface-600 leading-relaxed">{ticket.additionalRequests}</p>
-            </div>
-          )}
-
-
-        </div>
-
-        {/* Sidebar */}
-        <div className="space-y-6">
-          <div className="card p-5">
-            <h2 className="text-sm font-semibold text-surface-900 mb-4">Details</h2>
-            <div className="space-y-4">
-              <div>
-                <p className="text-xs text-surface-400 font-medium">Created By</p>
-                <div className="flex items-center gap-2 mt-1">
-                  <Avatar name={ticket.createdBy} size="sm" />
-                  <span className="text-sm text-surface-800">{ticket.createdBy}</span>
-                </div>
-              </div>
-              {ticket.isCollaboration && (
-                <div>
-                  <p className="text-xs text-surface-400 font-medium">Collaborators</p>
-                  <div className="flex flex-wrap gap-1.5 mt-1.5">
-                    {ticket.collaborators.map((c, i) => (
-                      <span key={i} className="chip bg-surface-100 text-surface-600">{c}</span>
-                    ))}
-                  </div>
-                </div>
-              )}
-              <div>
-                <p className="text-xs text-surface-400 font-medium">Graphic Types</p>
-                <div className="flex flex-wrap gap-1.5 mt-1.5">
-                  {ticket.graphicTypes.map((g, i) => (
-                    <span key={i} className="chip bg-accent-50 text-accent-600">{g}</span>
-                  ))}
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="card p-5">
-            <h2 className="text-sm font-semibold text-surface-900 mb-4">Activity</h2>
-            <div className="space-y-3">
-              <div className="flex gap-3">
-                <div className="w-1.5 h-1.5 rounded-full bg-blue-500 mt-1.5 shrink-0" />
-                <div>
-                  <p className="text-xs text-surface-600">Status changed to <span className="font-medium">In Progress</span></p>
-                  <p className="text-[10px] text-surface-400 mt-0.5">{timeAgo(ticket.updatedAt)}</p>
-                </div>
-              </div>
-              <div className="flex gap-3">
-                <div className="w-1.5 h-1.5 rounded-full bg-green-500 mt-1.5 shrink-0" />
-                <div>
-                  <p className="text-xs text-surface-600">Request created</p>
-                  <p className="text-[10px] text-surface-400 mt-0.5">{timeAgo(ticket.createdAt)}</p>
-                </div>
-              </div>
+            )}
+            <div className="col-span-2">
+              <p className="text-xs text-surface-400 font-medium">Due Date</p>
+              <p className={cn("text-sm mt-0.5 font-medium", getDeadlineColor(ticket.deadline))}>
+                {formatDate(ticket.deadline)}
+                {isOverdue(ticket.deadline) && " (Overdue)"}
+              </p>
             </div>
           </div>
         </div>
+
+        {/* Summary */}
+        <div className="card p-5">
+          <h2 className="text-sm font-semibold text-surface-900 mb-3">Summary</h2>
+          <p className="text-sm text-surface-600 leading-relaxed">{ticket.summary}</p>
+        </div>
+
+        {/* Creative Vision */}
+        <div className="card p-5">
+          <h2 className="text-sm font-semibold text-surface-900 mb-3">Creative Vision</h2>
+          <p className="text-sm text-surface-600 leading-relaxed whitespace-pre-wrap">{ticket.creativeVision}</p>
+        </div>
+
+        {/* References */}
+        {ticket.references.length > 0 && (
+          <div className="card p-5">
+            <h2 className="text-sm font-semibold text-surface-900 mb-3">References</h2>
+            <div className="space-y-2">
+              {ticket.references.map((ref, i) => (
+                <div key={i} className="flex items-center gap-2 p-3 bg-surface-50 rounded-lg">
+                  <Paperclip className="w-4 h-4 text-surface-400" />
+                  <span className="text-sm text-surface-600">{ref}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* Additional Requests */}
+        {ticket.additionalRequests && (
+          <div className="card p-5">
+            <h2 className="text-sm font-semibold text-surface-900 mb-3">Additional Requests</h2>
+            <p className="text-sm text-surface-600 leading-relaxed">{ticket.additionalRequests}</p>
+          </div>
+        )}
       </div>
     </div>
   );

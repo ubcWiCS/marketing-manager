@@ -89,16 +89,6 @@ export default function RequestsPage() {
 
       <div className="card overflow-hidden">
         <table className="w-full">
-          <thead>
-            <tr className="border-b border-surface-100">
-              <th className="text-left text-[10px] font-semibold text-surface-400 uppercase tracking-wider px-4 py-2.5">Title</th>
-              <th className="text-left text-[10px] font-semibold text-surface-400 uppercase tracking-wider px-4 py-2.5">Portfolio</th>
-              <th className="text-left text-[10px] font-semibold text-surface-400 uppercase tracking-wider px-4 py-2.5">Contact</th>
-              <th className="text-left text-[10px] font-semibold text-surface-400 uppercase tracking-wider px-4 py-2.5">Priority</th>
-              <th className="text-left text-[10px] font-semibold text-surface-400 uppercase tracking-wider px-4 py-2.5">Status</th>
-              <th className="text-left text-[10px] font-semibold text-surface-400 uppercase tracking-wider px-4 py-2.5">Deadline</th>
-            </tr>
-          </thead>
           <tbody className="divide-y divide-surface-100">
             {filtered.map((ticket) => (
               <tr key={ticket.id} className="hover:bg-surface-50 transition-colors">

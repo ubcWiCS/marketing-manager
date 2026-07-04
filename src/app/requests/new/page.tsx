@@ -6,7 +6,7 @@ import Link from "next/link";
 import { useSearchParams } from "next/navigation";
 import {
   ChevronLeft, ChevronRight, Check, Upload,
-  X, ArrowLeft, Send, Image,
+  X, ArrowLeft, Send, Image, CheckCircle,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
@@ -31,8 +31,12 @@ export default function NewRequestPage() {
   const searchParams = useSearchParams();
   const editId = searchParams.get("edit");
   const [step, setStep] = useState(1);
-  const [form, setForm] = useState<NewTicketForm>({ ...defaultFormValues });
+  const [form, setForm] = useState<NewTicketForm>({ 
+    ...defaultFormValues,
+    deadline: new Date().toISOString().split('T')[0] // Auto-set to today's date
+  });
   const [isEditing, setIsEditing] = useState(false);
+  const [showSuccessModal, setShowSuccessModal] = useState(false);
 
   // Load ticket data if editing
   useEffect(() => {
@@ -43,11 +47,9 @@ export default function NewRequestPage() {
         setForm({
           portfolio: ticket.portfolio,
           pointOfContact: ticket.pointOfContact,
-          isCollaboration: ticket.isCollaboration,
-          collaborators: ticket.collaborators,
           graphicTypes: ticket.graphicTypes,
+          otherGraphicType: "",
           eventName: ticket.eventName,
-          eventDate: ticket.eventDate,
           eventTime: ticket.eventTime,
           eventLocation: ticket.eventLocation,
           summary: ticket.summary,
@@ -73,25 +75,7 @@ export default function NewRequestPage() {
     }));
   };
 
-  const addCollaborator = () => {
-    const name = prompt("Enter collaborator name:");
-    if (name && name.trim()) {
-      setForm((prev) => ({
-        ...prev,
-        collaborators: [...prev.collaborators, name.trim()],
-      }));
-    }
-  };
-
-  const removeCollaborator = (idx: number) => {
-    setForm((prev) => ({
-      ...prev,
-      collaborators: prev.collaborators.filter((_, i) => i !== idx),
-    }));
-  };
-
-  const addReference = () => {
-    const url = prompt("Enter reference URL:");
+  const addReference = (url: string) => {
     if (url && url.trim()) {
       setForm((prev) => ({
         ...prev,
@@ -119,8 +103,10 @@ export default function NewRequestPage() {
 
   const handleSubmit = () => {
     // Mock submission — in real app, would POST to API
-    alert("Request submitted successfully! (Mock)");
-    router.push("/requests");
+    setShowSuccessModal(true);
+    setTimeout(() => {
+      router.push("/requests");
+    }, 2000);
   };
 
   return (
@@ -206,35 +192,6 @@ export default function NewRequestPage() {
                   onChange={(e) => setForm((prev) => ({ ...prev, pointOfContact: e.target.value }))}
                 />
               </div>
-              <div className="flex items-center gap-3">
-                <label className="flex items-center gap-2 cursor-pointer">
-                  <input
-                    type="checkbox"
-                    className="w-4 h-4 rounded border-surface-300 text-accent-500 focus:ring-accent-500"
-                    checked={form.isCollaboration}
-                    onChange={(e) => setForm((prev) => ({ ...prev, isCollaboration: e.target.checked }))}
-                  />
-                  <span className="text-sm text-surface-700">This is a collaboration</span>
-                </label>
-              </div>
-              {form.isCollaboration && (
-                <div className="space-y-2">
-                  <label className="label">Collaborators</label>
-                  <div className="flex flex-wrap gap-2">
-                    {form.collaborators.map((c, i) => (
-                      <span key={i} className="chip bg-surface-100 text-surface-600">
-                        {c}
-                        <button onClick={() => removeCollaborator(i)} className="hover:text-red-500">
-                          <X className="w-3 h-3" />
-                        </button>
-                      </span>
-                    ))}
-                    <button onClick={addCollaborator} className="chip border border-dashed border-surface-300 text-surface-400 hover:border-accent-500 hover:text-accent-500">
-                      + Add collaborator
-                    </button>
-                  </div>
-                </div>
-              )}
             </div>
           )}
 
@@ -269,48 +226,55 @@ export default function NewRequestPage() {
                   </button>
                 ))}
               </div>
+              {form.graphicTypes.includes("Other") && (
+                <div className="space-y-2">
+                  <label className="label">Please specify the type of media</label>
+                  <input
+                    type="text"
+                    className="input-field"
+                    placeholder="e.g. Poster, Banner, Business Card, etc."
+                    value={form.otherGraphicType}
+                    onChange={(e) => setForm((prev) => ({ ...prev, otherGraphicType: e.target.value }))}
+                  />
+                </div>
+              )}
             </div>
           )}
 
-          {/* Step 3: Event Details */}
+          {/* Step 3: Details */}
           {step === 3 && (
             <div className="space-y-5 animate-slide-up">
               <div>
-                <h2 className="text-lg font-semibold text-surface-900">Event Details</h2>
-                <p className="text-sm text-surface-400 mt-1">Tell us about the event or content</p>
+                <h2 className="text-lg font-semibold text-surface-900">Details</h2>
+                <p className="text-sm text-surface-400 mt-1">Tell us about your request</p>
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div className="col-span-2 space-y-1">
-                  <label className="label">Event / Activity Name</label>
-                  <input type="text" className="input-field" placeholder="e.g. Fall Recruitment"
+                  <label className="label">Name / Title</label>
+                  <input type="text" className="input-field" placeholder="e.g. Fall Recruitment, Merch Design, Sticker Pack"
                     value={form.eventName} onChange={(e) => setForm((prev) => ({ ...prev, eventName: e.target.value }))} />
                 </div>
                 <div className="space-y-1">
-                  <label className="label">Date</label>
-                  <input type="date" className="input-field"
-                    value={form.eventDate} onChange={(e) => setForm((prev) => ({ ...prev, eventDate: e.target.value }))} />
-                </div>
-                <div className="space-y-1">
-                  <label className="label">Time</label>
+                  <label className="label">Time (Optional)</label>
                   <input type="text" className="input-field" placeholder="e.g. 10:00 AM"
                     value={form.eventTime} onChange={(e) => setForm((prev) => ({ ...prev, eventTime: e.target.value }))} />
                 </div>
                 <div className="space-y-1">
-                  <label className="label">Location</label>
-                  <input type="text" className="input-field" placeholder="e.g. Student Center"
+                  <label className="label">Location (Optional)</label>
+                  <input type="text" className="input-field" placeholder="e.g. Student Center, Online, N/A"
                     value={form.eventLocation} onChange={(e) => setForm((prev) => ({ ...prev, eventLocation: e.target.value }))} />
                 </div>
-                <div className="space-y-1">
+                <div className="col-span-2 space-y-1">
                   <label className="label">
-                    Posting Deadline
-                    <span className="text-surface-400 font-normal ml-1">(ideally 2+ weeks before)</span>
+                    Due Date
+                    <span className="text-surface-400 font-normal ml-1">(when do you need this by?)</span>
                   </label>
                   <input type="date" className="input-field"
                     value={form.deadline} onChange={(e) => setForm((prev) => ({ ...prev, deadline: e.target.value }))} />
                 </div>
                 <div className="col-span-2 space-y-1">
                   <label className="label">Summary</label>
-                  <textarea className="input-field min-h-[80px] resize-none" placeholder="Brief description of the event/content..."
+                  <textarea className="input-field min-h-[80px] resize-none" placeholder="Brief description of what you need..."
                     value={form.summary} onChange={(e) => setForm((prev) => ({ ...prev, summary: e.target.value }))} />
                 </div>
               </div>
@@ -350,12 +314,35 @@ export default function NewRequestPage() {
             <div className="space-y-6 animate-slide-up">
               <div>
                 <h2 className="text-lg font-semibold text-surface-900">References & Inspiration</h2>
-                <p className="text-sm text-surface-400 mt-1">Share URLs or files that inspire the design</p>
+                <p className="text-sm text-surface-400 mt-1">Share URLs that inspire the design</p>
               </div>
-              <div className="border-2 border-dashed border-surface-200 rounded-xl p-8 text-center hover:border-accent-300 transition-colors cursor-pointer" onClick={addReference}>
-                <Upload className="w-8 h-8 text-surface-300 mx-auto mb-3" />
-                <p className="text-sm text-surface-500">Click to add a reference URL</p>
-                <p className="text-xs text-surface-400 mt-1">Dribbble, Pinterest, Figma links, etc.</p>
+              <div className="space-y-2">
+                <label className="label">Add Reference URL</label>
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    className="input-field flex-1"
+                    placeholder="https://..."
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        e.preventDefault();
+                        addReference((e.target as HTMLInputElement).value);
+                        (e.target as HTMLInputElement).value = '';
+                      }
+                    }}
+                  />
+                  <button
+                    type="button"
+                    onClick={(e) => {
+                      const input = e.currentTarget.previousElementSibling as HTMLInputElement;
+                      addReference(input.value);
+                      input.value = '';
+                    }}
+                    className="btn-primary text-xs"
+                  >
+                    Add
+                  </button>
+                </div>
               </div>
               {form.references.length > 0 && (
                 <div className="space-y-2">
@@ -398,16 +385,12 @@ export default function NewRequestPage() {
                     <p className="text-sm font-medium text-surface-800 mt-1">{form.graphicTypes.join(", ")}</p>
                   </div>
                   <div className="p-4 bg-surface-50 rounded-xl">
-                    <p className="text-xs text-surface-400 font-medium uppercase tracking-wide">Collaboration</p>
-                    <p className="text-sm font-medium text-surface-800 mt-1">{form.isCollaboration ? `Yes - ${form.collaborators.join(", ")}` : "No"}</p>
-                  </div>
-                  <div className="p-4 bg-surface-50 rounded-xl">
-                    <p className="text-xs text-surface-400 font-medium uppercase tracking-wide">Event</p>
+                    <p className="text-xs text-surface-400 font-medium uppercase tracking-wide">Name / Title</p>
                     <p className="text-sm font-medium text-surface-800 mt-1">{form.eventName}</p>
-                    <p className="text-xs text-surface-400 mt-0.5">{form.eventDate} {form.eventTime} | {form.eventLocation}</p>
+                    <p className="text-xs text-surface-400 mt-0.5">{form.eventTime} | {form.eventLocation}</p>
                   </div>
                   <div className="p-4 bg-surface-50 rounded-xl">
-                    <p className="text-xs text-surface-400 font-medium uppercase tracking-wide">Deadline</p>
+                    <p className="text-xs text-surface-400 font-medium uppercase tracking-wide">Due Date</p>
                     <p className="text-sm font-medium text-surface-800 mt-1">{form.deadline}</p>
                   </div>
                 </div>
@@ -431,6 +414,24 @@ export default function NewRequestPage() {
             </div>
           )}
         </div>
+
+        {/* Success Modal */}
+        {showSuccessModal && (
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+            <div className="bg-white rounded-xl p-8 max-w-sm w-full shadow-2xl animate-slide-up">
+              <div className="flex flex-col items-center text-center">
+                <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-4">
+                  <CheckCircle className="w-8 h-8 text-green-600" />
+                </div>
+                <h3 className="text-xl font-semibold text-surface-900 mb-2">Request Submitted!</h3>
+                <p className="text-sm text-surface-500 mb-6">Your request has been successfully submitted. Redirecting to all requests...</p>
+                <div className="w-full bg-surface-200 rounded-full h-2 overflow-hidden">
+                  <div className="bg-accent-500 h-2 rounded-full animate-pulse" style={{ width: '100%' }}></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* Navigation */}
         <div className="flex items-center justify-between mt-8 pt-6 border-t border-surface-100">

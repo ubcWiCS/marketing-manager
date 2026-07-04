@@ -1,7 +1,6 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { Sidebar } from "@/components/layout/sidebar";
-import { Topbar } from "@/components/layout/topbar";
 import { TicketProvider } from "@/lib/ticket-context";
 import { TeamProvider } from "@/lib/team-context";
 
@@ -29,10 +28,7 @@ export default function RootLayout({
         <TicketProvider>
           <TeamProvider>
             <Sidebar />
-            <div className="flex flex-col flex-1 min-w-0">
-              <Topbar />
-              <main className="flex-1 overflow-y-auto">{children}</main>
-            </div>
+            <main className="flex-1 overflow-y-auto">{children}</main>
           </TeamProvider>
         </TicketProvider>
       </body>

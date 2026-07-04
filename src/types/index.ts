@@ -102,11 +102,9 @@ export interface Ticket {
 export interface NewTicketForm {
   portfolio: Portfolio | null;
   pointOfContact: string;
-  isCollaboration: boolean;
-  collaborators: string[];
   graphicTypes: GraphicType[];
+  otherGraphicType: string;
   eventName: string;
-  eventDate: string;
   eventTime: string;
   eventLocation: string;
   summary: string;
