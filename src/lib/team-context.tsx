@@ -13,14 +13,11 @@ interface TeamContextType {
 const TeamContext = createContext<TeamContextType | undefined>(undefined);
 
 const initialMembers: TeamMember[] = [
-  { id: "1", name: "Sarah Chen" },
-  { id: "2", name: "Marcus Johnson" },
-  { id: "3", name: "Priya Patel" },
-  { id: "4", name: "David Kim" },
-  { id: "5", name: "Maya Rodriguez" },
-  { id: "6", name: "James Liu" },
-  { id: "7", name: "Olivia Martinez" },
-  { id: "8", name: "Emily Watson" },
+  { id: "1", name: "Ella" },
+  { id: "2", name: "Yolanda" },
+  { id: "3", name: "Claire" },
+  { id: "4", name: "Amber" },
+  { id: "5", name: "Rosie" },
 ];
 
 export function TeamProvider({ children }: { children: ReactNode }) {

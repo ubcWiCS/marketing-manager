@@ -5,19 +5,23 @@ import Link from "next/link";
 import { useParams } from "next/navigation";
 import {
   ArrowLeft, Clock, Calendar, MapPin, User,
-  Paperclip, Edit3,
+  Paperclip, Edit3, Archive, Trash2,
 } from "lucide-react";
 import { mockTickets } from "@/lib/mock-data";
+import { useTickets } from "@/lib/ticket-context";
 import { cn, formatDate, formatDateTime, timeAgo, getDeadlineColor, isOverdue } from "@/lib/utils";
 import { PortfolioBadge } from "@/components/ui/portfolio-badge";
 import { PriorityBadge } from "@/components/ui/priority-badge";
 import { Badge } from "@/components/ui/badge";
 import { Avatar } from "@/components/ui/avatar";
+import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { RequestStatus, REQUEST_STATUSES, Priority, PRIORITIES, PORTFOLIO_COLORS } from "@/types";
 
 export default function RequestDetailPage() {
   const params = useParams();
   const ticket = mockTickets.find((t) => t.id === params.id);
+  const { archiveTicket, deleteTicket } = useTickets();
+  const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
   if (!ticket) {
     return (
@@ -55,13 +59,31 @@ export default function RequestDetailPage() {
           <div className="flex-1">
             <h1 className="text-xl font-bold text-surface-900">{ticket.title}</h1>
           </div>
-          <Link 
-            href={`/requests/new?edit=${ticket.id}`}
-            className="btn-secondary text-xs"
-          >
-            <Edit3 className="w-3.5 h-3.5" />
-            Edit
-          </Link>
+          <div className="flex gap-2">
+            <button
+              onClick={() => archiveTicket(ticket.id)}
+              className="btn-secondary text-xs"
+              title="Archive ticket"
+            >
+              <Archive className="w-3.5 h-3.5" />
+              Archive
+            </button>
+            <button
+              onClick={() => setShowDeleteDialog(true)}
+              className="btn-secondary text-xs text-red-600 hover:text-red-700 hover:border-red-300"
+              title="Delete ticket"
+            >
+              <Trash2 className="w-3.5 h-3.5" />
+              Delete
+            </button>
+            <Link 
+              href={`/requests/new?edit=${ticket.id}`}
+              className="btn-secondary text-xs"
+            >
+              <Edit3 className="w-3.5 h-3.5" />
+              Edit
+            </Link>
+          </div>
         </div>
 
         <div className="flex items-center gap-6 flex-wrap">
@@ -167,6 +189,18 @@ export default function RequestDetailPage() {
             <p className="text-sm text-surface-600 leading-relaxed">{ticket.additionalRequests}</p>
           </div>
         )}
+
+        {/* Delete Confirmation Dialog */}
+        <ConfirmDialog
+          isOpen={showDeleteDialog}
+          onClose={() => setShowDeleteDialog(false)}
+          onConfirm={() => deleteTicket(ticket.id)}
+          title="Delete Ticket"
+          message="Are you sure you want to delete this ticket? This action cannot be undone."
+          confirmText="Delete"
+          cancelText="Cancel"
+          variant="danger"
+        />
       </div>
     </div>
   );

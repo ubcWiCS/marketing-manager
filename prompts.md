@@ -129,3 +129,95 @@ i want the edit button to come back. to edit the ticket, let me go through the e
 - Submit button changes to "Update Request" when editing
 - Calls `updateTicket()` to save changes
 - Form title changes to "Edit Request" in edit mode
+
+## Prompt 12 — Streamline Request Form
+
+**User Request:**
+i want to work on the ticket form itself. get rid of the place to add a collaborator on the first page. on the second page, if other is selected, give a text box to enter what the other type of media is on the following page. where it says event details on the third page, make it just details - sometimes tickets are for merch or stickers. automatically make the date of the ticket the date it was submitted, so only allow the user to enter the due date (and call it due date rather than date of event). where you ask for reference urls, just make that a textbox rather than the weird popups, make sure its clickable through the ticket page itself later. make a custom popup for when the request is submitted rather than the default browser one, and bring us back to all tickets when its submitted.
+
+**Result:**
+- Removed collaboration checkbox and collaborator management from step 1
+- Added conditional "otherGraphicType" text input when "Other" is selected in step 2
+- Renamed "Event Details" to "Details" in step 3 with generic fields
+- Removed event date field, auto-set deadline to today's date on form load
+- Renamed "Posting Deadline" to "Due Date" with helper text
+- Replaced prompt() popups with inline text input for reference URLs
+- Added custom success modal with checkmark animation on submission
+- Auto-redirect to /requests after 2 seconds
+- Updated NewTicketForm type to remove collaboration fields and add otherGraphicType
+
+## Prompt 13 — Redesign Ticket Detail View
+
+**User Request:**
+i want to work on the expanded view of the ticket itself. Please emphasize the graphic types that need to be made in a central card near the top, and then have the event details underneath it. Remove anything that isnt expliclty stated in the request form from this extended view.
+
+**Result:**
+- Created prominent "What Needs to be Made" card with gradient background at top
+- Graphic types displayed as large white badges with accent-500 background
+- Moved "Details" card below with Name/Title, Time, Location, Due Date
+- Removed sidebar with Created By, Collaborators, and Activity feed
+- Removed all fields not in request form (no REQ-001 IDs, no comments)
+- Simplified to single-column layout focusing on deliverable information
+
+## Prompt 14 — Simplify References Section
+
+**User Request:**
+in the References & Inspiration section of the request form, please remove the big drag and drop section and only have the text box where you submit the link
+
+**Result:**
+- Removed drag-and-drop upload area with Upload icon
+- Kept only text input field with "Add" button for URLs
+- Updated subtitle to "Share URLs that inspire the design"
+- Cleaner, more focused interface for adding reference links
+
+## Prompt 15 — Remove Empty Header
+
+**User Request:**
+get rid of the header rectangle / There is an extra header section in the big panel on the right, please get rid of that rectangle / its where there used to be a logo. it's <header class="h-12 glass flex items-center justify-between px-4 shrink-0"></header>
+
+**Result:**
+- Removed empty Topbar component from layout
+- Deleted src/components/layout/topbar.tsx file
+- Removed Topbar import from app/layout.tsx
+- Removed Topbar element from layout structure
+
+## Prompt 16 — Update Default Team Members
+
+**User Request:**
+make the default team members ella yolanda claire amber and rosie
+
+**Result:**
+- Updated initialMembers array in src/lib/team-context.tsx
+- Changed from 8 members (Sarah Chen, Marcus Johnson, Priya Patel, David Kim, Maya Rodriguez, James Liu, Olivia Martinez, Emily Watson) to 5 members (Ella, Yolanda, Claire, Amber, Rosie)
+- These now appear as default columns on the kanban board
+
+## Prompt 17 — Complete CRUD Operations with Archive/Delete
+
+**User Request:**
+does this follow CRUD? make sure all data does / i want a soft delete too, i want to be able to archive/mark off as done and move to the archive, as well as delte. i want to be careful with the delete, so there's an are you sure to it as well
+
+**Result:**
+- Added `archiveTicket(id)` function to ticket context (soft delete - changes status to "Archived")
+- Added `deleteTicket(id)` function to ticket context (hard delete - permanent removal)
+- Created ConfirmDialog component for confirmation prompts
+- Added Archive and Delete buttons to ticket detail page header
+- Delete button triggers confirmation dialog with "Are you sure?" warning
+- Archive button immediately changes status to "Archived"
+- Completed full CRUD for both tickets and team members
+
+## Prompt 18 — Add Archive Tab
+
+**User Request:**
+i want there to be an archive tab bellow all tickets, where you can visit the archived posts
+
+**Result:**
+- Added tab navigation to requests page with "Active" and "Archived" tabs
+- Active tab shows all non-archived tickets (default view)
+- Archived tab shows only tickets with status "Archived"
+- Implemented archive filtering logic in useMemo
+- Added `restoreTicket(id)` function to restore archived tickets back to "Open" status
+- Archived tickets styled distinctly with opacity-60 and gray background
+- Gray status badge for archived tickets
+- Restore button (RotateCcw icon) appears next to deadline for archived tickets
+- Confirmation dialog for restore action
+- Complete archive workflow: Archive → View in tab → Restore or Delete

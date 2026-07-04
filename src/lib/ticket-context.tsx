@@ -9,6 +9,10 @@ interface TicketContextType {
   moveTicket: (id: string, targetMember: string) => void;
   addToBoard: (id: string) => void;
   updateTicket: (id: string, updates: Partial<Ticket>) => void;
+  archiveTicket: (id: string) => void;
+  deleteTicket: (id: string) => void;
+  restoreTicket: (id: string) => void;
+  unassignMember: (memberName: string) => void;
 }
 
 const TicketContext = createContext<TicketContextType | undefined>(undefined);
@@ -45,8 +49,25 @@ export function TicketProvider({ children }: { children: ReactNode }) {
       )
     );
   };
+  const archiveTicket = (id: string) => {
+    setTickets((prev) =>
+      prev.map((t) =>
+        t.id === id ? { ...t, status: "Archived" as const } : t
+      )
+    );
+  };
+  const deleteTicket = (id: string) => {
+    setTickets((prev) => prev.filter((t) => t.id !== id));
+  };
+  const restoreTicket = (id: string) => {
+    setTickets((prev) =>
+      prev.map((t) =>
+        t.id === id ? { ...t, status: "Open" as const } : t
+      )
+    );
+  };
   return (
-    <TicketContext.Provider value={{ tickets, moveTicket, addToBoard, updateTicket, unassignMember }}>
+    <TicketContext.Provider value={{ tickets, moveTicket, addToBoard, updateTicket, archiveTicket, deleteTicket, restoreTicket, unassignMember }}>
       {children}
     </TicketContext.Provider>
   );
