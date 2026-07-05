@@ -11,9 +11,10 @@ import {
   Portfolio, PORTFOLIOS, RequestStatus,
   REQUEST_STATUSES,
 } from "@/types";
+import { SkeletonTableRow } from "@/components/ui/skeleton";
 
 export default function RequestsPage() {
-  const { tickets, restoreTicket } = useTickets();
+  const { tickets, restoreTicket, loading } = useTickets();
   const [search, setSearch] = useState("");
   const [filterPortfolio, setFilterPortfolio] = useState<Portfolio | "All">("All");
   const [filterStatus, setFilterStatus] = useState<RequestStatus | "All">("All");
@@ -48,15 +49,15 @@ export default function RequestsPage() {
     <div className="p-6 max-w-5xl mx-auto animate-fade-in">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-lg font-bold text-surface-900">All Tickets</h1>
+          <h1 className="text-xl font-bold text-navy-800">All Tickets</h1>
           <p className="text-xs text-surface-400 mt-0.5">{filtered.length} result{filtered.length !== 1 ? "s" : ""}</p>
         </div>
         <div className="flex items-center gap-2">
-          <div className="flex items-center bg-white border border-surface-200 rounded-lg p-0.5">
-            <button onClick={() => setView("list")} className={cn("p-1.5 rounded-md transition-colors", view === "list" ? "bg-surface-100 text-surface-700" : "text-surface-400 hover:text-surface-600")}>
+          <div className="flex items-center bg-white border-2 border-surface-200 rounded-hand p-0.5">
+            <button onClick={() => setView("list")} className={cn("p-1.5 rounded-hand transition-colors", view === "list" ? "bg-plum-100 text-plum-700" : "text-surface-400 hover:text-navy-700")}>
               <List className="w-4 h-4" />
             </button>
-            <button onClick={() => setView("board")} className={cn("p-1.5 rounded-md transition-colors", view === "board" ? "bg-surface-100 text-surface-700" : "text-surface-400 hover:text-surface-600")}>
+            <button onClick={() => setView("board")} className={cn("p-1.5 rounded-hand transition-colors", view === "board" ? "bg-plum-100 text-plum-700" : "text-surface-400 hover:text-navy-700")}>
               <Columns className="w-4 h-4" />
             </button>
           </div>
@@ -68,14 +69,14 @@ export default function RequestsPage() {
       </div>
 
       {/* Tabs */}
-      <div className="flex items-center gap-1 mb-4 bg-white border border-surface-200 rounded-lg p-1 w-fit">
+      <div className="flex items-center gap-1 mb-4 bg-white border-2 border-surface-200 rounded-hand p-1 w-fit">
         <button
           onClick={() => setActiveTab("active")}
           className={cn(
-            "px-4 py-1.5 rounded-md text-xs font-medium transition-colors",
+            "px-4 py-1.5 rounded-hand text-xs font-medium transition-colors",
             activeTab === "active"
-              ? "bg-accent-500 text-white"
-              : "text-surface-600 hover:text-surface-800"
+              ? "bg-plum-500 text-white"
+              : "text-navy-600 hover:text-navy-800"
           )}
         >
           Active
@@ -83,10 +84,10 @@ export default function RequestsPage() {
         <button
           onClick={() => setActiveTab("archived")}
           className={cn(
-            "px-4 py-1.5 rounded-md text-xs font-medium transition-colors",
+            "px-4 py-1.5 rounded-hand text-xs font-medium transition-colors",
             activeTab === "archived"
-              ? "bg-accent-500 text-white"
-              : "text-surface-600 hover:text-surface-800"
+              ? "bg-plum-500 text-white"
+              : "text-navy-600 hover:text-navy-800"
           )}
         >
           Archived
@@ -129,49 +130,59 @@ export default function RequestsPage() {
       <div className="card overflow-hidden">
         <table className="w-full">
           <tbody className="divide-y divide-surface-100">
-            {filtered.map((ticket) => (
-              <tr key={ticket.id} className={cn("hover:bg-surface-50 transition-colors", ticket.status === "Archived" && "opacity-60 bg-surface-50")}>
-                <td className="px-4 py-2.5">
-                  <Link href={`/requests/${ticket.id}`} className="block group">
+            {loading ? (
+              <>
+                <SkeletonTableRow />
+                <SkeletonTableRow />
+                <SkeletonTableRow />
+                <SkeletonTableRow />
+                <SkeletonTableRow />
+              </>
+            ) : (
+              filtered.map((ticket) => (
+                <tr key={ticket.id} className={cn("hover:bg-surface-50 transition-colors", ticket.status === "Archived" && "opacity-60 bg-surface-50")}>
+                  <td className="px-4 py-2.5">
+                    <Link href={`/requests/${ticket.id}`} className="block group">
+                      <div className="flex items-center gap-2">
+                        <PortfolioDot portfolio={ticket.portfolio} />
+                        <span className="text-xs font-medium text-navy-800 group-hover:text-plum-600 transition-colors">{ticket.title}</span>
+                      </div>
+                    </Link>
+                  </td>
+                  <td className="px-4 py-2.5">
+                    <span className="text-xs text-navy-600">{ticket.portfolio}</span>
+                  </td>
+                  <td className="px-4 py-2.5">
+                    <span className="text-xs text-navy-600">{ticket.pointOfContact}</span>
+                  </td>
+                  <td className="px-4 py-2.5">
+                    <span className={cn("text-xs font-medium", ticket.priority === "Urgent" && "text-red-600", ticket.priority === "High" && "text-orange-600", ticket.priority === "Medium" && "text-amber-600", ticket.priority === "Low" && "text-emerald-600")}>{ticket.priority}</span>
+                  </td>
+                  <td className="px-4 py-2.5">
+                    <span className={cn("text-xs px-1.5 py-0.5 rounded-full", ticket.status === "Open" && "bg-emerald-50 text-emerald-700", ticket.status === "In Progress" && "bg-sky-50 text-sky-700", ticket.status === "In Review" && "bg-amber-50 text-amber-700", ticket.status === "Completed" && "bg-purple-50 text-purple-700", ticket.status === "Archived" && "bg-gray-50 text-gray-700")}>{ticket.status}</span>
+                  </td>
+                  <td className="px-4 py-2.5">
                     <div className="flex items-center gap-2">
-                      <PortfolioDot portfolio={ticket.portfolio} />
-                      <span className="text-xs font-medium text-surface-800 group-hover:text-accent-600 transition-colors">{ticket.title}</span>
+                      <span className={cn("text-xs", new Date(ticket.deadline) < new Date() ? "text-red-500 font-medium" : "text-surface-400")}>
+                        {new Date(ticket.deadline).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
+                      </span>
+                      {ticket.status === "Archived" && (
+                        <button
+                          onClick={() => {
+                            setTicketToRestore(ticket.id);
+                            setRestoreDialogOpen(true);
+                          }}
+                          className="p-1 hover:bg-surface-200 rounded-hand transition-colors"
+                          title="Restore ticket"
+                        >
+                          <RotateCcw className="w-3.5 h-3.5 text-surface-500 hover:text-plum-600" />
+                        </button>
+                      )}
                     </div>
-                  </Link>
-                </td>
-                <td className="px-4 py-2.5">
-                  <span className="text-xs text-surface-600">{ticket.portfolio}</span>
-                </td>
-                <td className="px-4 py-2.5">
-                  <span className="text-xs text-surface-600">{ticket.pointOfContact}</span>
-                </td>
-                <td className="px-4 py-2.5">
-                  <span className={cn("text-xs font-medium", ticket.priority === "Urgent" && "text-red-600", ticket.priority === "High" && "text-orange-600", ticket.priority === "Medium" && "text-yellow-600", ticket.priority === "Low" && "text-green-600")}>{ticket.priority}</span>
-                </td>
-                <td className="px-4 py-2.5">
-                  <span className={cn("text-xs px-1.5 py-0.5 rounded-full", ticket.status === "Open" && "bg-green-50 text-green-700", ticket.status === "In Progress" && "bg-blue-50 text-blue-700", ticket.status === "In Review" && "bg-amber-50 text-amber-700", ticket.status === "Completed" && "bg-purple-50 text-purple-700", ticket.status === "Archived" && "bg-gray-50 text-gray-700")}>{ticket.status}</span>
-                </td>
-                <td className="px-4 py-2.5">
-                  <div className="flex items-center gap-2">
-                    <span className={cn("text-xs", new Date(ticket.deadline) < new Date() ? "text-red-500 font-medium" : "text-surface-500")}>
-                      {new Date(ticket.deadline).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
-                    </span>
-                    {ticket.status === "Archived" && (
-                      <button
-                        onClick={() => {
-                          setTicketToRestore(ticket.id);
-                          setRestoreDialogOpen(true);
-                        }}
-                        className="p-1 hover:bg-surface-200 rounded transition-colors"
-                        title="Restore ticket"
-                      >
-                        <RotateCcw className="w-3.5 h-3.5 text-surface-500 hover:text-accent-600" />
-                      </button>
-                    )}
-                  </div>
-                </td>
-              </tr>
-            ))}
+                  </td>
+                </tr>
+              ))
+            )}
           </tbody>
         </table>
       </div>

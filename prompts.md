@@ -298,6 +298,19 @@ i want to be able to move a ticket back to being unassigned by dragging it to th
   - Drops call unassignFromBoard(id) to move ticket back to unassigned
 - Build passes successfully
 
+## Prompt 26 — Remove Handwritten Font & Brand Text
+
+**User Request:**
+get rid of the handwritten font anywhere where it is, and get rid of where it says wids pm in the corner
+
+**Result:**
+- Removed `font-handwritten` class from all headings (Board, All Tickets, ticket title)
+- Removed "wids pm" brand section from sidebar
+- Removed unused Sparkles icon import
+- Removed Caveat font from layout.tsx and tailwind.config.ts
+- Kept navy + plum color palette and rounded-hand styling
+- Build passes successfully
+
 ## Prompt 25 — Secure Credentials & Update Prompts
 
 **User Request:**

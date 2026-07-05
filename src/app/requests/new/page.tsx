@@ -144,25 +144,25 @@ function NewRequestForm() {
         {STEPS.map((s, i) => (
           <div key={s.num} className="flex items-center">
             <div className="flex flex-col items-center">
-              <div className={cn(
-                "w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-all duration-300",
-                step > s.num
-                  ? "bg-accent-500 text-white"
-                  : step === s.num
-                  ? "bg-accent-500 text-white ring-4 ring-accent-100"
-                  : "bg-surface-200 text-surface-500"
-              )}>
+<div className={cn(
+  "w-8 h-8 rounded-full flex items-center justify-center text-xs font-bold transition-all duration-300",
+  step > s.num
+    ? "bg-plum-500 text-white"
+    : step === s.num
+    ? "bg-plum-500 text-white ring-4 ring-plum-100"
+    : "bg-surface-200 text-surface-500"
+)}>
                 {step > s.num ? <Check className="w-4 h-4" /> : s.num}
               </div>
               <span className={cn(
                 "text-xs mt-1.5 font-medium",
-                step >= s.num ? "text-surface-700" : "text-surface-400"
+                step >= s.num ? "text-navy-700" : "text-surface-400"
               )}>{s.label}</span>
             </div>
             {i < STEPS.length - 1 && (
               <div className={cn(
                 "w-16 h-0.5 mx-2 mt-[-1.5rem] transition-colors duration-300",
-                step > s.num ? "bg-accent-500" : "bg-surface-200"
+                step > s.num ? "bg-plum-500" : "bg-surface-200"
               )} />
             )}
           </div>
@@ -187,7 +187,7 @@ function NewRequestForm() {
                     className={cn(
                       "flex flex-col items-center gap-2 p-4 rounded-xl border-2 transition-all duration-200",
                       form.portfolio === p
-                        ? "border-accent-500 bg-accent-50"
+                        ? "border-plum-500 bg-plum-50"
                         : "border-surface-200 bg-white hover:border-surface-300 hover:shadow-sm"
                     )}
                   >
@@ -232,14 +232,14 @@ function NewRequestForm() {
                     className={cn(
                       "flex items-center gap-3 p-4 rounded-xl border-2 transition-all duration-200 text-left",
                       form.graphicTypes.includes(g)
-                        ? "border-accent-500 bg-accent-50"
+                        ? "border-plum-500 bg-plum-50"
                         : "border-surface-200 bg-white hover:border-surface-300"
                     )}
                   >
                     <div className={cn(
                       "w-5 h-5 rounded-md border-2 flex items-center justify-center transition-all",
                       form.graphicTypes.includes(g)
-                        ? "border-accent-500 bg-accent-500"
+                        ? "border-plum-500 bg-plum-500"
                         : "border-surface-300"
                     )}>
                       {form.graphicTypes.includes(g) && <Check className="w-3 h-3 text-white" />}
@@ -442,13 +442,13 @@ function NewRequestForm() {
           <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
             <div className="bg-white rounded-xl p-8 max-w-sm w-full shadow-2xl animate-slide-up">
               <div className="flex flex-col items-center text-center">
-                <div className="w-16 h-16 bg-green-100 rounded-full flex items-center justify-center mb-4">
-                  <CheckCircle className="w-8 h-8 text-green-600" />
+                <div className="w-16 h-16 bg-plum-100 rounded-full flex items-center justify-center mb-4">
+                  <CheckCircle className="w-8 h-8 text-plum-600" />
                 </div>
-                <h3 className="text-xl font-semibold text-surface-900 mb-2">Request Submitted!</h3>
+                <h3 className="text-xl font-semibold text-navy-800 mb-2">Request Submitted!</h3>
                 <p className="text-sm text-surface-500 mb-6">Your request has been successfully submitted. Redirecting to all requests...</p>
                 <div className="w-full bg-surface-200 rounded-full h-2 overflow-hidden">
-                  <div className="bg-accent-500 h-2 rounded-full animate-pulse" style={{ width: '100%' }}></div>
+                  <div className="bg-plum-500 h-2 rounded-full animate-pulse" style={{ width: '100%' }}></div>
                 </div>
               </div>
             </div>

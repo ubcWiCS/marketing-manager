@@ -8,7 +8,8 @@ import {
   Paperclip, Edit3, Archive, Trash2,
 } from "lucide-react";
 import { useTickets } from "@/lib/ticket-context";
-import { cn, formatDate, formatDateTime, timeAgo, getDeadlineColor, isOverdue } from "@/lib/utils";
+import { cn, formatDate, formatDateTime, timeAgo, isOverdue, getDeadlineColor } from "@/lib/utils";
+import { SkeletonDetail } from "@/components/ui/skeleton";
 import { PortfolioBadge } from "@/components/ui/portfolio-badge";
 import { PriorityBadge } from "@/components/ui/priority-badge";
 import { Badge } from "@/components/ui/badge";
@@ -53,10 +54,10 @@ export default function RequestDetailPage() {
       </Link>
 
       {/* Header */}
-      <div className="card p-6 mb-6">
+      <div className="card-hand p-6 mb-6">
         <div className="flex items-start justify-between mb-4">
           <div className="flex-1">
-            <h1 className="text-xl font-bold text-surface-900">{ticket.title}</h1>
+            <h1 className="text-xl font-bold text-navy-800">{ticket.title}</h1>
           </div>
           <div className="flex gap-2">
             <button
@@ -113,11 +114,11 @@ export default function RequestDetailPage() {
 
       <div className="space-y-6">
         {/* Graphic Types - Prominent Central Card */}
-        <div className="card p-6 bg-gradient-to-br from-accent-50 to-white border-accent-200">
+        <div className="card-hand p-6 bg-plum-50/30 border-plum-200">
           <h2 className="text-sm font-semibold text-surface-900 mb-4">What Needs to be Made</h2>
           <div className="flex flex-wrap gap-2">
             {ticket.graphicTypes.map((g, i) => (
-              <span key={i} className="chip bg-accent-500 text-white text-sm px-4 py-2 font-medium">
+              <span key={i} className="chip bg-plum-500 text-white text-sm px-4 py-2 font-medium">
                 {g}
               </span>
             ))}
@@ -125,8 +126,8 @@ export default function RequestDetailPage() {
         </div>
 
         {/* Details Card */}
-        <div className="card p-5">
-          <h2 className="text-sm font-semibold text-surface-900 mb-4">Details</h2>
+        <div className="card-hand p-5">
+          <h2 className="text-sm font-semibold text-navy-800 mb-4">Details</h2>
           <div className="grid grid-cols-2 gap-4">
             <div className="col-span-2">
               <p className="text-xs text-surface-400 font-medium">Name / Title</p>
@@ -155,26 +156,26 @@ export default function RequestDetailPage() {
         </div>
 
         {/* Summary */}
-        <div className="card p-5">
-          <h2 className="text-sm font-semibold text-surface-900 mb-3">Summary</h2>
-          <p className="text-sm text-surface-600 leading-relaxed">{ticket.summary}</p>
+        <div className="card-hand p-5">
+          <h2 className="text-sm font-semibold text-navy-800 mb-3">Summary</h2>
+          <p className="text-sm text-navy-600 leading-relaxed">{ticket.summary}</p>
         </div>
 
         {/* Creative Vision */}
-        <div className="card p-5">
-          <h2 className="text-sm font-semibold text-surface-900 mb-3">Creative Vision</h2>
-          <p className="text-sm text-surface-600 leading-relaxed whitespace-pre-wrap">{ticket.creativeVision}</p>
+        <div className="card-hand p-5">
+          <h2 className="text-sm font-semibold text-navy-800 mb-3">Creative Vision</h2>
+          <p className="text-sm text-navy-600 leading-relaxed whitespace-pre-wrap">{ticket.creativeVision}</p>
         </div>
 
         {/* References */}
         {ticket.references.length > 0 && (
-          <div className="card p-5">
-            <h2 className="text-sm font-semibold text-surface-900 mb-3">References</h2>
+          <div className="card-hand p-5">
+            <h2 className="text-sm font-semibold text-navy-800 mb-3">References</h2>
             <div className="space-y-2">
               {ticket.references.map((ref, i) => (
-                <div key={i} className="flex items-center gap-2 p-3 bg-surface-50 rounded-lg">
+                <div key={i} className="flex items-center gap-2 p-3 bg-surface-50 rounded-hand">
                   <Paperclip className="w-4 h-4 text-surface-400" />
-                  <span className="text-sm text-surface-600">{ref}</span>
+                  <span className="text-sm text-navy-600">{ref}</span>
                 </div>
               ))}
             </div>
@@ -183,9 +184,9 @@ export default function RequestDetailPage() {
 
         {/* Additional Requests */}
         {ticket.additionalRequests && (
-          <div className="card p-5">
-            <h2 className="text-sm font-semibold text-surface-900 mb-3">Additional Requests</h2>
-            <p className="text-sm text-surface-600 leading-relaxed">{ticket.additionalRequests}</p>
+          <div className="card-hand p-5">
+            <h2 className="text-sm font-semibold text-navy-800 mb-3">Additional Requests</h2>
+            <p className="text-sm text-navy-600 leading-relaxed">{ticket.additionalRequests}</p>
           </div>
         )}
 
