@@ -307,13 +307,13 @@ export function TicketProvider({ children }: { children: ReactNode }) {
       setError(null);
       const { error } = await supabase
         .from('tickets')
-        .update({ status: 'Open' })
+        .update({ status: 'Open', is_on_board: false })
         .eq('id', id);
 
       if (error) throw error;
       setTickets((prev) =>
         prev.map((t) =>
-          t.id === id ? { ...t, status: "Open" as const } : t
+          t.id === id ? { ...t, status: "Open" as const, isOnBoard: false } : t
         )
       );
     } catch (err) {
