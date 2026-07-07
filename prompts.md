@@ -450,3 +450,71 @@ Edit the prompts.md file to make sure it's up to date. Then edit all prompts for
 - Fixed grammar, spelling, and capitalization throughout all entries
 - Added Design Prompts citation at the top of the file
 - Added missing prompts (34-35) for duplicate tickets fix and softened design
+
+## Prompt 37 — Fix Login 405 Error & Persistent Login
+
+**User Request:**
+When I log in from the Vercel deployment, I get a 405 error. Make sure I always log in when I come to see the site first.
+
+**Result:**
+- Added `path: "/"` to auth cookie so it's sent to all routes (was scoped to /api/auth/ by default)
+- Added `maxAge: 60 * 60 * 24 * 7` (7 days) for persistent login between visits
+- Added GET handler to login API to prevent 405 errors from direct URL hits
+- Fixed logout cookie deletion to use `path: "/"` with `maxAge: 0`
+- Wrapped `useSearchParams()` in Suspense boundary on login page (pre-existing build error)
+
+## Prompt 38 — Fix Create Ticket Not Working
+
+**User Request:**
+The create mode isn't working.
+
+**Result:**
+- Added `createTicket()` function to ticket context with Supabase insert
+- Exposed createTicket through TicketContext provider
+- Wired up form submit handler to call createTicket with all form data
+- Added `is_on_board: true` to insert so tickets appear on board immediately
+- Added user-visible error banner to show Supabase errors when creation fails
+
+## Prompt 39 — Tickets Not Showing in Database
+
+**User Request:**
+Tickets are not showing when they are created, and they aren't making it to the database.
+
+**Result:**
+- Fixed silently swallowed errors — catch block now sets submitError state
+- Added error banner component to display Supabase error messages to the user
+- Set Supabase environment variables in Vercel dashboard for production
+
+## Prompt 40 — Replace Archive with Complete Status
+
+**User Request:**
+Instead of archive, let's make it complete/completed tickets, so it's more clear.
+
+**Result:**
+- Renamed `archiveTicket` to `completeTicket` in ticket context
+- completeTicket sets status to "Completed" and is_on_board to false
+- Added status dropdown selector on ticket detail page (Open / In Progress / In Review / Completed)
+- Changed detail page buttons: "Archive" → "Mark Complete", "Unarchive" → "Reopen"
+- Changed All Tickets tab from "Archived" → "Completed"
+- Status dropdown allows manual status changes at any time
+
+## Prompt 41 — Remove Completed Tickets from Sidebar
+
+**User Request:**
+Make sure that when a ticket gets marked completed, it's moved to the archive, which means that it gets removed from the unassigned tickets, and vice versa.
+
+**Result:**
+- Updated sidebar filter to exclude completed tickets: `tickets.filter((t) => !t.isOnBoard && t.status !== "Completed")`
+- Completed tickets disappear from "Unassigned Tickets" sidebar
+- Reopened tickets reappear in sidebar since status is back to "Open"
+
+## Prompt 42 — Change Contact to Team Member & Add Filter
+
+**User Request:**
+In the all tickets page, where it says contact, make it say team member and let me filter by team member.
+
+**Result:**
+- Changed table column header from "Contact" to "Team Member"
+- Added `useTeamMembers()` import to load team members list
+- Added `filterMember` state with "All Members" dropdown populated from team context
+- Added member filter logic to useMemo to filter tickets by pointOfContact

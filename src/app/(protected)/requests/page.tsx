@@ -4,6 +4,7 @@ import { useState, useMemo } from "react";
 import Link from "next/link";
 import { Search, List, Columns, PlusCircle, RotateCcw } from "lucide-react";
 import { useTickets } from "@/lib/ticket-context";
+import { useTeamMembers } from "@/lib/team-context";
 import { cn } from "@/lib/utils";
 import { PortfolioDot } from "@/components/ui/portfolio-dot";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
@@ -15,9 +16,11 @@ import { SkeletonTableRow } from "@/components/ui/skeleton";
 
 export default function RequestsPage() {
   const { tickets, restoreTicket, loading } = useTickets();
+  const { members } = useTeamMembers();
   const [search, setSearch] = useState("");
   const [filterPortfolio, setFilterPortfolio] = useState<Portfolio | "All">("All");
   const [filterStatus, setFilterStatus] = useState<RequestStatus | "All">("All");
+  const [filterMember, setFilterMember] = useState<string>("All");
   const [view, setView] = useState<"list" | "board">("list");
   const [activeTab, setActiveTab] = useState<"active" | "completed">("active");
   const [restoreDialogOpen, setRestoreDialogOpen] = useState(false);
@@ -42,8 +45,9 @@ export default function RequestsPage() {
     }
     if (filterPortfolio !== "All") items = items.filter((t) => t.portfolio === filterPortfolio);
     if (filterStatus !== "All") items = items.filter((t) => t.status === filterStatus);
+    if (filterMember !== "All") items = items.filter((t) => t.pointOfContact === filterMember);
     return items.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
-  }, [search, filterPortfolio, filterStatus, activeTab, tickets]);
+  }, [search, filterPortfolio, filterStatus, filterMember, activeTab, tickets]);
 
   return (
     <div className="p-6 max-w-5xl mx-auto animate-fade-in">
@@ -137,6 +141,16 @@ export default function RequestsPage() {
             <option key={s} value={s}>{s}</option>
           ))}
         </select>
+        <select
+          className="input-brutal w-auto text-sm py-1.5"
+          value={filterMember}
+          onChange={(e) => setFilterMember(e.target.value)}
+        >
+          <option value="All">All Members</option>
+          {members.map((m) => (
+            <option key={m.id} value={m.name}>{m.name}</option>
+          ))}
+        </select>
       </div>
 
       <div className="border border-surface-200 rounded-hand-xl bg-white/80 shadow-sm">
@@ -145,7 +159,7 @@ export default function RequestsPage() {
             <tr className="border-b border-surface-200 bg-plum-50/50">
               <th className="px-4 py-2.5 text-left text-xs font-medium text-navy-700 uppercase">Title</th>
               <th className="px-4 py-2.5 text-left text-xs font-medium text-navy-700 uppercase">Portfolio</th>
-              <th className="px-4 py-2.5 text-left text-xs font-medium text-navy-700 uppercase">Contact</th>
+              <th className="px-4 py-2.5 text-left text-xs font-medium text-navy-700 uppercase">Team Member</th>
               <th className="px-4 py-2.5 text-left text-xs font-medium text-navy-700 uppercase">Priority</th>
               <th className="px-4 py-2.5 text-left text-xs font-medium text-navy-700 uppercase">Status</th>
               <th className="px-4 py-2.5 text-left text-xs font-medium text-navy-700 uppercase">Due</th>
