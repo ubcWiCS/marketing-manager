@@ -9,7 +9,7 @@ export async function POST(request: NextRequest) {
   const password = formData.get("password") as string;
 
   if (username === AUTH_USER && password === AUTH_PASS) {
-    const response = NextResponse.redirect(new URL("/", request.url));
+    const response = NextResponse.json({ success: true });
     response.cookies.set("auth", "authenticated", {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
@@ -18,5 +18,5 @@ export async function POST(request: NextRequest) {
     return response;
   }
 
-  return NextResponse.redirect(new URL("/login?error=1", request.url));
+  return NextResponse.json({ success: false, error: "Invalid credentials" }, { status: 401 });
 }

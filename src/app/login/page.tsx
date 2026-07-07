@@ -1,15 +1,40 @@
-import { Metadata } from "next";
+"use client";
 
-export const metadata: Metadata = {
-  title: "Sign In - Portfolio Manager",
-  description: "Sign in to see your tasks",
-};
+import { useState } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
 
-export default function LoginPage({
-  searchParams,
-}: {
-  searchParams: { error?: string };
-}) {
+export default function LoginPage() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const error = searchParams.get("error");
+  const [isLoading, setIsLoading] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setIsLoading(true);
+
+    const formData = new FormData(e.currentTarget);
+    
+    try {
+      const response = await fetch("/api/auth/login", {
+        method: "POST",
+        body: formData,
+      });
+
+      const result = await response.json();
+
+      if (result.success) {
+        router.push("/");
+      } else {
+        router.push("/login?error=1");
+      }
+    } catch (error) {
+      router.push("/login?error=1");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
   return (
     <div className="flex items-center justify-center min-h-screen bg-gold-50 p-4 relative overflow-hidden">
       {/* Background decorative elements */}
@@ -22,7 +47,7 @@ export default function LoginPage({
           <p className="text-sm text-surface-600 font-medium">Sign in to see your tasks</p>
         </div>
         
-        <form action="/api/auth/login" method="POST" className="space-y-4">
+        <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="label-brutal">Username</label>
             <input
@@ -45,12 +70,16 @@ export default function LoginPage({
             />
           </div>
           
-          {searchParams.error && (
+          {error && (
             <p className="text-sm text-red-600 font-bold uppercase">Invalid credentials. Please try again.</p>
           )}
           
-          <button type="submit" className="btn-brutal-primary w-full">
-            Sign In
+          <button 
+            type="submit" 
+            className="btn-brutal-primary w-full" 
+            disabled={isLoading}
+          >
+            {isLoading ? "Signing In..." : "Sign In"}
           </button>
         </form>
       </div>
