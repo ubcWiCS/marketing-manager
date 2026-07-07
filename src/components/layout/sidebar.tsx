@@ -14,7 +14,7 @@ import { ManageMembersDialog } from "./manage-members-dialog";
 export function Sidebar() {
   const pathname = usePathname();
   const { tickets, unassignFromBoard, loading } = useTickets();
-  const sidebarTickets = tickets.filter((t) => !t.isOnBoard);
+  const sidebarTickets = tickets.filter((t) => !t.isOnBoard && t.status !== "Completed");
   const [manageOpen, setManageOpen] = useState(false);
   const [draggingOver, setDraggingOver] = useState(false);
 

@@ -19,18 +19,18 @@ export default function RequestsPage() {
   const [filterPortfolio, setFilterPortfolio] = useState<Portfolio | "All">("All");
   const [filterStatus, setFilterStatus] = useState<RequestStatus | "All">("All");
   const [view, setView] = useState<"list" | "board">("list");
-  const [activeTab, setActiveTab] = useState<"active" | "archived">("active");
+  const [activeTab, setActiveTab] = useState<"active" | "completed">("active");
   const [restoreDialogOpen, setRestoreDialogOpen] = useState(false);
   const [ticketToRestore, setTicketToRestore] = useState<string | null>(null);
 
   const filtered = useMemo(() => {
     let items = [...tickets];
     
-    // Filter by active/archived tab
-    if (activeTab === "archived") {
-      items = items.filter((t) => t.status === "Archived");
+    // Filter by active/completed tab
+    if (activeTab === "completed") {
+      items = items.filter((t) => t.status === "Completed");
     } else {
-      items = items.filter((t) => t.status !== "Archived");
+      items = items.filter((t) => t.status !== "Completed");
     }
     
     if (search) {
@@ -94,15 +94,15 @@ export default function RequestsPage() {
           Active
         </button>
         <button
-          onClick={() => setActiveTab("archived")}
+          onClick={() => setActiveTab("completed")}
           className={cn(
             "px-3 py-1 font-medium text-xs rounded transition-all",
-            activeTab === "archived"
+            activeTab === "completed"
               ? "bg-plum-500 text-white"
               : "text-navy-700 bg-transparent hover:bg-plum-50"
           )}
         >
-          Archived
+          Completed
         </button>
       </div>
 

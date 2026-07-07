@@ -10,7 +10,7 @@ interface TicketContextType {
   moveTicket: (id: string, targetMember: string) => Promise<void>;
   addToBoard: (id: string) => Promise<void>;
   updateTicket: (id: string, updates: Partial<Ticket>) => Promise<void>;
-  archiveTicket: (id: string) => Promise<void>;
+  completeTicket: (id: string) => Promise<void>;
   deleteTicket: (id: string) => Promise<void>;
   restoreTicket: (id: string) => Promise<void>;
   unassignMember: (memberName: string) => Promise<void>;
@@ -266,22 +266,22 @@ export function TicketProvider({ children }: { children: ReactNode }) {
     }
   };
 
-  const archiveTicket = async (id: string) => {
+  const completeTicket = async (id: string) => {
     try {
       setError(null);
       const { error } = await supabase
         .from('tickets')
-        .update({ status: 'Archived' })
+        .update({ status: 'Completed', is_on_board: false })
         .eq('id', id);
 
       if (error) throw error;
       setTickets((prev) =>
         prev.map((t) =>
-          t.id === id ? { ...t, status: "Archived" as const } : t
+          t.id === id ? { ...t, status: "Completed" as const, isOnBoard: false } : t
         )
       );
     } catch (err) {
-      setError(err instanceof Error ? err.message : 'Failed to archive ticket');
+      setError(err instanceof Error ? err.message : 'Failed to complete ticket');
       throw err;
     }
   };
@@ -323,7 +323,7 @@ export function TicketProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <TicketContext.Provider value={{ tickets, createTicket, moveTicket, addToBoard, updateTicket, archiveTicket, deleteTicket, restoreTicket, unassignMember, unassignFromBoard, loading, error }}>
+    <TicketContext.Provider value={{ tickets, createTicket, moveTicket, addToBoard, updateTicket, completeTicket, deleteTicket, restoreTicket, unassignMember, unassignFromBoard, loading, error }}>
       {children}
     </TicketContext.Provider>
   );
