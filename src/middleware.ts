@@ -12,6 +12,7 @@ export function middleware(request: NextRequest) {
 
   if (isProtectedRoute) {
     const loginUrl = new URL("/login", request.url);
+    loginUrl.searchParams.set("redirect", request.nextUrl.pathname);
     return NextResponse.redirect(loginUrl);
   }
 

@@ -9,6 +9,8 @@ function LoginForm() {
   const error = searchParams.get("error");
   const [isLoading, setIsLoading] = useState(false);
 
+  const redirectTo = searchParams.get("redirect") || "/";
+
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
@@ -24,7 +26,7 @@ function LoginForm() {
       const result = await response.json();
 
       if (result.success) {
-        router.push("/");
+        router.push(redirectTo);
       } else {
         router.push("/login?error=1");
       }
