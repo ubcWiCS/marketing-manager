@@ -5,7 +5,7 @@ import { TeamProvider } from "@/lib/team-context";
 
 export const metadata: Metadata = {
   title: "Portfolio Manager",
-  description: "Modern ticket management for student organizations",
+  description: "Brutalist ticket management for student organizations",
 };
 
 export default function ProtectedLayout({
@@ -14,11 +14,13 @@ export default function ProtectedLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <div className="flex h-screen overflow-hidden">
+    <div className="flex h-screen overflow-hidden bg-gold-200">
       <TicketProvider>
         <TeamProvider>
           <Sidebar />
-          <main className="flex-1 overflow-y-auto">{children}</main>
+          <main className="flex-1 overflow-y-auto bg-gold-200">
+            {children}
+          </main>
         </TeamProvider>
       </TicketProvider>
     </div>

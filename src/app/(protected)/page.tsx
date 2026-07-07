@@ -52,16 +52,16 @@ export default function BoardPage() {
       <div className="flex items-center justify-between px-5 py-3 border-b border-surface-200 bg-white/80">
         <div className="flex items-center gap-3">
           <h1 className="text-xl font-bold text-navy-800">Board</h1>
-          <span className="text-xs text-surface-400">{tickets.length} tickets</span>
+          <span className="text-xs text-surface-500">{tickets.length} tickets</span>
         </div>
-        <Link href="/requests/new" className="btn-primary text-xs py-1.5 px-3">
+        <Link href="/requests/new" className="btn-brutal-primary text-xs py-1.5 px-3">
           <PlusCircle className="w-3.5 h-3.5" />
           New Ticket
         </Link>
       </div>
 
       {/* Kanban columns */}
-      <div className="flex-1 flex gap-3 p-4 overflow-x-auto">
+      <div className="flex-1 flex gap-3 p-4 overflow-x-auto bg-gold-50">
         {loading ? (
           <>
             <SkeletonColumn />
@@ -77,8 +77,8 @@ export default function BoardPage() {
               onDragOver={handleDragOver}
               onDrop={(e) => handleDrop(e, member)}
               className={cn(
-                "flex flex-col w-64 shrink-0 rounded-hand-xl bg-surface-100/60 transition-colors duration-150",
-                draggingId && "ring-2 ring-plum-300 ring-dashed bg-plum-50/30"
+                "flex flex-col w-64 shrink-0 rounded-hand-xl bg-surface-100/60 transition-colors duration-200",
+                draggingId && "ring-2 ring-plum-300 ring-dashed"
               )}
             >
               {/* Column header */}
@@ -101,7 +101,7 @@ export default function BoardPage() {
                       onDragStart={(e) => handleDragStart(e, ticket.id)}
                       onDragEnd={() => setDraggingId(null)}
                       className={cn(
-                        "bg-white rounded-hand-xl border-2 border-surface-200 px-3 py-2.5 cursor-grab active:cursor-grabbing transition-all duration-150",
+                        "bg-white rounded-hand-xl border border-surface-200 px-3 py-2.5 cursor-grab active:cursor-grabbing transition-all duration-200",
                         draggingId === ticket.id
                           ? "opacity-50 scale-95 shadow-sm"
                           : "hover:border-plum-300 hover:shadow-sm"
@@ -126,7 +126,7 @@ export default function BoardPage() {
                       <div className="flex items-center gap-2 mt-1.5">
                         <PortfolioDot portfolio={ticket.portfolio as Portfolio} />
                         <span className={cn(
-                          "text-[10px] font-medium",
+                          "text-[10px]",
                           new Date(ticket.deadline) < new Date() ? "text-red-500" : "text-surface-400"
                         )}>
                           {new Date(ticket.deadline).toLocaleDateString("en-US", { month: "short", day: "numeric" })}

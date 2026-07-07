@@ -7,72 +7,85 @@
     @apply border-surface-200;
   }
   body {
-    @apply bg-surface-50 text-navy-900 font-sans antialiased;
+    background-color: #FDF4C8;
+    @apply text-navy-900 font-sans antialiased;
+    /* Subtle grid pattern background */
+    background-image: 
+      linear-gradient(to right, rgba(0, 0, 0, 0.02) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(0, 0, 0, 0.02) 1px, transparent 1px);
+    background-size: 40px 40px;
   }
 }
 
 @layer components {
-  .card {
-    @apply bg-white rounded-hand-xl border border-surface-200 shadow-sm;
+  /* Softened Brutalist Card - with rounded corners and softer shadow */
+  .card-brutal {
+    @apply bg-white rounded-hand-xl border border-surface-300 shadow-brutal-md;
   }
-  .card-hand {
-    @apply bg-white rounded-hand-xl border-2 border-surface-200 shadow-sm hover:shadow-md transition-all duration-200;
+  
+  .card-brutal-lg {
+    @apply bg-white rounded-hand-xl border-2 border-surface-300 shadow-brutal-lg;
   }
-  .animate-slide-up {
-    animation: slideUp 0.3s ease-out;
-  }
-  @keyframes slideUp {
-    from {
-      opacity: 0;
-      transform: translateY(10px);
-    }
-    to {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-  .chip {
-    @apply inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-medium;
-  }
-  .btn-primary {
-    @apply inline-flex items-center justify-center gap-2 px-4 py-2 bg-plum-500 text-white rounded-hand font-medium text-sm
-           hover:bg-plum-600 active:bg-plum-700 transition-colors duration-150
+  
+  /* Softer Button - reduced border thickness */
+  .btn-brutal-primary {
+    @apply inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-plum-500 text-white font-bold text-sm uppercase tracking-wider
+           rounded-hand border-2 border-black shadow-brutal-sm
+           hover:bg-plum-600 transition-all duration-200
            disabled:opacity-50 disabled:cursor-not-allowed;
   }
-  .btn-secondary {
-    @apply inline-flex items-center justify-center gap-2 px-4 py-2 bg-white text-navy-700 rounded-hand font-medium text-sm border-2 border-surface-200
-           hover:bg-surface-50 hover:border-plum-300 active:bg-surface-100 transition-colors duration-150
-           disabled:opacity-50 disabled:cursor-not-allowed;
+  
+  .btn-brutal-primary:hover {
+    @apply shadow-brutal-md;
   }
-  .btn-ghost {
-    @apply inline-flex items-center justify-center gap-2 px-3 py-2 text-navy-600 rounded-hand font-medium text-sm
-           hover:bg-plum-50 active:bg-plum-100 transition-colors duration-150;
+  
+  .btn-brutal-primary:active {
+    @apply translate-x-0.5 translate-y-0.5 shadow-brutal-sm;
   }
-  .input-field {
-    @apply w-full px-3 py-2 bg-white border-2 border-surface-200 rounded-hand text-sm text-navy-900
+
+  /* Secondary Button */
+  .btn-brutal-secondary {
+    @apply inline-flex items-center justify-center gap-2 px-4 py-2.5 bg-white text-navy-800 font-bold text-sm uppercase rounded-hand
+           border-2 border-surface-300 shadow-brutal-sm
+           hover:bg-plum-50 hover:border-plum-300 transition-all duration-200;
+  }
+  
+  .btn-brutal-secondary:active {
+    @apply translate-x-0.5 translate-y-0.5 shadow-brutal-sm;
+  }
+
+  /* Input Field */
+  .input-brutal {
+    @apply w-full px-3 py-2.5 bg-white rounded-hand border-2 border-surface-300 font-medium text-sm text-navy-900
            placeholder:text-surface-400
-           focus:outline-none focus:ring-2 focus:ring-plum-500/20 focus:border-plum-400
-           transition-all duration-150;
+           focus:border-plum-500 focus:ring-2 focus:ring-plum-200
+           transition-all duration-200;
   }
-  .label {
-    @apply block text-sm font-medium text-navy-700 mb-1.5;
+
+  /* Label */
+  .label-brutal {
+    @apply block text-sm font-bold text-navy-800 mb-1 uppercase tracking-wide;
   }
-  .badge {
-    @apply inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium;
+
+  /* Badge */
+  .badge-brutal {
+    @apply inline-flex items-center px-2.5 py-0.5 rounded-full font-bold text-[10px] uppercase tracking-wider
+           border border-navy-300;
   }
-  .badge-open {
-    @apply badge bg-emerald-50 text-emerald-700 border border-emerald-200;
+  
+  .badge-brutal-open {
+    @apply badge-brutal bg-status-open text-navy-800;
   }
-  .badge-in-progress {
-    @apply badge bg-sky-50 text-sky-700 border border-sky-200;
+  .badge-brutal-in-progress {
+    @apply badge-brutal bg-status-in_progress text-navy-800;
   }
-  .badge-in-review {
-    @apply badge bg-amber-50 text-amber-700 border border-amber-200;
+  .badge-brutal-review {
+    @apply badge-brutal bg-status-review text-navy-800;
   }
-  .badge-completed {
-    @apply badge bg-purple-50 text-purple-700 border border-purple-200;
+  .badge-brutal-completed {
+    @apply badge-brutal bg-status-completed text-navy-800;
   }
-  .badge-archived {
-    @apply badge bg-gray-50 text-gray-700 border border-gray-200;
+  .badge-brutal-archived {
+    @apply badge-brutal bg-status-archived text-navy-800;
   }
 }

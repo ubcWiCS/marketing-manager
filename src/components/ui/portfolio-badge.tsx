@@ -10,17 +10,9 @@ export function PortfolioBadge({ portfolio, className }: PortfolioBadgeProps) {
 
   return (
     <span
-      className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium ${className || ""}`}
-      style={{
-        backgroundColor: `${color}15`,
-        color: color,
-        border: `1px solid ${color}30`,
-      }}
+      className={`inline-flex items-center gap-1.5 px-2 py-1 font-black text-[10px] uppercase border-2 border-black shadow-brutal-sm ${className || ""}`}
+      style={{ backgroundColor: color, color: 'white' }}
     >
-      <span
-        className="w-1.5 h-1.5 rounded-full"
-        style={{ backgroundColor: color }}
-      />
       {portfolio}
     </span>
   );

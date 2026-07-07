@@ -1,10 +1,9 @@
 import { Portfolio, PORTFOLIO_COLORS } from "@/types";
-import { cn } from "@/lib/utils";
 
-export function PortfolioDot({ portfolio, className }: { portfolio: Portfolio; className?: string }) {
+export function PortfolioDot({ portfolio }: { portfolio: Portfolio; className?: string }) {
   return (
     <span
-      className={cn("inline-block w-2 h-2 rounded-full shrink-0", className)}
+      className="inline-block w-2.5 h-2.5 border-2 border-black shrink-0 shadow-brutal-sm"
       style={{ backgroundColor: PORTFOLIO_COLORS[portfolio] }}
       title={portfolio}
     />

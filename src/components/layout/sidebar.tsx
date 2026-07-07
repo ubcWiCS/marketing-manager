@@ -45,13 +45,13 @@ export function Sidebar() {
   return (
     <>
     <aside className="w-56 h-screen flex flex-col bg-navy-900 border-r border-navy-700 shrink-0">
-      <nav className="px-2 pt-3 pb-2 space-y-0.5">
+      <nav className="px-2 pt-3 pb-2 space-y-1">
         <NavItem href="/" icon={LayoutDashboard} label="Board" isActive={pathname === "/"} />
         <NavItem href="/requests" icon={ListTodo} label="All Tickets" isActive={pathname === "/requests"} />
       </nav>
 
       <div className="flex-1 flex flex-col min-h-0">
-        <div className="px-4 py-2 text-[10px] font-semibold text-plum-300 uppercase tracking-wider">
+        <div className="px-4 py-2 text-[10px] font-bold text-plum-300 uppercase tracking-wider">
           Unassigned Tickets
         </div>
         <div
@@ -59,8 +59,8 @@ export function Sidebar() {
           onDragLeave={handleDragLeave}
           onDrop={handleDrop}
           className={cn(
-            "flex-1 overflow-y-auto px-2 pb-2 space-y-0.5 transition-colors duration-150",
-            draggingOver && "bg-plum-900/30 rounded-hand-lg ring-2 ring-dashed ring-plum-400"
+            "flex-1 overflow-y-auto px-2 pb-2 space-y-1 transition-all duration-200 bg-navy-800/50",
+            draggingOver && "ring-2 ring-plum-400"
           )}
         >
           {loading ? (
@@ -78,12 +78,12 @@ export function Sidebar() {
                 key={ticket.id}
                 draggable
                 onDragStart={(e) => handleDragStart(e, ticket.id)}
-                className="flex items-center gap-2 px-2 py-1.5 rounded-hand hover:bg-navy-800 cursor-grab active:cursor-grabbing transition-colors text-xs group"
+                className="flex items-center gap-2 px-2 py-1.5 rounded-hand hover:bg-navy-800 cursor-grab active:cursor-grabbing font-medium text-xs transition-colors"
               >
                 <PortfolioDot portfolio={ticket.portfolio as Portfolio} />
                 <Link
                   href={`/requests/${ticket.id}`}
-                  className="text-surface-300 truncate hover:text-plum-300 transition-colors flex-1 min-w-0"
+                  className="truncate text-white hover:text-plum-300 transition-colors flex-1 min-w-0"
                   onClick={(e) => e.stopPropagation()}
                 >
                   {ticket.title}
@@ -94,7 +94,7 @@ export function Sidebar() {
         </div>
       </div>
 
-      <div className="px-3 py-3 border-t border-navy-700 space-y-1">
+      <div className="px-3 py-3 border-t border-navy-700 space-y-2">
         <button
           onClick={() => setManageOpen(true)}
           className="flex items-center gap-2 w-full px-2 py-1.5 rounded-hand text-xs text-surface-400 hover:text-white hover:bg-navy-800 transition-colors"
@@ -125,8 +125,10 @@ function NavItem({ href, icon: Icon, label, isActive }: { href: string; icon: an
     <Link
       href={href}
       className={cn(
-        "flex items-center gap-2 px-2.5 py-1.5 rounded-hand text-sm transition-colors",
-        isActive ? "bg-plum-600/30 text-plum-300 font-medium" : "text-surface-400 hover:bg-navy-800 hover:text-white"
+        "flex items-center gap-2 px-2.5 py-1.5 rounded-hand text-sm font-medium uppercase transition-all duration-200",
+        isActive 
+          ? "bg-plum-600/30 text-plum-300" 
+          : "text-surface-400 hover:bg-navy-800 hover:text-white"
       )}
     >
       <Icon className="w-4 h-4" />
@@ -134,5 +136,3 @@ function NavItem({ href, icon: Icon, label, isActive }: { href: string; icon: an
     </Link>
   );
 }
-
-

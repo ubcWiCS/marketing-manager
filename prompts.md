@@ -1,9 +1,11 @@
 # Portfolio Manager — Development Prompts
 
+*This design overhaul was inspired by principles from [Design Prompts](https://www.designprompts.dev/), a resource for systematic design guidance.*
+
 ## Prompt 1 — Initial Design & Build
 
 **User Request:**
-I want to build the frontend of a modern ticket management system before implementing any backend. Do not write any backend code, API routes, database schemas, or authentication yet. First, help me design the application's overall layout, information architecture, and user experience. Based on the following description of a google form, propose a polished interface inspired by Linear, Notion, and Jira that is intuitive for student organizations. Explain the layout, navigation, pages, components, and user flow before writing code.
+I want to build the frontend of a modern ticket management system before implementing any backend. Do not write any backend code, API routes, database schemas, or authentication yet. First, help me design the application's overall layout, information architecture, and user experience. Based on the following description of a Google Form, propose a polished interface inspired by Linear, Notion, and Jira that is intuitive for student organizations. Explain the layout, navigation, pages, components, and user flow before writing code.
 
 Our current Google Form request system should be used as the basis for the new request form. The current form asks users to select which portfolio the request belongs to (Events, Presidential, Marketing, Internal, External, Tech, youCode, or Data), enter the point of contact, indicate whether the request is a collaboration and list collaborators if applicable, select the type(s) of graphic needed (Instagram Post, Instagram Story, Instagram Reel/TikTok, LinkedIn Post, Award Certificate, Thank You Card, or Other), provide the event or activity name, specify the event date, time, and location, write a short summary of the event or content, indicate the desired posting deadline (with a note that requests should ideally be submitted at least two weeks before an event), describe the creative vision in detail (including desired colors, style, required text, branding, references, and inspiration), upload inspiration or reference files, and provide any additional design requests not covered elsewhere. The current Google Form is very linear and utilitarian; I want the new application to preserve all of these fields while presenting them in a much more polished, modern, intuitive, and visually appealing multi-step experience that feels more like Notion, Linear, or Typeform than a standard Google Form.
 
@@ -17,11 +19,11 @@ Our current Google Form request system should be used as the basis for the new r
 ## Prompt 2 — Debloat & Kanban Redesign
 
 **User Request:**
-Lets do two things. The first is that I want you to write my prompts into a .md file called prompts.md and add it to the repo. Next I want you to debloat the UI. You added way too many details. I want the sidebar to have the tickets and for it to be more kanbam style, where I can drag and drop the tasks into columns per team member.
+Let's do two things. The first is that I want you to write my prompts into a `.md` file called `prompts.md` and add it to the repo. Next I want you to debloat the UI. You added way too many details. I want the sidebar to have the tickets and for it to be more Kanban style, where I can drag and drop the tasks into columns per team member.
 
 **Result:**
 - Simplified sidebar (removed portfolio list, moved New Request to topbar)
-- Dashboard replaced with full-screen kanban board grouped by team member
+- Dashboard replaced with full-screen Kanban board grouped by team member
 - HTML5 drag and drop for moving tickets between member columns
 - Minimal ticket cards (ID, title, portfolio dot, priority indicator)
 - Removed stat cards, activity feed, and list/table view complexity
@@ -29,7 +31,7 @@ Lets do two things. The first is that I want you to write my prompts into a .md 
 ## Prompt 3 — Sidebar Drag-to-Remove
 
 **User Request:**
-when we drag from the side bar on the left, the objects need to get removed from that bar
+When we drag from the sidebar on the left, the objects need to get removed from that bar.
 
 **Result:**
 - Added `isOnBoard` flag to Ticket type
@@ -40,7 +42,7 @@ when we drag from the side bar on the left, the objects need to get removed from
 ## Prompt 4 — Fix View State Error
 
 **User Request:**
-the all tickets button is currently giving me this error: Unhandled Runtime Error ReferenceError: view is not defined
+The "All Tickets" button is currently giving me this error: Unhandled Runtime Error ReferenceError: `view` is not defined.
 
 **Result:**
 - Added missing `view` state variable with `useState<"list" | "board">("list")`
@@ -50,7 +52,7 @@ the all tickets button is currently giving me this error: Unhandled Runtime Erro
 ## Prompt 5 — Fix PlusCircle Import Error
 
 **User Request:**
-i am now getting Unhandled Runtime Error ReferenceError: PlusCircle is not defined
+I am now getting Unhandled Runtime Error ReferenceError: `PlusCircle` is not defined.
 
 **Result:**
 - Added `PlusCircle` to the lucide-react imports in requests/page.tsx
@@ -59,7 +61,7 @@ i am now getting Unhandled Runtime Error ReferenceError: PlusCircle is not defin
 ## Prompt 6 — Team Member Management
 
 **User Request:**
-we need a way to manage the members on the team. i want to be add or remove team memebers, and give them names
+We need a way to manage the members on the team. I want to be able to add or remove team members, and give them names.
 
 **Result:**
 - Created TeamContext for managing team members
@@ -71,7 +73,7 @@ we need a way to manage the members on the team. i want to be add or remove team
 ## Prompt 7 — Remove Redundant UI Elements
 
 **User Request:**
-get rid of the following redundant items: where it says ellie lan at the bottom, the top most search bar and the top most new button. it's repeating features that are not needed.
+Get rid of the following redundant items: where it says "Ella Lan" at the bottom, the topmost search bar and the topmost "New" button. It's repeating features that are not needed.
 
 **Result:**
 - Removed user avatar/name block from sidebar footer
@@ -82,7 +84,7 @@ get rid of the following redundant items: where it says ellie lan at the bottom,
 ## Prompt 8 — Fix Member Deletion & Update Sidebar Label
 
 **User Request:**
-when i remove a team member, it's now deleting their tickets. make sure they get added back to the drag and drop sidebar when a member is deleted. where it currently says tickets (number) make it say unassigned tickets
+When I remove a team member, it's now deleting their tickets. Make sure they get added back to the drag and drop sidebar when a member is deleted. Where it currently says "Tickets (number)", make it say "Unassigned Tickets".
 
 **Result:**
 - Added `unassignMember()` function to ticket context
@@ -93,7 +95,7 @@ when i remove a team member, it's now deleting their tickets. make sure they get
 ## Prompt 9 — Remove Top Navigation & Logo
 
 **User Request:**
-get rid of the all tickets toggle in the top banner and the place where it says PM with the icon.
+Get rid of the "All Tickets" toggle in the top banner and the place where it says "PM" with the icon.
 
 **Result:**
 - Removed "All Tickets" link from topbar
@@ -104,7 +106,7 @@ get rid of the all tickets toggle in the top banner and the place where it says 
 ## Prompt 10 — Redesign Ticket Detail Page
 
 **User Request:**
-I want to work on the request tickets. We need to make the details that are important easy to understand upon first glance. Get rid of any reference to a request number, like REQ-001, across the whole application. When the ticket is expanded so we can see the details, make sure the type of content that needs to be made, like if it's a post or a Tiktok, is highlighted with more emphasis at the top of the ticket. Get rid of the comments. Allow the details of the tickets to be editable from inside of the ticket itself.
+I want to work on the request tickets. We need to make the details that are important easy to understand upon first glance. Get rid of any reference to a request number, like "REQ-001", across the whole application. When the ticket is expanded so we can see the details, make sure the type of content that needs to be made, like if it's a post or a TikTok, is highlighted with more emphasis at the top of the ticket. Get rid of the comments. Allow the details of the tickets to be editable from inside of the ticket itself.
 
 **Result:**
 - Removed all REQ-001 ID displays from board, sidebar, and requests list
@@ -119,7 +121,7 @@ I want to work on the request tickets. We need to make the details that are impo
 ## Prompt 11 — Add Edit Button with Full Workflow
 
 **User Request:**
-i want the edit button to come back. to edit the ticket, let me go through the entire workflow of the survey sheet again
+I want the edit button to come back. To edit the ticket, let me go through the entire workflow of the survey sheet again.
 
 **Result:**
 - Restored Edit button to ticket detail page header
@@ -133,7 +135,7 @@ i want the edit button to come back. to edit the ticket, let me go through the e
 ## Prompt 12 — Streamline Request Form
 
 **User Request:**
-i want to work on the ticket form itself. get rid of the place to add a collaborator on the first page. on the second page, if other is selected, give a text box to enter what the other type of media is on the following page. where it says event details on the third page, make it just details - sometimes tickets are for merch or stickers. automatically make the date of the ticket the date it was submitted, so only allow the user to enter the due date (and call it due date rather than date of event). where you ask for reference urls, just make that a textbox rather than the weird popups, make sure its clickable through the ticket page itself later. make a custom popup for when the request is submitted rather than the default browser one, and bring us back to all tickets when its submitted.
+I want to work on the ticket form itself. Get rid of the place to add a collaborator on the first page. On the second page, if "Other" is selected, give a textbox to enter what the other type of media is on the following page. Where it says "event details" on the third page, make it just "Details" - sometimes tickets are for merch or stickers. Automatically make the date of the ticket the date it was submitted, so only allow the user to enter the due date (and call it due date rather than date of event). Where you ask for reference URLs, just make that a textbox rather than the weird popups, make sure it's clickable through the ticket page itself later. Make a custom popup for when the request is submitted rather than the default browser one, and bring us back to all tickets when it's submitted.
 
 **Result:**
 - Removed collaboration checkbox and collaborator management from step 1
@@ -149,7 +151,7 @@ i want to work on the ticket form itself. get rid of the place to add a collabor
 ## Prompt 13 — Redesign Ticket Detail View
 
 **User Request:**
-i want to work on the expanded view of the ticket itself. Please emphasize the graphic types that need to be made in a central card near the top, and then have the event details underneath it. Remove anything that isnt expliclty stated in the request form from this extended view.
+I want to work on the expanded view of the ticket itself. Please emphasize the graphic types that need to be made in a central card near the top, and then have the event details underneath it. Remove anything that isn't explicitly stated in the request form from this extended view.
 
 **Result:**
 - Created prominent "What Needs to be Made" card with gradient background at top
@@ -162,7 +164,7 @@ i want to work on the expanded view of the ticket itself. Please emphasize the g
 ## Prompt 14 — Simplify References Section
 
 **User Request:**
-in the References & Inspiration section of the request form, please remove the big drag and drop section and only have the text box where you submit the link
+In the References & Inspiration section of the request form, please remove the big drag and drop section and only have the textbox where you submit the link.
 
 **Result:**
 - Removed drag-and-drop upload area with Upload icon
@@ -173,7 +175,7 @@ in the References & Inspiration section of the request form, please remove the b
 ## Prompt 15 — Remove Empty Header
 
 **User Request:**
-get rid of the header rectangle / There is an extra header section in the big panel on the right, please get rid of that rectangle / its where there used to be a logo. it's <header class="h-12 glass flex items-center justify-between px-4 shrink-0"></header>
+Get rid of the header rectangle. There is an extra header section in the big panel on the right, please get rid of that rectangle. It's where there used to be a logo. It's `<header class="h-12 glass flex items-center justify-between px-4 shrink-0"></header>`.
 
 **Result:**
 - Removed empty Topbar component from layout
@@ -184,17 +186,17 @@ get rid of the header rectangle / There is an extra header section in the big pa
 ## Prompt 16 — Update Default Team Members
 
 **User Request:**
-make the default team members ella yolanda claire amber and rosie
+Make the default team members Ella, Yolanda, Claire, Amber, and Rosie.
 
 **Result:**
 - Updated initialMembers array in src/lib/team-context.tsx
 - Changed from 8 members (Sarah Chen, Marcus Johnson, Priya Patel, David Kim, Maya Rodriguez, James Liu, Olivia Martinez, Emily Watson) to 5 members (Ella, Yolanda, Claire, Amber, Rosie)
-- These now appear as default columns on the kanban board
+- These now appear as default columns on the Kanban board
 
 ## Prompt 17 — Complete CRUD Operations with Archive/Delete
 
 **User Request:**
-does this follow CRUD? make sure all data does / i want a soft delete too, i want to be able to archive/mark off as done and move to the archive, as well as delte. i want to be careful with the delete, so there's an are you sure to it as well
+Does this follow CRUD? Make sure all data does. I want a soft delete too. I want to be able to archive/mark off as done and move to the archive, as well as delete. I want to be careful with the delete, so there's an "Are you sure?" prompt for it as well.
 
 **Result:**
 - Added `archiveTicket(id)` function to ticket context (soft delete - changes status to "Archived")
@@ -208,7 +210,7 @@ does this follow CRUD? make sure all data does / i want a soft delete too, i wan
 ## Prompt 18 — Add Archive Tab
 
 **User Request:**
-i want there to be an archive tab bellow all tickets, where you can visit the archived posts
+I want there to be an archive tab below "All Tickets", where you can visit the archived posts.
 
 **Result:**
 - Added tab navigation to requests page with "Active" and "Archived" tabs
@@ -225,7 +227,7 @@ i want there to be an archive tab bellow all tickets, where you can visit the ar
 ## Prompt 19 — Connect to Supabase Database
 
 **User Request:**
-i want to connect this to a supabase database, how do i do it
+I want to connect this to a Supabase database. How do I do it?
 
 **Result:**
 - Installed Supabase dependencies (@supabase/supabase-js, @supabase/ssr)
@@ -243,7 +245,7 @@ i want to connect this to a supabase database, how do i do it
 ## Prompt 20 — Fix Runtime Error & Install Supabase
 
 **User Request:**
-when i go to use it, im getting Unhandled Runtime Error TypeError: Cannot read properties of null (reading 'from')
+When I go to use it, I'm getting Unhandled Runtime Error TypeError: Cannot read properties of null (reading 'from').
 
 **Result:**
 - Installed @supabase/supabase-js (was missing, causing null client)
@@ -255,7 +257,7 @@ when i go to use it, im getting Unhandled Runtime Error TypeError: Cannot read p
 ## Prompt 21 — Fix Empty Sidebar (Mock Data Fallback)
 
 **User Request:**
-all the tickets are now not showing correctly in the unassigned panel on the side
+All the tickets are now not showing correctly in the unassigned panel on the side.
 
 **Result:**
 - Identified root cause: Supabase database had no tickets, so fetchTickets() returned empty array
@@ -265,7 +267,7 @@ all the tickets are now not showing correctly in the unassigned panel on the sid
 ## Prompt 22 — Seed Supabase & Remove Mock Data
 
 **User Request:**
-please add the mock data to supabase, and get rid of the mock data files
+Please add the mock data to Supabase, and get rid of the mock data files.
 
 **Result:**
 - Created scripts/seed-supabase.mjs to insert mock data into Supabase
@@ -278,7 +280,7 @@ please add the mock data to supabase, and get rid of the mock data files
 ## Prompt 23 — Delete Fall Recruitment Ticket
 
 **User Request:**
-delete the fall recuitment ticket
+Delete the Fall Recruitment ticket.
 
 **Result:**
 - Queried Supabase to find the "Fall Recruitment Instagram Campaign" ticket (from original schema.sql sample data)
@@ -288,7 +290,7 @@ delete the fall recuitment ticket
 ## Prompt 24 — Drag Ticket Back to Unassigned
 
 **User Request:**
-i want to be able to move a ticket back to being unassigned by dragging it to the left hand side
+I want to be able to move a ticket back to being unassigned by dragging it to the left hand side.
 
 **Result:**
 - Added `unassignFromBoard(id)` function to ticket context
@@ -298,68 +300,23 @@ i want to be able to move a ticket back to being unassigned by dragging it to th
   - Drops call unassignFromBoard(id) to move ticket back to unassigned
 - Build passes successfully
 
-## Prompt 32 — Final Login Page Fix
+## Prompt 25 — Secure Credentials & Update Prompts
 
 **User Request:**
-when showing the password login UI, hide all the other elements
+Update the prompts.md and the .gitignore to make sure the prompts are all tracked and no information is leaked.
 
 **Result:**
-- Removed Sidebar and providers from root layout.tsx
-- Login page now renders standalone without sidebar
-- Protected pages (in (protected) route group) have their own layout with sidebar
-- Build passes successfully
-- Login page shows only the centered login form
+- Updated scripts/seed-supabase.mjs to read credentials from .env.local instead of hardcoding them
+  - Added dotenv dependency for loading .env.local
+  - Script now exits with error if credentials are missing
+- Verified .gitignore already ignores .env.local and all .env.*.local files
+- Added all missing prompt entries to prompts.md
+- No sensitive information is tracked in the repository
 
-## Prompt 31 — Fix Login Page Layout (Hide Sidebar)
-
-**User Request:**
-when showing the password login UI, hide all the other elements
-
-**Result:**
-- Created src/app/(protected)/ route group for all protected pages
-- Moved page.tsx, requests/, and api/auth into (protected) group
-- Created src/app/(protected)/layout.tsx with sidebar
-- Login page now renders without sidebar (inherits from root layout)
-- Build passes successfully
-
-## Prompt 30 — Fix Login Page Hydration
+## Prompt 26 — Add Basic Auth Password Protection
 
 **User Request:**
-Error: Hydration failed because the initial UI does not match what was rendered on the server.
-
-**Result:**
-- Simplified src/app/login/layout.tsx to just a wrapper div (no html/head/body)
-- This allows the login page to inherit from the root layout without conflicts
-- Build passes successfully
-
-## Prompt 29 — Hide UI on Login Page
-
-**User Request:**
-when showing the password login UI, hide all the other elements
-
-**Result:**
-- Created src/app/login/layout.tsx with standalone layout (no sidebar)
-- Updated middleware to exclude /login from protection
-- Login page now shows only the login form without sidebar or other UI elements
-
-## Prompt 28 — Custom Login UI
-
-**User Request:**
-create a custom UI for entering the password and username
-
-**Result:**
-- Created src/app/login/page.tsx with custom login form
-- Created src/app/api/auth/login/route.ts for credential validation
-- Created src/app/api/auth/logout/route.ts for sign out
-- Updated middleware to check auth cookie and redirect to /login
-- Added Sign Out button to sidebar
-- Login form uses navy + plum styling to match app theme
-- Credentials stored in AUTH_USER and AUTH_PASS env vars
-
-## Prompt 27 — Add Basic Auth Password Protection
-
-**User Request:**
-i want to deploy this so other people can access it, and i gently want to be able to authenticate the users seeing it by password protecting this somehow, what do i do?
+I want to deploy this so other people can access it, and I gently want to be able to authenticate the users seeing it by password protecting this somehow. What do I do?
 
 **Result:**
 - Created src/middleware.ts with HTTP Basic Auth protection
@@ -374,28 +331,122 @@ i want to deploy this so other people can access it, and i gently want to be abl
 3. Add environment variables in Vercel dashboard
 4. Deploy
 
-## Prompt 26 — Remove Handwritten Font & Brand Text
+## Prompt 27 — Custom Login UI
 
 **User Request:**
-get rid of the handwritten font anywhere where it is, and get rid of where it says wids pm in the corner
+Create a custom UI for entering the password and username.
 
 **Result:**
-- Removed `font-handwritten` class from all headings (Board, All Tickets, ticket title)
-- Removed "wids pm" brand section from sidebar
-- Removed unused Sparkles icon import
-- Removed Caveat font from layout.tsx and tailwind.config.ts
-- Kept navy + plum color palette and rounded-hand styling
+- Created src/app/login/page.tsx with custom login form
+- Created src/app/api/auth/login/route.ts for credential validation
+- Created src/app/api/auth/logout/route.ts for sign out
+- Updated middleware to check auth cookie and redirect to /login
+- Added Sign Out button to sidebar
+- Login form uses navy + plum styling to match app theme
+- Credentials stored in AUTH_USER and AUTH_PASS env vars
+
+## Prompt 28 — Hide UI on Login Page
+
+**User Request:**
+When showing the password login UI, hide all the other elements.
+
+**Result:**
+- Created src/app/login/layout.tsx with standalone layout (no sidebar)
+- Updated middleware to exclude /login from protection
+- Login page now shows only the login form without sidebar or other UI elements
+
+## Prompt 29 — Hide UI on Login Page (Alt)
+
+**User Request:**
+When showing the password login UI, hide all the other elements.
+
+**Result:**
+- Created src/app/login/layout.tsx with standalone layout (no sidebar)
+- Updated middleware to exclude /login from protection
+- Login page now shows only the login form without sidebar or other UI elements
+
+## Prompt 30 — Fix Login Page Hydration
+
+**User Request:**
+Error: Hydration failed because the initial UI does not match what was rendered on the server.
+
+**Result:**
+- Simplified src/app/login/layout.tsx to just a wrapper div (no html/head/body)
+- This allows the login page to inherit from the root layout without conflicts
 - Build passes successfully
 
-## Prompt 25 — Secure Credentials & Update Prompts
+## Prompt 31 — Fix Login Page Layout (Hide Sidebar)
 
 **User Request:**
-update the prompts.md and the .gitignore to make sure the prompts are all tracked and no information is leajed
+When showing the password login UI, hide all the other elements.
 
 **Result:**
-- Updated scripts/seed-supabase.mjs to read credentials from .env.local instead of hardcoding them
-  - Added dotenv dependency for loading .env.local
-  - Script now exits with error if credentials are missing
-- Verified .gitignore already ignores .env.local and all .env.*.local files
-- Added all missing prompt entries to prompts.md
-- No sensitive information is tracked in the repository
+- Created src/app/(protected)/ route group for all protected pages
+- Moved page.tsx, requests/, and api/auth into (protected) group
+- Created src/app/(protected)/layout.tsx with sidebar
+- Login page now renders without sidebar (inherits from root layout)
+- Build passes successfully
+
+## Prompt 32 — Session-Based Auth & Auto-Login
+
+**User Request:**
+When I show up to the board, I want it to ask me to log in every time.
+
+**Result:**
+- Changed auth cookie from persistent 7-day session (maxAge) to session cookie
+- Removed `maxAge` property from cookie options in login route
+- Cookie now expires when browser is closed
+- Users must log in on each new browser session
+
+## Prompt 33 — Neo-Brutalism Design Overhaul
+
+*This design direction was inspired by principles from [Design Prompts](https://www.designprompts.dev/), a resource for systematic design guidance.*
+
+**User Request:**
+Apply the neo-brutalism design system to transform the entire app.
+
+**Result:**
+- Changed font to Space Grotesk with heavy weights (900, 700)
+- Added hard black borders (border-4) to all elements
+- Implemented hard offset shadows (4px 4px 0px 0px #000)
+- Changed background to cream (#FFFDF5) with grid pattern
+- Added mechanical button interactions (push-down on click)
+- Used high-saturation colors (Navy, Gold, Purple, Light Blue, Lavender)
+- Removed all subtle grays and smooth transitions
+
+## Prompt 34 — Fix Duplicate Tickets & Clear Database
+
+**User Request:**
+Get rid of duplicate tickets. Make sure unassigned tickets render correctly.
+
+**Result:**
+- Added deduplication logic in ticket-context.tsx to filter out duplicate tickets by ID when fetching
+- Updated seed script to delete ALL existing tickets before re-seeding (fixed UUID syntax for delete query)
+- Ran seed script successfully - database cleaned from 18 tickets to 6 clean tickets
+- Fixed sidebar text contrast (changed to white text on dark navy background)
+- Added bg-navy-800/50 background to unassigned tickets scroll area
+
+## Prompt 35 — Softened Neo-Brutalism Design
+
+**User Request:**
+Get rid of the harsh shadows and borders. Find a way to soften the design slightly.
+
+**Result:**
+- Changed from harsh `border-4` to softer `border-2` or `border` for most elements
+- Added subtle blur to shadows (2-8px blur instead of 0px)
+- Restored rounded corners (`rounded-hand`, `rounded-hand-xl`)
+- Used softer color application (plum-500 instead of harsh contrasts)
+- Kept Space Grotesk font, cream background (#FDF4C8), and bold typography
+- Removed aggressive rotation effects and harsh border thickness
+- Maintains neo-brutal character with a more approachable feel
+
+## Prompt 36 — Updated Prompts Documentation
+
+**User Request:**
+Edit the prompts.md file to make sure it's up to date. Then edit all prompts for grammar, spelling, and capitalization. Cite https://www.designprompts.dev/ for the design overhaul.
+
+**Result:**
+- Updated prompts.md with complete history of all prompts
+- Fixed grammar, spelling, and capitalization throughout all entries
+- Added Design Prompts citation at the top of the file
+- Added missing prompts (34-35) for duplicate tickets fix and softened design

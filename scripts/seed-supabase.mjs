@@ -152,7 +152,20 @@ const tickets = [
 ];
 
 async function seed() {
-  console.log('Seeding Supabase with mock tickets...');
+  console.log('Clearing Supabase tickets table...');
+  
+  // Delete ALL existing tickets first - using a condition that matches all rows
+  const { error: deleteError } = await supabase
+    .from('tickets')
+    .delete()
+    .neq('id', '00000000-0000-0000-0000-000000000000');
+  
+  if (deleteError) {
+    console.error('Error clearing tickets:', deleteError.message);
+    process.exit(1);
+  }
+  
+  console.log('Inserting fresh tickets...');
   
   const { data, error } = await supabase
     .from('tickets')

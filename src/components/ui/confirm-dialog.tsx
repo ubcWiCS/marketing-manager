@@ -1,7 +1,7 @@
 "use client";
 
-import { useState } from "react";
 import { X } from "lucide-react";
+import { cn } from "@/lib/utils";
 
 interface ConfirmDialogProps {
   isOpen: boolean;
@@ -26,35 +26,29 @@ export function ConfirmDialog({
 }: ConfirmDialogProps) {
   if (!isOpen) return null;
 
-  const variantStyles = {
-    danger: "bg-red-50 border-red-200 text-red-900",
-    warning: "bg-amber-50 border-amber-200 text-amber-900",
-    info: "bg-blue-50 border-blue-200 text-blue-900",
-  };
-
   const buttonStyles = {
-    danger: "bg-red-600 hover:bg-red-700 text-white",
-    warning: "bg-amber-600 hover:bg-amber-700 text-white",
-    info: "bg-blue-600 hover:bg-blue-700 text-white",
+    danger: "bg-red-500 hover:bg-red-600 text-white",
+    warning: "bg-amber-500 hover:bg-amber-600 text-navy-900",
+    info: "bg-plum-500 hover:bg-plum-600 text-white",
   };
 
   return (
-    <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-xl p-6 max-w-sm w-full shadow-2xl animate-slide-up">
-        <div className="flex items-start justify-between mb-4">
-          <h3 className="text-lg font-semibold text-surface-900">{title}</h3>
+    <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50 p-4">
+      <div className="bg-white rounded-hand-xl shadow-lg max-w-sm w-full animate-slide-up">
+        <div className="flex items-start justify-between mb-4 p-4 border-b border-surface-200">
+          <h3 className="text-lg font-bold text-navy-800">{title}</h3>
           <button
             onClick={onClose}
-            className="text-surface-400 hover:text-surface-600 transition-colors"
+            className="text-surface-400 hover:text-navy-800 transition-colors"
           >
             <X className="w-5 h-5" />
           </button>
         </div>
-        <p className="text-sm text-surface-600 mb-6">{message}</p>
-        <div className="flex gap-2 justify-end">
+        <p className="text-sm text-surface-600 mb-6 px-4">{message}</p>
+        <div className="flex gap-2 justify-end p-4 pt-0">
           <button
             onClick={onClose}
-            className="btn-secondary text-xs"
+            className="btn-brutal-secondary text-xs"
           >
             {cancelText}
           </button>
@@ -63,7 +57,7 @@ export function ConfirmDialog({
               onConfirm();
               onClose();
             }}
-            className={`${buttonStyles[variant]} px-4 py-2 rounded-lg font-medium text-sm transition-colors`}
+            className={cn("btn-brutal-primary text-xs", buttonStyles[variant])}
           >
             {confirmText}
           </button>

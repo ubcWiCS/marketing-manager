@@ -41,7 +41,12 @@ export function TicketProvider({ children }: { children: ReactNode }) {
       if (error) throw error;
 
       if (data) {
-        const formattedTickets: Ticket[] = data.map((t: any) => ({
+        // Deduplicate by ID to prevent duplicate tickets
+        const uniqueData = data.filter((t: any, index: number, self: any[]) =>
+          index === self.findIndex((ticket: any) => ticket.id === t.id)
+        );
+        
+        const formattedTickets: Ticket[] = uniqueData.map((t: any) => ({
           id: t.id,
           title: t.title,
           portfolio: t.portfolio,

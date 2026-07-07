@@ -50,18 +50,30 @@ export default function RequestsPage() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-xl font-bold text-navy-800">All Tickets</h1>
-          <p className="text-xs text-surface-400 mt-0.5">{filtered.length} result{filtered.length !== 1 ? "s" : ""}</p>
+          <p className="text-xs text-surface-500">{filtered.length} result{filtered.length !== 1 ? "s" : ""}</p>
         </div>
         <div className="flex items-center gap-2">
-          <div className="flex items-center bg-white border-2 border-surface-200 rounded-hand p-0.5">
-            <button onClick={() => setView("list")} className={cn("p-1.5 rounded-hand transition-colors", view === "list" ? "bg-plum-100 text-plum-700" : "text-surface-400 hover:text-navy-700")}>
+          <div className="flex items-center bg-white/60 rounded-lg p-0.5">
+            <button 
+              onClick={() => setView("list")} 
+              className={cn(
+                "p-1.5 rounded font-medium text-xs transition-all",
+                view === "list" ? "bg-plum-100 text-plum-700" : "text-surface-500 hover:bg-plum-50"
+              )}
+            >
               <List className="w-4 h-4" />
             </button>
-            <button onClick={() => setView("board")} className={cn("p-1.5 rounded-hand transition-colors", view === "board" ? "bg-plum-100 text-plum-700" : "text-surface-400 hover:text-navy-700")}>
+            <button 
+              onClick={() => setView("board")} 
+              className={cn(
+                "p-1.5 rounded font-medium text-xs transition-all",
+                view === "board" ? "bg-plum-100 text-plum-700" : "text-surface-500 hover:bg-plum-50"
+              )}
+            >
               <Columns className="w-4 h-4" />
             </button>
           </div>
-          <Link href="/requests/new" className="btn-primary text-xs">
+          <Link href="/requests/new" className="btn-brutal-primary text-xs">
             <PlusCircle className="w-3.5 h-3.5" />
             New Request
           </Link>
@@ -69,14 +81,14 @@ export default function RequestsPage() {
       </div>
 
       {/* Tabs */}
-      <div className="flex items-center gap-1 mb-4 bg-white border-2 border-surface-200 rounded-hand p-1 w-fit">
+      <div className="flex items-center gap-1 mb-4 bg-white/60 rounded-hand p-1 w-fit">
         <button
           onClick={() => setActiveTab("active")}
           className={cn(
-            "px-4 py-1.5 rounded-hand text-xs font-medium transition-colors",
+            "px-3 py-1 font-medium text-xs rounded transition-all",
             activeTab === "active"
               ? "bg-plum-500 text-white"
-              : "text-navy-600 hover:text-navy-800"
+              : "text-navy-700 bg-transparent hover:bg-plum-50"
           )}
         >
           Active
@@ -84,10 +96,10 @@ export default function RequestsPage() {
         <button
           onClick={() => setActiveTab("archived")}
           className={cn(
-            "px-4 py-1.5 rounded-hand text-xs font-medium transition-colors",
+            "px-3 py-1 font-medium text-xs rounded transition-all",
             activeTab === "archived"
               ? "bg-plum-500 text-white"
-              : "text-navy-600 hover:text-navy-800"
+              : "text-navy-700 bg-transparent hover:bg-plum-50"
           )}
         >
           Archived
@@ -96,17 +108,17 @@ export default function RequestsPage() {
 
       <div className="flex items-center gap-2 mb-4">
         <div className="relative flex-1 max-w-xs">
-          <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-3.5 h-3.5 text-surface-400" />
+          <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-surface-400" />
           <input
             type="text"
             placeholder="Search by title or contact..."
-            className="input-field pl-8 text-xs py-1.5"
+            className="input-brutal pl-8 text-sm py-1.5"
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
         </div>
         <select
-          className="input-field w-auto text-xs py-1.5"
+          className="input-brutal w-auto text-sm py-1.5"
           value={filterPortfolio}
           onChange={(e) => setFilterPortfolio(e.target.value as Portfolio | "All")}
         >
@@ -116,7 +128,7 @@ export default function RequestsPage() {
           ))}
         </select>
         <select
-          className="input-field w-auto text-xs py-1.5"
+          className="input-brutal w-auto text-sm py-1.5"
           value={filterStatus}
           onChange={(e) => setFilterStatus(e.target.value as RequestStatus | "All")}
         >
@@ -127,9 +139,19 @@ export default function RequestsPage() {
         </select>
       </div>
 
-      <div className="card overflow-hidden">
+      <div className="border border-surface-200 rounded-hand-xl bg-white/80 shadow-sm">
         <table className="w-full">
-          <tbody className="divide-y divide-surface-100">
+          <thead>
+            <tr className="border-b border-surface-200 bg-plum-50/50">
+              <th className="px-4 py-2.5 text-left text-xs font-medium text-navy-700 uppercase">Title</th>
+              <th className="px-4 py-2.5 text-left text-xs font-medium text-navy-700 uppercase">Portfolio</th>
+              <th className="px-4 py-2.5 text-left text-xs font-medium text-navy-700 uppercase">Contact</th>
+              <th className="px-4 py-2.5 text-left text-xs font-medium text-navy-700 uppercase">Priority</th>
+              <th className="px-4 py-2.5 text-left text-xs font-medium text-navy-700 uppercase">Status</th>
+              <th className="px-4 py-2.5 text-left text-xs font-medium text-navy-700 uppercase">Due</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-surface-200">
             {loading ? (
               <>
                 <SkeletonTableRow />
@@ -140,30 +162,58 @@ export default function RequestsPage() {
               </>
             ) : (
               filtered.map((ticket) => (
-                <tr key={ticket.id} className={cn("hover:bg-surface-50 transition-colors", ticket.status === "Archived" && "opacity-60 bg-surface-50")}>
+                <tr 
+                  key={ticket.id} 
+                  className={cn(
+                    "hover:bg-plum-50/30 transition-all", 
+                    ticket.status === "Archived" && "opacity-60"
+                  )}
+                >
                   <td className="px-4 py-2.5">
                     <Link href={`/requests/${ticket.id}`} className="block group">
                       <div className="flex items-center gap-2">
                         <PortfolioDot portfolio={ticket.portfolio} />
-                        <span className="text-xs font-medium text-navy-800 group-hover:text-plum-600 transition-colors">{ticket.title}</span>
+                        <span className="text-sm font-medium text-navy-800 group-hover:text-plum-600 transition-colors">
+                          {ticket.title}
+                        </span>
                       </div>
                     </Link>
                   </td>
                   <td className="px-4 py-2.5">
-                    <span className="text-xs text-navy-600">{ticket.portfolio}</span>
+                    <span className="text-sm text-navy-700">{ticket.portfolio}</span>
                   </td>
                   <td className="px-4 py-2.5">
-                    <span className="text-xs text-navy-600">{ticket.pointOfContact}</span>
+                    <span className="text-sm text-navy-700">{ticket.pointOfContact}</span>
                   </td>
                   <td className="px-4 py-2.5">
-                    <span className={cn("text-xs font-medium", ticket.priority === "Urgent" && "text-red-600", ticket.priority === "High" && "text-orange-600", ticket.priority === "Medium" && "text-amber-600", ticket.priority === "Low" && "text-emerald-600")}>{ticket.priority}</span>
+                    <span className={cn(
+                      "text-xs font-medium px-2 py-0.5 rounded-full",
+                      ticket.priority === "Urgent" && "bg-red-50 text-red-600",
+                      ticket.priority === "High" && "bg-orange-50 text-orange-600",
+                      ticket.priority === "Medium" && "bg-amber-50 text-amber-600",
+                      ticket.priority === "Low" && "bg-emerald-50 text-emerald-600"
+                    )}>
+                      {ticket.priority}
+                    </span>
                   </td>
                   <td className="px-4 py-2.5">
-                    <span className={cn("text-xs px-1.5 py-0.5 rounded-full", ticket.status === "Open" && "bg-emerald-50 text-emerald-700", ticket.status === "In Progress" && "bg-sky-50 text-sky-700", ticket.status === "In Review" && "bg-amber-50 text-amber-700", ticket.status === "Completed" && "bg-purple-50 text-purple-700", ticket.status === "Archived" && "bg-gray-50 text-gray-700")}>{ticket.status}</span>
+                    <span className={cn(
+                      "text-xs font-medium px-2 py-0.5 rounded-full",
+                      ticket.status === "Open" && "bg-status-open text-navy-800",
+                      ticket.status === "In Progress" && "bg-status-in_progress text-navy-800",
+                      ticket.status === "In Review" && "bg-status-review text-navy-800",
+                      ticket.status === "Completed" && "bg-status-completed text-navy-800",
+                      ticket.status === "Archived" && "bg-status-archived text-navy-800"
+                    )}>
+                      {ticket.status}
+                    </span>
                   </td>
                   <td className="px-4 py-2.5">
                     <div className="flex items-center gap-2">
-                      <span className={cn("text-xs", new Date(ticket.deadline) < new Date() ? "text-red-500 font-medium" : "text-surface-400")}>
+                      <span className={cn(
+                        "text-sm", 
+                        new Date(ticket.deadline) < new Date() ? "text-red-600" : "text-surface-500"
+                      )}>
                         {new Date(ticket.deadline).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
                       </span>
                       {ticket.status === "Archived" && (
@@ -172,10 +222,10 @@ export default function RequestsPage() {
                             setTicketToRestore(ticket.id);
                             setRestoreDialogOpen(true);
                           }}
-                          className="p-1 hover:bg-surface-200 rounded-hand transition-colors"
+                          className="p-0.5 hover:text-plum-600 transition-colors"
                           title="Restore ticket"
                         >
-                          <RotateCcw className="w-3.5 h-3.5 text-surface-500 hover:text-plum-600" />
+                          <RotateCcw className="w-3.5 h-3.5" />
                         </button>
                       )}
                     </div>
