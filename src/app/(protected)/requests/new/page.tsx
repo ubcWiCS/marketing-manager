@@ -69,6 +69,7 @@ function NewRequestForm() {
   });
   const [isEditing, setIsEditing] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
+  const [submitError, setSubmitError] = useState<string | null>(null);
 
   useEffect(() => {
     if (editId) {
@@ -159,7 +160,8 @@ function NewRequestForm() {
         }, 2000);
       }
     } catch (err) {
-      console.error("Failed to create ticket:", err);
+      const message = err instanceof Error ? err.message : "Failed to create ticket";
+      setSubmitError(message);
     }
   };
 
@@ -459,6 +461,14 @@ function NewRequestForm() {
                 <p className="font-medium text-navy-800">{form.deadline}</p>
               </div>
             </div>
+          </div>
+        )}
+
+        {/* Error banner */}
+        {submitError && (
+          <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-hand">
+            <p className="text-sm font-medium text-red-700">Failed to create ticket</p>
+            <p className="text-xs text-red-600 mt-1">{submitError}</p>
           </div>
         )}
 

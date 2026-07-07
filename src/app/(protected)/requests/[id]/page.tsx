@@ -14,7 +14,7 @@ import { RequestStatus, REQUEST_STATUSES, Priority, PRIORITIES } from "@/types";
 
 export default function RequestDetailPage() {
   const params = useParams();
-  const { tickets, archiveTicket, deleteTicket } = useTickets();
+  const { tickets, archiveTicket, restoreTicket, deleteTicket } = useTickets();
   const ticket = tickets.find((t) => t.id === params.id);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
@@ -47,14 +47,25 @@ export default function RequestDetailPage() {
             <h1 className="text-xl font-medium text-navy-800">{ticket.title}</h1>
           </div>
           <div className="flex gap-2">
-            <button
-              onClick={() => archiveTicket(ticket.id)}
-              className="text-sm font-medium text-navy-600 hover:text-red-600 rounded-hand px-3 py-1.5 hover:bg-red-50 transition-colors"
-              title="Archive ticket"
-            >
-              <Archive className="w-4 h-4 inline" />
-              Archive
-            </button>
+            {ticket.status === "Archived" ? (
+              <button
+                onClick={() => restoreTicket(ticket.id)}
+                className="text-sm font-medium text-navy-600 hover:text-green-600 rounded-hand px-3 py-1.5 hover:bg-green-50 transition-colors"
+                title="Unarchive ticket"
+              >
+                <Archive className="w-4 h-4 inline" />
+                Unarchive
+              </button>
+            ) : (
+              <button
+                onClick={() => archiveTicket(ticket.id)}
+                className="text-sm font-medium text-navy-600 hover:text-red-600 rounded-hand px-3 py-1.5 hover:bg-red-50 transition-colors"
+                title="Archive ticket"
+              >
+                <Archive className="w-4 h-4 inline" />
+                Archive
+              </button>
+            )}
             <button
               onClick={() => setShowDeleteDialog(true)}
               className="text-sm font-medium text-navy-600 hover:text-red-600 rounded-hand px-3 py-1.5 hover:bg-red-50 transition-colors"

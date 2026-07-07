@@ -102,6 +102,7 @@ export function TicketProvider({ children }: { children: ReactNode }) {
           created_by: ticket.pointOfContact,
           status: 'Open',
           priority: 'Medium',
+          is_on_board: true,
         }])
         .select()
         .single();
