@@ -6,6 +6,7 @@ import { supabase } from "@/lib/supabase/client";
 
 interface TicketContextType {
   tickets: Ticket[];
+  createTicket: (ticket: Omit<Ticket, "id" | "createdAt" | "updatedAt" | "status" | "priority" | "isOnBoard">) => Promise<Ticket | null>;
   moveTicket: (id: string, targetMember: string) => Promise<void>;
   addToBoard: (id: string) => Promise<void>;
   updateTicket: (id: string, updates: Partial<Ticket>) => Promise<void>;
@@ -78,6 +79,70 @@ export function TicketProvider({ children }: { children: ReactNode }) {
       setLoading(false);
     }
   };
+
+  const createTicket = async (ticket: Omit<Ticket, "id" | "createdAt" | "updatedAt" | "status" | "priority" | "isOnBoard">): Promise<Ticket | null> => {
+    try {
+      setError(null);
+      const { data, error } = await supabase
+        .from('tickets')
+        .insert([{
+          title: ticket.title,
+          portfolio: ticket.portfolio,
+          point_of_contact: ticket.pointOfContact,
+          graphic_types: ticket.graphicTypes,
+          other_graphic_type: ticket.otherGraphicType || null,
+          event_name: ticket.eventName,
+          event_time: ticket.eventTime || null,
+          event_location: ticket.eventLocation || null,
+          deadline: ticket.deadline,
+          summary: ticket.summary,
+          creative_vision: ticket.creativeVision,
+          reference_urls: ticket.references,
+          additional_requests: ticket.additionalRequests || null,
+          created_by: ticket.pointOfContact,
+          status: 'Open',
+          priority: 'Medium',
+        }])
+        .select()
+        .single();
+
+      if (error) throw error;
+
+      if (data) {
+        const newTicket: Ticket = {
+          id: data.id,
+          title: data.title,
+          portfolio: data.portfolio,
+          pointOfContact: data.point_of_contact,
+          isCollaboration: false,
+          collaborators: [],
+          graphicTypes: data.graphic_types,
+          otherGraphicType: data.other_graphic_type || "",
+          eventName: data.event_name,
+          eventTime: data.event_time || "",
+          eventLocation: data.event_location || "",
+          summary: data.summary,
+          deadline: data.deadline,
+          creativeVision: data.creative_vision,
+          references: data.reference_urls || [],
+          additionalRequests: data.additional_requests || "",
+          status: data.status,
+          priority: data.priority,
+          createdAt: data.created_at,
+          updatedAt: data.updated_at,
+          createdBy: data.created_by,
+          isOnBoard: data.is_on_board,
+        };
+        setTickets((prev) => [newTicket, ...prev]);
+        return newTicket;
+      }
+      return null;
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to create ticket');
+      throw err;
+    }
+  };
+
   const moveTicket = async (id: string, targetMember: string) => {
     try {
       setError(null);
@@ -257,7 +322,7 @@ export function TicketProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <TicketContext.Provider value={{ tickets, moveTicket, addToBoard, updateTicket, archiveTicket, deleteTicket, restoreTicket, unassignMember, unassignFromBoard, loading, error }}>
+    <TicketContext.Provider value={{ tickets, createTicket, moveTicket, addToBoard, updateTicket, archiveTicket, deleteTicket, restoreTicket, unassignMember, unassignFromBoard, loading, error }}>
       {children}
     </TicketContext.Provider>
   );
