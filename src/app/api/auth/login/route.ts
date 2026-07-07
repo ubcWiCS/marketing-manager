@@ -14,9 +14,16 @@ export async function POST(request: NextRequest) {
       httpOnly: true,
       secure: process.env.NODE_ENV === "production",
       sameSite: "lax",
+      path: "/",
+      maxAge: 60 * 60 * 24 * 7, // 7 days
     });
     return response;
   }
 
   return NextResponse.json({ success: false, error: "Invalid credentials" }, { status: 401 });
+}
+
+// Handle GET requests to prevent 405 errors
+export async function GET() {
+  return NextResponse.redirect(new URL("/login", "http://localhost"));
 }
