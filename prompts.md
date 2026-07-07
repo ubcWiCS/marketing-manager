@@ -518,3 +518,14 @@ In the all tickets page, where it says contact, make it say team member and let 
 - Added `useTeamMembers()` import to load team members list
 - Added `filterMember` state with "All Members" dropdown populated from team context
 - Added member filter logic to useMemo to filter tickets by pointOfContact
+
+## Prompt 43 — Shareable Link with Login Redirect
+
+**User Request:**
+I want to be able to send https://widsmarketing.vercel.app/requests/new as a link, and when users login to be redirected to the same place they were earlier rather than the tickerboard.
+
+**Result:**
+- Updated middleware to pass `redirect` query parameter to `/login` with the original URL path
+- Login page reads `redirect` param and uses it after successful authentication
+- Visiting any protected URL redirects to login, then back to the original destination
+- Default fallback to `/` (board) if no redirect param is present
