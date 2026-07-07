@@ -1,6 +1,6 @@
 "use client";
 
-import { LayoutDashboard, ListTodo, Users } from "lucide-react";
+import { LayoutDashboard, ListTodo, Users, LogOut } from "lucide-react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useState } from "react";
@@ -94,13 +94,23 @@ export function Sidebar() {
         </div>
       </div>
 
-      <div className="px-3 py-3 border-t border-navy-700">
+      <div className="px-3 py-3 border-t border-navy-700 space-y-1">
         <button
           onClick={() => setManageOpen(true)}
           className="flex items-center gap-2 w-full px-2 py-1.5 rounded-hand text-xs text-surface-400 hover:text-white hover:bg-navy-800 transition-colors"
         >
           <Users className="w-3.5 h-3.5" />
           Manage Team
+        </button>
+        <button
+          onClick={async () => {
+            await fetch("/api/auth/logout", { method: "POST" });
+            window.location.href = "/login";
+          }}
+          className="flex items-center gap-2 w-full px-2 py-1.5 rounded-hand text-xs text-surface-400 hover:text-red-400 hover:bg-navy-800 transition-colors"
+        >
+          <LogOut className="w-3.5 h-3.5" />
+          Sign Out
         </button>
       </div>
 

@@ -298,6 +298,82 @@ i want to be able to move a ticket back to being unassigned by dragging it to th
   - Drops call unassignFromBoard(id) to move ticket back to unassigned
 - Build passes successfully
 
+## Prompt 32 — Final Login Page Fix
+
+**User Request:**
+when showing the password login UI, hide all the other elements
+
+**Result:**
+- Removed Sidebar and providers from root layout.tsx
+- Login page now renders standalone without sidebar
+- Protected pages (in (protected) route group) have their own layout with sidebar
+- Build passes successfully
+- Login page shows only the centered login form
+
+## Prompt 31 — Fix Login Page Layout (Hide Sidebar)
+
+**User Request:**
+when showing the password login UI, hide all the other elements
+
+**Result:**
+- Created src/app/(protected)/ route group for all protected pages
+- Moved page.tsx, requests/, and api/auth into (protected) group
+- Created src/app/(protected)/layout.tsx with sidebar
+- Login page now renders without sidebar (inherits from root layout)
+- Build passes successfully
+
+## Prompt 30 — Fix Login Page Hydration
+
+**User Request:**
+Error: Hydration failed because the initial UI does not match what was rendered on the server.
+
+**Result:**
+- Simplified src/app/login/layout.tsx to just a wrapper div (no html/head/body)
+- This allows the login page to inherit from the root layout without conflicts
+- Build passes successfully
+
+## Prompt 29 — Hide UI on Login Page
+
+**User Request:**
+when showing the password login UI, hide all the other elements
+
+**Result:**
+- Created src/app/login/layout.tsx with standalone layout (no sidebar)
+- Updated middleware to exclude /login from protection
+- Login page now shows only the login form without sidebar or other UI elements
+
+## Prompt 28 — Custom Login UI
+
+**User Request:**
+create a custom UI for entering the password and username
+
+**Result:**
+- Created src/app/login/page.tsx with custom login form
+- Created src/app/api/auth/login/route.ts for credential validation
+- Created src/app/api/auth/logout/route.ts for sign out
+- Updated middleware to check auth cookie and redirect to /login
+- Added Sign Out button to sidebar
+- Login form uses navy + plum styling to match app theme
+- Credentials stored in AUTH_USER and AUTH_PASS env vars
+
+## Prompt 27 — Add Basic Auth Password Protection
+
+**User Request:**
+i want to deploy this so other people can access it, and i gently want to be able to authenticate the users seeing it by password protecting this somehow, what do i do?
+
+**Result:**
+- Created src/middleware.ts with HTTP Basic Auth protection
+- Added AUTH_USER and AUTH_PASS environment variables to .env.local.example and .env.local
+- Default credentials: admin / password (change in .env.local before deployment)
+- All routes protected except static assets and API routes
+- Browser will show native login prompt on first visit
+
+**To deploy:**
+1. Push to GitHub
+2. Connect to Vercel (vercel.com)
+3. Add environment variables in Vercel dashboard
+4. Deploy
+
 ## Prompt 26 — Remove Handwritten Font & Brand Text
 
 **User Request:**

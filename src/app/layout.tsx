@@ -1,8 +1,5 @@
 import type { Metadata } from "next";
 import "./globals.css";
-import { Sidebar } from "@/components/layout/sidebar";
-import { TicketProvider } from "@/lib/ticket-context";
-import { TeamProvider } from "@/lib/team-context";
 
 export const metadata: Metadata = {
   title: "Portfolio Manager",
@@ -24,15 +21,9 @@ export default function RootLayout({
           rel="stylesheet"
         />
       </head>
-      <body className="flex h-screen overflow-hidden">
-        <TicketProvider>
-          <TeamProvider>
-            <Sidebar />
-            <main className="flex-1 overflow-y-auto">{children}</main>
-          </TeamProvider>
-        </TicketProvider>
+      <body className="min-h-screen bg-surface-50">
+        {children}
       </body>
     </html>
   );
 }
-
