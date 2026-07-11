@@ -40,11 +40,11 @@ PM is a portfolio management system designed to streamline the creation and trac
 
 | Dashboard | Request Detail |
 |---|---|
-| ![Dashboard](screenshots/dashboard.png) | ![Request Detail](screenshots/request-detail.png) |
+| ![Dashboard](screenshots/dashboard.png) | ![Request a new ticket](screenshots/request-detail.png) |
 
 | New Request Form | Requests List |
 |---|---|
-| ![New Request](screenshots/new-request.png) | ![Requests List](screenshots/requests-list.png) |
+| ![Request a new ticket](screenshots/request-detail-2.png) | ![Requests List](screenshots/request-list.png) |
 
 
 ## Tech Stack
