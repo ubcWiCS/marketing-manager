@@ -31,7 +31,7 @@ Let's do two things. The first is that I want you to write my prompts into a `.m
 ## Prompt 3 — Sidebar Drag-to-Remove
 
 **User Request:**
-When we drag from the sidebar on the left, the objects need to get removed from that bar.
+When we drag from the sidebar on the left, the objects need to be removed from that bar.
 
 **Result:**
 - Added `isOnBoard` flag to Ticket type
@@ -84,7 +84,7 @@ Get rid of the following redundant items: where it says "Ella Lan" at the bottom
 ## Prompt 8 — Fix Member Deletion & Update Sidebar Label
 
 **User Request:**
-When I remove a team member, it's now deleting their tickets. Make sure they get added back to the drag and drop sidebar when a member is deleted. Where it currently says "Tickets (number)", make it say "Unassigned Tickets".
+When I remove a team member, it's now deleting their tickets. Make sure they get added back to the drag-and-drop sidebar when a member is deleted. Where it currently says "Tickets (number)", make it say "Unassigned Tickets".
 
 **Result:**
 - Added `unassignMember()` function to ticket context
@@ -164,7 +164,7 @@ I want to work on the expanded view of the ticket itself. Please emphasize the g
 ## Prompt 14 — Simplify References Section
 
 **User Request:**
-In the References & Inspiration section of the request form, please remove the big drag and drop section and only have the textbox where you submit the link.
+In the References & Inspiration section of the request form, please remove the big drag-and-drop section and only have the textbox where you submit the link.
 
 **Result:**
 - Removed drag-and-drop upload area with Upload icon
@@ -290,7 +290,7 @@ Delete the Fall Recruitment ticket.
 ## Prompt 24 — Drag Ticket Back to Unassigned
 
 **User Request:**
-I want to be able to move a ticket back to being unassigned by dragging it to the left hand side.
+I want to be able to move a ticket back to being unassigned by dragging it to the left-hand side.
 
 **Result:**
 - Added `unassignFromBoard(id)` function to ticket context
@@ -316,7 +316,7 @@ Update the prompts.md and the .gitignore to make sure the prompts are all tracke
 ## Prompt 26 — Add Basic Auth Password Protection
 
 **User Request:**
-I want to deploy this so other people can access it, and I gently want to be able to authenticate the users seeing it by password protecting this somehow. What do I do?
+I want to deploy this so other people can access it, and I gently want to be able to authenticate the users seeing it by password-protecting this somehow. What do I do?
 
 **Result:**
 - Created src/middleware.ts with HTTP Basic Auth protection
@@ -529,3 +529,53 @@ I want to be able to send https://widsmarketing.vercel.app/requests/new as a lin
 - Login page reads `redirect` param and uses it after successful authentication
 - Visiting any protected URL redirects to login, then back to the original destination
 - Default fallback to `/` (board) if no redirect param is present
+
+## Prompt 44 — Fix New Tickets Not Showing in Sidebar
+
+**User Request:**
+When a new ticket is made, it is not showing up on the sidebar.
+
+**Result:**
+- Identified root cause: `createTicket()` was setting `is_on_board: true` by default
+- Sidebar only displays tickets where `isOnBoard` is `false` and status is not "Completed"
+- Changed `is_on_board` default from `true` to `false` in ticket-context.tsx
+- New tickets now appear in "Unassigned Tickets" sidebar immediately after creation
+- Tickets can then be dragged to board columns and marked as on board
+
+## Prompt 45 — Fix Edit Creating Duplicates
+
+**User Request:**
+When I edit a ticket, a duplicate is made with the changes. I want this to be a true edit feature.
+
+**Result:**
+- Updated handleSubmit() in requests/new/page.tsx to detect edit mode via `isEditing && editId`
+- When editing, calls `updateTicket()` instead of `createTicket()` to update existing ticket
+- After successful edit, navigates to the ticket detail page instead of requests list
+- Form pre-populates with existing data when `?edit=${ticketId}` URL parameter is present
+- No more duplicate tickets created when editing
+
+## Prompt 46 — Separate Point of Contact from Assignee
+
+**User Request:**
+The point of contact field is changing when a ticket is assigned. I want there to be a difference between point of contact (person who created the ticket) and assignee.
+
+**Result:**
+- Added `assignedTo?: string` field to Ticket interface in types/index.ts
+- Added `assigned_to TEXT` column to tickets table in schema.sql
+- Updated `moveTicket()` to update `assigned_to` instead of `point_of_contact`
+- Updated `unassignFromBoard()` to clear `assigned_to` instead of `point_of_contact`
+- Board columns now filter by `assignedTo` (assignee) instead of `pointOfContact` (creator)
+- Point of contact remains immutable as the ticket creator
+- Assignee changes when tickets are dragged to board columns
+
+## Prompt 47 — Unassign All Tickets
+
+**User Request:**
+I need all these tickets to now be marked as unassigned.
+
+**Result:**
+- Created scripts/unassign-all-tickets.sql with UPDATE query to set assigned_to to NULL
+- Updated seed script (scripts/seed-supabase.mjs) to include `assigned_to: null` for all new tickets
+- Provided SQL migration: `ALTER TABLE tickets ADD COLUMN IF NOT EXISTS assigned_to TEXT;`
+- After running migration, all existing tickets can be unassigned with UPDATE query
+- New tickets created without an assignee by default
