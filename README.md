@@ -42,9 +42,13 @@ PM is a portfolio management system designed to streamline the creation and trac
 |---|---|
 | ![Dashboard](screenshots/dashboard.png) | ![Request a new ticket](screenshots/request-detail.png) |
 
-| New Request Form | Requests List |
+| Login Page | Request Form |
 |---|---|
-| ![Request a new ticket](screenshots/request-detail-2.png) | ![Requests List](screenshots/request-list.png) |
+| ![Login Page](screenshots/login.png) | ![Request Form](screenshots/request-detail-2.png) |
+
+| Request Detail | Requests List |
+|---|---|
+| ![Request Detail](screenshots/request-detail.png) | ![Requests List](screenshots/request-list.png) |
 
 
 ## Tech Stack
@@ -89,10 +93,15 @@ PM is a portfolio management system designed to streamline the creation and trac
    cp .env.local.example .env.local
    ```
 
-   Edit `.env.local` and add your Supabase credentials:
+   Edit `.env.local` and add your credentials:
    ```env
+   # Supabase
    NEXT_PUBLIC_SUPABASE_URL=your-project-url
    NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
+   
+   # Authentication (optional but recommended)
+   AUTH_USER=admin
+   AUTH_PASS=password
    ```
 
 5. Run the development server:
@@ -187,11 +196,40 @@ Edit `src/types/index.ts` to add new portfolio or graphic type options.
 
 Update `src/lib/supabase/schema.sql` and re-run the SQL in the Supabase SQL Editor.
 
-## Security
+## Authentication & Security
+
+### Password Protection
+
+The application includes built-in HTTP Basic Authentication to restrict access. When configured, users will see a login screen before accessing the application.
+
+**Login Screenshot:**
+![Login Page](screenshots/login.png)
+
+**Configuration:**
+
+1. Set the authentication credentials in `.env.local`:
+   ```env
+   AUTH_USER=admin
+   AUTH_PASS=password
+   ```
+
+2. The middleware (`src/middleware.ts`) protects all routes except:
+   - Static assets
+   - API routes
+   - The login page itself
+
+3. Users are redirected to `/login` if not authenticated
+4. Session cookies expire when the browser is closed (no persistent login)
+5. A "Sign Out" button is available in the sidebar
+
+**Default credentials:** `admin` / `password` (change these in production!)
+
+### Security Best Practices
 
 - Environment variables are stored in `.env.local` (git-ignored)
 - Supabase credentials should never be committed to version control
 - Row Level Security (RLS) policies can be configured in Supabase for production use
+- Always change default authentication credentials before deployment
 
 ## Contributing
 
