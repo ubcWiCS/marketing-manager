@@ -69,6 +69,7 @@ export function TicketProvider({ children }: { children: ReactNode }) {
           createdAt: t.created_at,
           updatedAt: t.updated_at,
           createdBy: t.created_by,
+          assignedTo: t.assigned_to || undefined,
           isOnBoard: t.is_on_board,
         }));
         setTickets(formattedTickets);
@@ -102,7 +103,7 @@ export function TicketProvider({ children }: { children: ReactNode }) {
           created_by: ticket.pointOfContact,
           status: 'Open',
           priority: 'Medium',
-          is_on_board: true,
+          is_on_board: false,
         }])
         .select()
         .single();
@@ -132,6 +133,7 @@ export function TicketProvider({ children }: { children: ReactNode }) {
           createdAt: data.created_at,
           updatedAt: data.updated_at,
           createdBy: data.created_by,
+          assignedTo: data.assigned_to || undefined,
           isOnBoard: data.is_on_board,
         };
         setTickets((prev) => [newTicket, ...prev]);
@@ -149,13 +151,13 @@ export function TicketProvider({ children }: { children: ReactNode }) {
       setError(null);
       const { error } = await supabase
         .from('tickets')
-        .update({ point_of_contact: targetMember })
+        .update({ assigned_to: targetMember })
         .eq('id', id);
 
       if (error) throw error;
       setTickets((prev) =>
         prev.map((t) =>
-          t.id === id ? { ...t, pointOfContact: targetMember } : t
+          t.id === id ? { ...t, assignedTo: targetMember } : t
         )
       );
     } catch (err) {
@@ -205,6 +207,7 @@ export function TicketProvider({ children }: { children: ReactNode }) {
       if (updates.additionalRequests !== undefined) dbUpdates.additional_requests = updates.additionalRequests;
       if (updates.status !== undefined) dbUpdates.status = updates.status;
       if (updates.priority !== undefined) dbUpdates.priority = updates.priority;
+      if (updates.assignedTo !== undefined) dbUpdates.assigned_to = updates.assignedTo;
       if (updates.isOnBoard !== undefined) dbUpdates.is_on_board = updates.isOnBoard;
 
       const { error } = await supabase
@@ -251,13 +254,13 @@ export function TicketProvider({ children }: { children: ReactNode }) {
       setError(null);
       const { error } = await supabase
         .from('tickets')
-        .update({ point_of_contact: '', is_on_board: false })
+        .update({ assigned_to: null, is_on_board: false })
         .eq('id', id);
 
       if (error) throw error;
       setTickets((prev) =>
         prev.map((t) =>
-          t.id === id ? { ...t, pointOfContact: "", isOnBoard: false } : t
+          t.id === id ? { ...t, assignedTo: undefined, isOnBoard: false } : t
         )
       );
     } catch (err) {

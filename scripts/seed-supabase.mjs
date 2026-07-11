@@ -22,7 +22,7 @@ if (!supabaseUrl || !supabaseAnonKey) {
 
 const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
-const tickets = [
+  const tickets = [
   {
     title: "Summer Internships & Adventures Recap",
     portfolio: "Marketing",
@@ -42,6 +42,7 @@ const tickets = [
     created_at: "2026-07-04T10:00:00Z",
     updated_at: "2026-07-04T10:00:00Z",
     created_by: "Ella Ilan",
+    assigned_to: null,
     is_on_board: false,
   },
   {
@@ -63,6 +64,7 @@ const tickets = [
     created_at: "2026-07-04T10:05:00Z",
     updated_at: "2026-07-04T10:05:00Z",
     created_by: "Ella Ilan",
+    assigned_to: null,
     is_on_board: false,
   },
   {
@@ -84,6 +86,7 @@ const tickets = [
     created_at: "2026-07-04T10:10:00Z",
     updated_at: "2026-07-04T10:10:00Z",
     created_by: "Ella Ilan",
+    assigned_to: null,
     is_on_board: false,
   },
   {
@@ -105,6 +108,7 @@ const tickets = [
     created_at: "2026-07-04T10:15:00Z",
     updated_at: "2026-07-04T10:15:00Z",
     created_by: "Ella Ilan",
+    assigned_to: null,
     is_on_board: false,
   },
   {
@@ -126,6 +130,7 @@ const tickets = [
     created_at: "2026-07-04T10:20:00Z",
     updated_at: "2026-07-04T10:20:00Z",
     created_by: "Ella Ilan",
+    assigned_to: null,
     is_on_board: false,
   },
   {
@@ -147,6 +152,7 @@ const tickets = [
     created_at: "2026-07-04T10:25:00Z",
     updated_at: "2026-07-04T10:25:00Z",
     created_by: "Ella Ilan",
+    assigned_to: null,
     is_on_board: false,
   },
 ];

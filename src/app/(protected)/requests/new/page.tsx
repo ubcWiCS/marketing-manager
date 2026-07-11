@@ -46,7 +46,7 @@ function NewRequestForm() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const editId = searchParams.get("edit");
-  const { tickets, createTicket } = useTickets();
+  const { tickets, createTicket, updateTicket } = useTickets();
   const [step, setStep] = useState(1);
   const defaultFormValues: NewTicketForm = {
     portfolio: null,
@@ -135,32 +135,56 @@ function NewRequestForm() {
 
   const handleSubmit = async () => {
     try {
-      const newTicket = await createTicket({
-        title: form.eventName,
-        portfolio: form.portfolio!,
-        pointOfContact: form.pointOfContact,
-        isCollaboration: false,
-        collaborators: [],
-        graphicTypes: form.graphicTypes,
-        otherGraphicType: form.otherGraphicType,
-        eventName: form.eventName,
-        eventTime: form.eventTime,
-        eventLocation: form.eventLocation,
-        summary: form.summary,
-        deadline: form.deadline,
-        creativeVision: form.creativeVision,
-        references: form.references,
-        additionalRequests: form.additionalRequests,
-        createdBy: form.pointOfContact,
-      });
-      if (newTicket) {
+      if (isEditing && editId) {
+        await updateTicket(editId, {
+          title: form.eventName,
+          portfolio: form.portfolio!,
+          pointOfContact: form.pointOfContact,
+          graphicTypes: form.graphicTypes,
+          otherGraphicType: form.otherGraphicType,
+          eventName: form.eventName,
+          eventTime: form.eventTime,
+          eventLocation: form.eventLocation,
+          summary: form.summary,
+          deadline: form.deadline,
+          creativeVision: form.creativeVision,
+          references: form.references,
+          additionalRequests: form.additionalRequests,
+          status: "Open" as const,
+          priority: "Medium" as const,
+        });
         setShowSuccessModal(true);
         setTimeout(() => {
-          router.push("/requests");
+          router.push(`/requests/${editId}`);
         }, 2000);
+      } else {
+        const newTicket = await createTicket({
+          title: form.eventName,
+          portfolio: form.portfolio!,
+          pointOfContact: form.pointOfContact,
+          isCollaboration: false,
+          collaborators: [],
+          graphicTypes: form.graphicTypes,
+          otherGraphicType: form.otherGraphicType,
+          eventName: form.eventName,
+          eventTime: form.eventTime,
+          eventLocation: form.eventLocation,
+          summary: form.summary,
+          deadline: form.deadline,
+          creativeVision: form.creativeVision,
+          references: form.references,
+          additionalRequests: form.additionalRequests,
+          createdBy: form.pointOfContact,
+        });
+        if (newTicket) {
+          setShowSuccessModal(true);
+          setTimeout(() => {
+            router.push("/requests");
+          }, 2000);
+        }
       }
     } catch (err) {
-      const message = err instanceof Error ? err.message : "Failed to create ticket";
+      const message = err instanceof Error ? err.message : "Failed to save ticket";
       setSubmitError(message);
     }
   };

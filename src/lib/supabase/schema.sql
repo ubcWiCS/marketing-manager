@@ -25,6 +25,7 @@ CREATE TABLE IF NOT EXISTS tickets (
   created_at TIMESTAMP DEFAULT NOW() NOT NULL,
   updated_at TIMESTAMP DEFAULT NOW() NOT NULL,
   created_by TEXT NOT NULL,
+  assigned_to TEXT,
   is_on_board BOOLEAN DEFAULT FALSE
 );
 
