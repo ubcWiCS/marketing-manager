@@ -2,29 +2,61 @@
 
 A Next.js web application for managing design and marketing requests across multiple portfolios in a team environment.
 
+![Dashboard Screenshot](screenshots/dashboard.png)
+
+## Table of Contents
+
+- [Overview](#overview)
+- [Features](#features)
+- [Screenshots](#screenshots)
+- [Tech Stack](#tech-stack)
+- [Getting Started](#getting-started)
+- [Database Schema](#database-schema)
+- [Project Structure](#project-structure)
+- [Usage](#usage)
+- [Available Scripts](#available-scripts)
+- [Development](#development)
+- [Security](#security)
+- [Contributing](#contributing)
+- [License](#license)
+- [Resources](#resources)
+
 ## Overview
 
 PM is a portfolio management system designed to streamline the creation and tracking of design requests. It helps teams organize work by portfolio, assign priorities, and track progress from creation to completion.
 
 ## Features
 
-- **Dashboard**: View portfolio-wide statistics including total requests, open items, in-progress work, and urgent priorities
-- **Request Management**: Create, view, and track design requests with comprehensive details
-- **Portfolio Organization**: Categorize requests by portfolio (Events, Presidential, Marketing, Internal, External, Tech, youCode, Data)
-- **Team Collaboration**: Assign point of contacts and collaborators to requests
-- **Priority Tracking**: Mark requests as Low, Medium, High, or Urgent priority
-- **Status Workflow**: Track requests through statuses: Open, In Progress, In Review, Completed, Archived
-- **Graphic Type Selection**: Specify request types including Instagram content, LinkedIn posts, certificates, and more
-- **Dark Mode UI**: Modern interface built with Tailwind CSS
+- **Dashboard** — View portfolio-wide statistics including total requests, open items, in-progress work, and urgent priorities
+- **Request Management** — Create, view, and track design requests with comprehensive details
+- **Portfolio Organization** — Categorize requests by portfolio (Events, Presidential, Marketing, Internal, External, Tech, youCode, Data)
+- **Team Collaboration** — Assign points of contact and collaborators to requests
+- **Priority Tracking** — Mark requests as Low, Medium, High, or Urgent priority
+- **Status Workflow** — Track requests through statuses: Open, In Progress, In Review, Completed, Archived
+- **Graphic Type Selection** — Specify request types including Instagram content, LinkedIn posts, certificates, and more
+- **Dark Mode UI** — Modern interface built with Tailwind CSS
+
+## Screenshots
+
+| Dashboard | Request Detail |
+|---|---|
+| ![Dashboard](screenshots/dashboard.png) | ![Request Detail](screenshots/request-detail.png) |
+
+| New Request Form | Requests List |
+|---|---|
+| ![New Request](screenshots/new-request.png) | ![Requests List](screenshots/requests-list.png) |
+
 
 ## Tech Stack
 
-- **Framework**: Next.js 14 with React 18
-- **Language**: TypeScript
-- **Styling**: Tailwind CSS with shadcn/ui components
-- **Backend**: Supabase (PostgreSQL database)
-- **Icons**: Lucide React
-- **Date Handling**: date-fns
+| Layer | Technology |
+|---|---|
+| Framework | Next.js 14 with React 18 |
+| Language | TypeScript |
+| Styling | Tailwind CSS with shadcn/ui components |
+| Backend | Supabase (PostgreSQL database) |
+| Icons | Lucide React |
+| Date Handling | date-fns |
 
 ## Getting Started
 
@@ -56,7 +88,7 @@ PM is a portfolio management system designed to streamline the creation and trac
    ```bash
    cp .env.local.example .env.local
    ```
-   
+
    Edit `.env.local` and add your Supabase credentials:
    ```env
    NEXT_PUBLIC_SUPABASE_URL=your-project-url
@@ -108,6 +140,8 @@ pm/
 │   └── types/                  # TypeScript type definitions
 ├── scripts/
 │   └── seed-supabase.mjs       # Database seeding script
+├── docs/
+│   └── screenshots/            # README screenshots
 └── SUPABASE_SETUP.md           # Detailed setup guide
 ```
 
@@ -136,10 +170,12 @@ pm/
 
 ## Available Scripts
 
-- `npm run dev` - Start development server
-- `npm run build` - Build for production
-- `npm run start` - Start production server
-- `npm run lint` - Run ESLint
+| Command | Description |
+|---|---|
+| `npm run dev` | Start development server |
+| `npm run build` | Build for production |
+| `npm run start` | Start production server |
+| `npm run lint` | Run ESLint |
 
 ## Development
 
