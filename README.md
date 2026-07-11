@@ -48,7 +48,7 @@ PM is a portfolio management system designed to streamline the creation and trac
 
 | Request Detail | Requests List |
 |---|---|
-| ![Request Detail](screenshots/request-detail.png) | ![Requests List](screenshots/request-list.png) |
+| ![Request Detail](screenshots/request-detail-3.png) | ![Requests List](screenshots/request-list.png) |
 
 
 ## Tech Stack
