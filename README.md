@@ -1,14 +1,11 @@
-# Portfolio Manager (PM)
+# WiCS Marketing Manager
 
-A Next.js web application for managing design and marketing requests across multiple portfolios in a team environment.
-
-![Dashboard Screenshot](screenshots/dashboard.png)
+A Next.js web application for managing design and marketing requests for the WiCS (Women in Computer Science) team.
 
 ## Table of Contents
 
 - [Overview](#overview)
 - [Features](#features)
-- [Screenshots](#screenshots)
 - [Tech Stack](#tech-stack)
 - [Getting Started](#getting-started)
 - [Database Schema](#database-schema)
@@ -23,33 +20,19 @@ A Next.js web application for managing design and marketing requests across mult
 
 ## Overview
 
-PM is a portfolio management system designed to streamline the creation and tracking of design requests. It helps teams organize work by portfolio, assign priorities, and track progress from creation to completion.
+WiCS Marketing Manager is a request management system designed to streamline the creation and tracking of design and marketing requests for WiCS. It helps the Marketing and Events teams organize work by portfolio, track deadlines, and manage the creative workflow from submission to completion.
 
 ## Features
 
 - **Dashboard** — View portfolio-wide statistics including total requests, open items, in-progress work, and urgent priorities
 - **Request Management** — Create, view, and track design requests with comprehensive details
-- **Portfolio Organization** — Categorize requests by portfolio (Events, Presidential, Marketing, Internal, External, Tech, youCode, Data)
-- **Team Collaboration** — Assign points of contact and collaborators to requests
+- **Portfolio Organization** — Categorize requests by portfolio (Community, Mentorship, External)
+- **Team Collaboration** — Assign points of contact to requests
 - **Priority Tracking** — Mark requests as Low, Medium, High, or Urgent priority
 - **Status Workflow** — Track requests through statuses: Open, In Progress, In Review, Completed, Archived
 - **Graphic Type Selection** — Specify request types including Instagram content, LinkedIn posts, certificates, and more
+- **Events Team Portal** — Dedicated submission form for Events team members with simplified portfolio options
 - **Dark Mode UI** — Modern interface built with Tailwind CSS
-
-## Screenshots
-
-| Dashboard | Request Detail |
-|---|---|
-| ![Dashboard](screenshots/dashboard.png) | ![Request a new ticket](screenshots/request-detail.png) |
-
-| Login Page | Request Form |
-|---|---|
-| ![Login Page](screenshots/login.png) | ![Request Form](screenshots/request-detail-2.png) |
-
-| Request Detail | Requests List |
-|---|---|
-| ![Request Detail](screenshots/request-detail-3.png) | ![Requests List](screenshots/request-list.png) |
-
 
 ## Tech Stack
 
@@ -73,8 +56,8 @@ PM is a portfolio management system designed to streamline the creation and trac
 
 1. Clone the repository:
    ```bash
-   git clone https://github.com/ellailan/pm.git
-   cd pm
+   git clone https://github.com/katjarj/marketing-manager.git
+   cd marketing-manager
    ```
 
 2. Install dependencies:
@@ -119,7 +102,8 @@ The application uses two main tables:
 - Request details (title, summary, creative vision)
 - Portfolio and team assignments
 - Graphic type specifications
-- Event information (name, time, location)
+- Event information (name, date, time, location)
+- Marketing due date and event date tracking
 - Status and priority tracking
 - Timestamps and audit trail
 
@@ -130,18 +114,19 @@ The application uses two main tables:
 ## Project Structure
 
 ```
-pm/
+marketing-manager/
 ├── src/
 │   ├── app/                    # Next.js app router pages
-│   │   ├── (protected)/        # Authenticated routes
+│   │   ├── (protected)/        # Authenticated routes (admin)
 │   │   │   ├── requests/       # Request management pages
 │   │   │   └── layout.tsx      # Protected layout with sidebar
+│   │   ├── (events)/           # Events team portal
+│   │   │   └── submit/         # Event submission form
 │   │   ├── login/              # Login page
 │   │   └── layout.tsx          # Root layout
 │   ├── components/
 │   │   ├── layout/             # Sidebar, topbar, dialogs
-│   │   ├── ui/                 # Reusable UI components
-│   │   └── tickets/            # Ticket-related components
+│   │   └── ui/                 # Reusable UI components
 │   ├── lib/
 │   │   ├── supabase/           # Supabase client and schema
 │   │   ├── ticket-context.tsx  # Ticket state management
@@ -149,24 +134,34 @@ pm/
 │   └── types/                  # TypeScript type definitions
 ├── scripts/
 │   └── seed-supabase.mjs       # Database seeding script
-├── docs/
-│   └── screenshots/            # README screenshots
 └── SUPABASE_SETUP.md           # Detailed setup guide
 ```
 
 ## Usage
 
-### Creating a Request
+### Creating a Request (Admin)
 
 1. Navigate to "New Request" from the sidebar
 2. Fill in the request form with:
-   - Portfolio selection
+   - Portfolio selection (Community, Mentorship, or External)
    - Point of contact
    - Graphic type(s) needed
-   - Event details (if applicable)
+   - Event details (name, date, time, location)
+   - Marketing due date
    - Summary and creative vision
-   - Deadline
    - Additional requests/notes
+3. Submit the form
+
+### Creating a Request (Events Team)
+
+1. Navigate to the Events Team Portal
+2. Fill in the submission form with:
+   - Portfolio selection (Community, Mentorship, or External)
+   - Point of contact
+   - Graphic type(s) needed
+   - Event details (name, date, time, location)
+   - Marketing due date
+   - Summary and creative vision
 3. Submit the form
 
 ### Managing Requests
@@ -202,9 +197,6 @@ Update `src/lib/supabase/schema.sql` and re-run the SQL in the Supabase SQL Edit
 
 The application includes built-in HTTP Basic Authentication to restrict access. When configured, users will see a login screen before accessing the application.
 
-**Login Screenshot:**
-![Login Page](screenshots/login.png)
-
 **Configuration:**
 
 1. Set the authentication credentials in `.env.local`:
@@ -217,6 +209,7 @@ The application includes built-in HTTP Basic Authentication to restrict access. 
    - Static assets
    - API routes
    - The login page itself
+   - The Events team portal
 
 3. Users are redirected to `/login` if not authenticated
 4. Session cookies expire when the browser is closed (no persistent login)

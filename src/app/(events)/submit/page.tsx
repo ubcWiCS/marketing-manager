@@ -161,7 +161,7 @@ function SubmitForm() {
               </div>
               <h2 className="text-2xl font-bold text-navy-800 mb-2">Request Submitted!</h2>
               <p className="text-surface-600 mb-6 max-w-sm">
-                Your request has been sent to the Marketing team. They'll be in touch with updates.
+                Your request has been sent to the Marketing team. You will hear from them with updates.
               </p>
               <button
                 onClick={handleSubmitAnother}
@@ -182,8 +182,8 @@ function SubmitForm() {
                         step > s.num
                           ? "bg-plum-500 text-white border-plum-500"
                           : step === s.num
-                          ? "bg-plum-100 text-plum-700 border-plum-300"
-                          : "text-surface-500"
+                            ? "bg-plum-100 text-plum-700 border-plum-300"
+                            : "text-surface-500"
                       )}>
                         {step > s.num ? <Check className="w-4 h-4" /> : s.num}
                       </div>
