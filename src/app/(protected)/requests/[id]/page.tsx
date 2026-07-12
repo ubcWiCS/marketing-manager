@@ -4,8 +4,8 @@ import { useState } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import {
-  ArrowLeft, Clock, Calendar, MapPin, User,
-  Paperclip, Edit3, CheckCircle, RotateCcw, Trash2,
+  ArrowLeft, Clock, Calendar, User,
+  Edit3, Trash2,
 } from "lucide-react";
 import { useTickets } from "@/lib/ticket-context";
 import { formatDate, formatDateTime, timeAgo } from "@/lib/utils";
@@ -15,7 +15,7 @@ import { RequestStatus, REQUEST_STATUSES, Priority, PRIORITIES } from "@/types";
 
 export default function RequestDetailPage() {
   const params = useParams();
-  const { tickets, completeTicket, restoreTicket, updateTicket, deleteTicket } = useTickets();
+  const { tickets, updateTicket, deleteTicket } = useTickets();
   const ticket = tickets.find((t) => t.id === params.id);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
@@ -48,25 +48,6 @@ export default function RequestDetailPage() {
             <h1 className="text-xl font-medium text-navy-800">{ticket.title}</h1>
           </div>
           <div className="flex gap-2">
-            {ticket.status === "Completed" ? (
-              <button
-                onClick={() => restoreTicket(ticket.id)}
-                className="text-sm font-medium text-navy-600 hover:text-green-600 rounded-hand px-3 py-1.5 hover:bg-green-50 transition-colors"
-                title="Reopen ticket"
-              >
-                <RotateCcw className="w-4 h-4 inline" />
-                Reopen
-              </button>
-            ) : (
-              <button
-                onClick={() => completeTicket(ticket.id)}
-                className="text-sm font-medium text-navy-600 hover:text-green-600 rounded-hand px-3 py-1.5 hover:bg-green-50 transition-colors"
-                title="Mark ticket as complete"
-              >
-                <CheckCircle className="w-4 h-4 inline" />
-                Mark Complete
-              </button>
-            )}
             <button
               onClick={() => setShowDeleteDialog(true)}
               className="text-sm font-medium text-navy-600 hover:text-red-600 rounded-hand px-3 py-1.5 hover:bg-red-50 transition-colors"
@@ -75,9 +56,9 @@ export default function RequestDetailPage() {
               <Trash2 className="w-4 h-4 inline" />
               Delete
             </button>
-            <Link 
+            <Link
               href={`/requests/new?edit=${ticket.id}`}
-              className="btn-brutal-secondary text-sm py-1.5"
+              className="btn-brutal-primary text-xs py-1 px-3"
             >
               <Edit3 className="w-4 h-4 inline" />
               Edit
@@ -100,6 +81,23 @@ export default function RequestDetailPage() {
             >
               {REQUEST_STATUSES.filter((s) => s !== "Archived").map((status) => (
                 <option key={status} value={status}>{status}</option>
+              ))}
+            </select>
+          </div>
+          <div className="flex items-center gap-1.5">
+            <select
+              value={ticket.priority}
+              onChange={(e) => updateTicket(ticket.id, { priority: e.target.value as Priority })}
+              className={cn(
+                "text-sm font-medium px-2 py-1 rounded-hand border border-surface-200 bg-white",
+                ticket.priority === "Urgent" && "text-red-600",
+                ticket.priority === "High" && "text-orange-600",
+                ticket.priority === "Medium" && "text-amber-600",
+                ticket.priority === "Low" && "text-emerald-600"
+              )}
+            >
+              {PRIORITIES.map((p) => (
+                <option key={p} value={p}>{p}</option>
               ))}
             </select>
           </div>
