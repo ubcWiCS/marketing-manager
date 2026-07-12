@@ -13,6 +13,7 @@ CREATE TABLE IF NOT EXISTS tickets (
   graphic_types TEXT[] NOT NULL,
   other_graphic_type TEXT,
   event_name TEXT NOT NULL,
+  event_date DATE,
   event_time TEXT,
   event_location TEXT,
   deadline DATE NOT NULL,
