@@ -9,14 +9,12 @@ function LoginForm() {
   const error = searchParams.get("error");
   const [isLoading, setIsLoading] = useState(false);
 
-  const redirectTo = searchParams.get("redirect") || "/";
-
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     setIsLoading(true);
 
     const formData = new FormData(e.currentTarget);
-    
+
     try {
       const response = await fetch("/api/auth/login", {
         method: "POST",
@@ -26,11 +24,15 @@ function LoginForm() {
       const result = await response.json();
 
       if (result.success) {
-        router.push(redirectTo);
+        if (result.role === "events") {
+          router.push("/submit");
+        } else {
+          router.push("/");
+        }
       } else {
         router.push("/login?error=1");
       }
-    } catch (error) {
+    } catch {
       router.push("/login?error=1");
     } finally {
       setIsLoading(false);
@@ -38,17 +40,17 @@ function LoginForm() {
   };
 
   return (
-    <div className="flex items-center justify-center min-h-screen bg-gold-50 p-4 relative overflow-hidden">
+    <div className="flex items-center justify-center min-h-screen p-4 relative overflow-hidden">
       {/* Background decorative elements */}
       <div className="absolute top-20 left-20 w-32 h-32 bg-plum-200/30 rounded-full -rotate-6"></div>
-      <div className="absolute bottom-32 right-32 w-24 h-24 bg-gold-300/40 rounded-full rotate-3"></div>
-      
+      <div className="absolute bottom-32 right-32 w-24 h-24 bg-plum-300/20 rounded-full rotate-3"></div>
+
       <div className="card-brutal w-full max-w-sm p-8 relative z-10">
         <div className="text-center mb-6">
           <h1 className="text-2xl font-black text-navy-800 mb-2 uppercase">Welcome!</h1>
-          <p className="text-sm text-surface-600 font-medium">Sign in to see your tasks</p>
+          <p className="text-sm text-surface-600 font-medium">Sign in to continue</p>
         </div>
-        
+
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
             <label className="label-brutal">Username</label>
@@ -56,11 +58,11 @@ function LoginForm() {
               type="text"
               name="username"
               className="input-brutal"
-              placeholder="admin"
+              placeholder="username"
               required
             />
           </div>
-          
+
           <div>
             <label className="label-brutal">Password</label>
             <input
@@ -71,14 +73,14 @@ function LoginForm() {
               required
             />
           </div>
-          
+
           {error && (
             <p className="text-sm text-red-600 font-bold uppercase">Invalid credentials. Please try again.</p>
           )}
-          
-          <button 
-            type="submit" 
-            className="btn-brutal-primary w-full" 
+
+          <button
+            type="submit"
+            className="btn-brutal-primary w-full"
             disabled={isLoading}
           >
             {isLoading ? "Signing In..." : "Sign In"}
@@ -91,7 +93,7 @@ function LoginForm() {
 
 export default function LoginPage() {
   return (
-    <Suspense fallback={<div className="flex items-center justify-center min-h-screen bg-gold-50">Loading...</div>}>
+    <Suspense fallback={<div className="flex items-center justify-center min-h-screen">Loading...</div>}>
       <LoginForm />
     </Suspense>
   );

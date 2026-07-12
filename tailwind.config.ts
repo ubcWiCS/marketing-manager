@@ -9,45 +9,45 @@ const config: Config = {
   theme: {
     extend: {
       colors: {
-        // Neo-brutalism primary palette
+        // Redefined navy as a dark purple/slate palette (contrast-optimized)
         navy: {
-          50: "#f0f3ff",
-          100: "#e1e8ff",
-          200: "#c6d2ff",
-          300: "#a4b4ff",
-          400: "#7d8dff",
-          500: "#5a67ff",
-          600: "#4850e6",
-          700: "#3a3fc1",
-          800: "#323696",
-          900: "#133272", // Primary navy
-          950: "#12122e",
+          50: "#f7f6fd",
+          100: "#f0eefa",
+          200: "#e3dffa",
+          300: "#cecaf6",
+          400: "#b2a1ec", // #b2a1ec Target light purple
+          500: "#7662c8", // #7662c8 Accessible purple for contrast
+          600: "#614db2",
+          700: "#4f3c98",
+          800: "#2a2154",
+          900: "#1b1437", // Very dark purple/black for text
+          950: "#0e0a1f",
         },
-        // Gold for backgrounds
+        // Redefined gold as a pastel pink palette (using target #fad2e0)
         gold: {
-          50: "#FEF9E3",
-          100: "#FEF5D0",
-          200: "#FDF4C8", // Primary gold/cream
-          300: "#FFE88C",
-          400: "#FFD93D",
-          500: "#F9C74F",
-          600: "#E9B535",
-          700: "#C99A2A",
-          800: "#A1761F",
-          900: "#735114",
+          50: "#fff5f8",  // Very light pink for content backdrops
+          100: "#ffeef4", // Softer pink
+          200: "#fad2e0", // Target #fad2e0 pink for page backgrounds
+          300: "#f8bad1",
+          400: "#f597ba",
+          500: "#e86c9d",
+          600: "#d2477f",
+          700: "#b22e63",
+          800: "#8f1c48",
+          900: "#6c1132",
         },
-        // Purple accent
-        purple: {
-          50: "#FAF5FF",
-          100: "#F3E8FF",
-          200: "#E9D9FF",
-          300: "#D5BCFF",
-          400: "#C4B5FD",
-          500: "#953A90",
-          600: "#7A2E76",
-          700: "#5F215C",
-          800: "#441442",
-          900: "#2F0D28",
+        // Redefined plum as brand accent palette centered around target #b2a1ec and accessible #7662c8
+        plum: {
+          50: "#f7f6fd",
+          100: "#f0eefa",
+          200: "#e3dffa",
+          300: "#cecaf6",
+          400: "#b2a1ec", // Target light purple
+          500: "#7662c8", // Accessible brand purple
+          600: "#614db2",
+          700: "#4f3c98",
+          800: "#41317e",
+          900: "#362967",
         },
         // Supporting colors
         "light-blue": {
@@ -74,37 +74,25 @@ const config: Config = {
           800: "#825DA3",
           900: "#6E4992",
         },
-        // Keep existing surface colors for softer backgrounds
+        // Softer neutral/surface colors
         surface: {
-          50: "#fafaf7",
-          100: "#f5f4ef",
-          200: "#eae8e0",
-          300: "#d8d5c8",
-          400: "#bfbba8",
-          500: "#a8a38c",
-          600: "#8b8670",
-          700: "#6f6a58",
-          800: "#555140",
-          900: "#3d3a2e",
-          950: "#221f18",
-        },
-        plum: {
-          50: "#f5f3ff",
-          100: "#ede9fe",
-          200: "#ddd6fe",
-          300: "#c4b5fd",
-          400: "#a78bfa",
-          500: "#8b5cf6",
-          600: "#7c3aed",
-          700: "#6d28d9",
-          800: "#5b21b6",
-          900: "#4c1d95",
+          50: "#faf9fa",
+          100: "#f4f3f4",
+          200: "#eae7ea",
+          300: "#dad6db",
+          400: "#c1bbc2",
+          500: "#a9a2aa",
+          600: "#8b858c",
+          700: "#706971",
+          800: "#565057",
+          900: "#3e3a3f",
+          950: "#232024",
         },
         status: {
           open: "#a7f3d0",
           in_progress: "#bfdbfe",
           review: "#fde68a",
-          completed: "#ddd6fe",
+          completed: "#d7d3e7",
           archived: "#d1d5db",
         },
       },

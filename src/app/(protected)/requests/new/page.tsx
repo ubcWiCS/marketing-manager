@@ -9,11 +9,13 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
-  Portfolio, PORTFOLIOS, PORTFOLIO_COLORS,
+  Portfolio, PORTFOLIO_COLORS,
   GraphicType, GRAPHIC_TYPES,
   NewTicketForm, Ticket,
 } from "@/types";
 import { useTickets } from "@/lib/ticket-context";
+
+const FORM_PORTFOLIOS: Portfolio[] = ["Community", "Mentorship", "External"];
 
 const STEPS = [
   { num: 1, label: "Portfolio", desc: "Select portfolio & contact" },
@@ -54,6 +56,7 @@ function NewRequestForm() {
     graphicTypes: [],
     otherGraphicType: "",
     eventName: "",
+    eventDate: "",
     eventTime: "",
     eventLocation: "",
     summary: "",
@@ -63,7 +66,7 @@ function NewRequestForm() {
     additionalRequests: "",
   };
 
-  const [form, setForm] = useState<NewTicketForm>({ 
+  const [form, setForm] = useState<NewTicketForm>({
     ...defaultFormValues,
     deadline: new Date().toISOString().split('T')[0]
   });
@@ -82,6 +85,7 @@ function NewRequestForm() {
           graphicTypes: ticket.graphicTypes,
           otherGraphicType: "",
           eventName: ticket.eventName,
+          eventDate: ticket.eventDate || "",
           eventTime: ticket.eventTime,
           eventLocation: ticket.eventLocation,
           summary: ticket.summary,
@@ -143,6 +147,7 @@ function NewRequestForm() {
           graphicTypes: form.graphicTypes,
           otherGraphicType: form.otherGraphicType,
           eventName: form.eventName,
+          eventDate: form.eventDate,
           eventTime: form.eventTime,
           eventLocation: form.eventLocation,
           summary: form.summary,
@@ -167,6 +172,7 @@ function NewRequestForm() {
           graphicTypes: form.graphicTypes,
           otherGraphicType: form.otherGraphicType,
           eventName: form.eventName,
+          eventDate: form.eventDate,
           eventTime: form.eventTime,
           eventLocation: form.eventLocation,
           summary: form.summary,
@@ -206,8 +212,8 @@ function NewRequestForm() {
                 step > s.num
                   ? "bg-plum-500 text-white border-plum-500"
                   : step === s.num
-                  ? "bg-plum-100 text-plum-700 border-plum-300"
-                  : "text-surface-500"
+                    ? "bg-plum-100 text-plum-700 border-plum-300"
+                    : "text-surface-500"
               )}>
                 {step > s.num ? <Check className="w-4 h-4" /> : s.num}
               </div>
@@ -237,8 +243,8 @@ function NewRequestForm() {
               <h2 className="text-lg font-medium text-navy-800">Select Portfolio</h2>
               <p className="text-sm text-surface-500">Which portfolio does this request belong to?</p>
             </div>
-            <div className="grid grid-cols-4 gap-2">
-              {PORTFOLIOS.map((p) => (
+            <div className="grid grid-cols-3 gap-3">
+              {FORM_PORTFOLIOS.map((p) => (
                 <button
                   key={p}
                   onClick={() => setForm((prev) => ({ ...prev, portfolio: p }))}
@@ -328,50 +334,59 @@ function NewRequestForm() {
             <div className="grid grid-cols-2 gap-3">
               <div className="col-span-2 space-y-1">
                 <label className="label-brutal">Name / Title</label>
-                <input 
-                  type="text" 
-                  className="input-brutal" 
+                <input
+                  type="text"
+                  className="input-brutal"
                   placeholder="e.g. Fall Recruitment, Merch Design"
-                  value={form.eventName} 
-                  onChange={(e) => setForm((prev) => ({ ...prev, eventName: e.target.value }))} 
+                  value={form.eventName}
+                  onChange={(e) => setForm((prev) => ({ ...prev, eventName: e.target.value }))}
                 />
               </div>
               <div className="space-y-1">
                 <label className="label-brutal">Time (Optional)</label>
-                <input 
-                  type="text" 
-                  className="input-brutal" 
+                <input
+                  type="text"
+                  className="input-brutal"
                   placeholder="e.g. 10:00 AM"
-                  value={form.eventTime} 
-                  onChange={(e) => setForm((prev) => ({ ...prev, eventTime: e.target.value }))} 
+                  value={form.eventTime}
+                  onChange={(e) => setForm((prev) => ({ ...prev, eventTime: e.target.value }))}
                 />
               </div>
               <div className="space-y-1">
                 <label className="label-brutal">Location (Optional)</label>
-                <input 
-                  type="text" 
-                  className="input-brutal" 
+                <input
+                  type="text"
+                  className="input-brutal"
                   placeholder="e.g. Student Center"
-                  value={form.eventLocation} 
-                  onChange={(e) => setForm((prev) => ({ ...prev, eventLocation: e.target.value }))} 
+                  value={form.eventLocation}
+                  onChange={(e) => setForm((prev) => ({ ...prev, eventLocation: e.target.value }))}
                 />
               </div>
-              <div className="col-span-2 space-y-1">
-                <label className="label-brutal">Due Date</label>
-                <input 
-                  type="date" 
+              <div className="space-y-1">
+                <label className="label-brutal">Event Date</label>
+                <input
+                  type="date"
                   className="input-brutal"
-                  value={form.deadline} 
-                  onChange={(e) => setForm((prev) => ({ ...prev, deadline: e.target.value }))} 
+                  value={form.eventDate}
+                  onChange={(e) => setForm((prev) => ({ ...prev, eventDate: e.target.value }))}
+                />
+              </div>
+              <div className="space-y-1">
+                <label className="label-brutal">Marketing Due Date</label>
+                <input
+                  type="date"
+                  className="input-brutal"
+                  value={form.deadline}
+                  onChange={(e) => setForm((prev) => ({ ...prev, deadline: e.target.value }))}
                 />
               </div>
               <div className="col-span-2 space-y-1">
                 <label className="label-brutal">Summary</label>
-                <textarea 
-                  className="input-brutal min-h-[60px] resize-none" 
+                <textarea
+                  className="input-brutal min-h-[60px] resize-none"
                   placeholder="Brief description..."
-                  value={form.summary} 
-                  onChange={(e) => setForm((prev) => ({ ...prev, summary: e.target.value }))} 
+                  value={form.summary}
+                  onChange={(e) => setForm((prev) => ({ ...prev, summary: e.target.value }))}
                 />
               </div>
             </div>
@@ -447,8 +462,8 @@ function NewRequestForm() {
                 {form.references.map((ref, i) => (
                   <div key={i} className="flex items-center justify-between p-2 rounded border border-surface-200 bg-plum-50/30">
                     <span className="text-xs text-navy-700 truncate flex-1">{ref}</span>
-                    <button 
-                      onClick={() => removeReference(i)} 
+                    <button
+                      onClick={() => removeReference(i)}
                       className="text-surface-500 hover:text-red-600"
                     >
                       <X className="w-3.5 h-3.5" />
@@ -481,7 +496,11 @@ function NewRequestForm() {
                 <p className="font-medium text-navy-800">{form.graphicTypes.join(", ")}</p>
               </div>
               <div className="p-3 bg-plum-50/50 rounded-hand">
-                <p className="text-xs text-navy-600 font-medium uppercase">Due</p>
+                <p className="text-xs text-navy-600 font-medium uppercase">Event Date</p>
+                <p className="font-medium text-navy-800">{form.eventDate || "—"}</p>
+              </div>
+              <div className="p-3 bg-plum-50/50 rounded-hand">
+                <p className="text-xs text-navy-600 font-medium uppercase">Marketing Due Date</p>
                 <p className="font-medium text-navy-800">{form.deadline}</p>
               </div>
             </div>

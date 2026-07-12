@@ -28,14 +28,14 @@ export default function RequestsPage() {
 
   const filtered = useMemo(() => {
     let items = [...tickets];
-    
+
     // Filter by active/completed tab
     if (activeTab === "completed") {
       items = items.filter((t) => t.status === "Completed");
     } else {
       items = items.filter((t) => t.status !== "Completed");
     }
-    
+
     if (search) {
       const q = search.toLowerCase();
       items = items.filter((t) =>
@@ -50,16 +50,17 @@ export default function RequestsPage() {
   }, [search, filterPortfolio, filterStatus, filterMember, activeTab, tickets]);
 
   return (
-    <div className="p-6 max-w-5xl mx-auto animate-fade-in">
-      <div className="flex items-center justify-between">
+    <div className="h-full flex flex-col">
+      {/* Page Header (same Y-level and styling as Board header) */}
+      <div className="flex items-center justify-between px-5 py-3 border-b border-surface-200 bg-white/80 shrink-0">
         <div>
           <h1 className="text-xl font-bold text-navy-800">All Tickets</h1>
           <p className="text-xs text-surface-500">{filtered.length} result{filtered.length !== 1 ? "s" : ""}</p>
         </div>
         <div className="flex items-center gap-2">
           <div className="flex items-center bg-white/60 rounded-lg p-0.5">
-            <button 
-              onClick={() => setView("list")} 
+            <button
+              onClick={() => setView("list")}
               className={cn(
                 "p-1.5 rounded font-medium text-xs transition-all",
                 view === "list" ? "bg-plum-100 text-plum-700" : "text-surface-500 hover:bg-plum-50"
@@ -67,8 +68,8 @@ export default function RequestsPage() {
             >
               <List className="w-4 h-4" />
             </button>
-            <button 
-              onClick={() => setView("board")} 
+            <button
+              onClick={() => setView("board")}
               className={cn(
                 "p-1.5 rounded font-medium text-xs transition-all",
                 view === "board" ? "bg-plum-100 text-plum-700" : "text-surface-500 hover:bg-plum-50"
@@ -77,15 +78,17 @@ export default function RequestsPage() {
               <Columns className="w-4 h-4" />
             </button>
           </div>
-          <Link href="/requests/new" className="btn-brutal-primary text-xs">
+          <Link href="/requests/new" className="btn-brutal-primary text-xs py-1.5 px-3">
             <PlusCircle className="w-3.5 h-3.5" />
-            New Request
+            New Ticket
           </Link>
         </div>
       </div>
 
-      {/* Tabs */}
-      <div className="flex items-center gap-1 mb-4 bg-white/60 rounded-hand p-1 w-fit">
+      {/* Main Content (with standard padding) */}
+      <div className="flex-1 p-6 max-w-5xl w-full mx-auto animate-fade-in overflow-y-auto">
+        {/* Tabs */}
+        <div className="flex items-center gap-1 mb-4 bg-white/60 rounded-hand p-1 w-fit">
         <button
           onClick={() => setActiveTab("active")}
           className={cn(
@@ -176,10 +179,10 @@ export default function RequestsPage() {
               </>
             ) : (
               filtered.map((ticket) => (
-                <tr 
-                  key={ticket.id} 
+                <tr
+                  key={ticket.id}
                   className={cn(
-                    "hover:bg-plum-50/30 transition-all", 
+                    "hover:bg-plum-50/30 transition-all",
                     ticket.status === "Archived" && "opacity-60"
                   )}
                 >
@@ -225,7 +228,7 @@ export default function RequestsPage() {
                   <td className="px-4 py-2.5">
                     <div className="flex items-center gap-2">
                       <span className={cn(
-                        "text-sm", 
+                        "text-sm",
                         new Date(ticket.deadline) < new Date() ? "text-red-600" : "text-surface-500"
                       )}>
                         {new Date(ticket.deadline).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
@@ -269,6 +272,7 @@ export default function RequestsPage() {
         cancelText="Cancel"
         variant="info"
       />
+      </div>
     </div>
   );
 }

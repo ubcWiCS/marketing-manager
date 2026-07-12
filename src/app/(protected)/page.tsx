@@ -61,7 +61,7 @@ export default function BoardPage() {
       </div>
 
       {/* Kanban columns */}
-      <div className="flex-1 flex gap-3 p-4 overflow-x-auto bg-gold-50">
+      <div className="flex-1 flex gap-3 p-4 overflow-x-auto">
         {loading ? (
           <>
             <SkeletonColumn />

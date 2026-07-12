@@ -7,7 +7,9 @@ export type Portfolio =
   | "External"
   | "Tech"
   | "youCode"
-  | "Data";
+  | "Data"
+  | "Community"
+  | "Mentorship";
 
 export const PORTFOLIOS: Portfolio[] = [
   "Events",
@@ -29,6 +31,8 @@ export const PORTFOLIO_COLORS: Record<Portfolio, string> = {
   Tech: "#22c55e",
   youCode: "#eab308",
   Data: "#6366f1",
+  Community: "#f43f5e",
+  Mentorship: "#a855f7",
 };
 
 // ─── Graphic Types ───
@@ -85,6 +89,7 @@ export interface Ticket {
   graphicTypes: GraphicType[];
   otherGraphicType: string;
   eventName: string;
+  eventDate: string;
   eventTime: string;
   eventLocation: string;
   summary: string;
@@ -108,6 +113,7 @@ export interface NewTicketForm {
   graphicTypes: GraphicType[];
   otherGraphicType: string;
   eventName: string;
+  eventDate: string;
   eventTime: string;
   eventLocation: string;
   summary: string;
