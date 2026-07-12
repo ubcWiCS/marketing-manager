@@ -1,8 +1,8 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Submit a Request — Marketing Team",
-  description: "Submit a graphic design or marketing request to the Marketing team.",
+  title: "WiCS Marketing Manager",
+  description: "Submit a graphic design or marketing request to the WiCS Marketing team.",
 };
 
 export default function EventsLayout({

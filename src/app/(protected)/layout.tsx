@@ -4,7 +4,7 @@ import { TicketProvider } from "@/lib/ticket-context";
 import { TeamProvider } from "@/lib/team-context";
 
 export const metadata: Metadata = {
-  title: "Portfolio Manager",
+  title: "WiCS Marketing Manager",
   description: "Brutalist ticket management for student organizations",
 };
 
