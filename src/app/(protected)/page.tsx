@@ -41,10 +41,14 @@ export default function BoardPage() {
   };
 
   const { members } = useTeamMembers();
-  const columns = members.map((m) => [
-    m.name,
-    tickets.filter((t) => t.assignedTo === m.name),
-  ]) as [string, Ticket[]][];
+  const unassignedTickets = tickets.filter((t) => !t.assignedTo);
+  const columns = [
+    ["Unassigned", unassignedTickets],
+    ...members.map((m) => [
+      m.name,
+      tickets.filter((t) => t.assignedTo === m.name),
+    ]),
+  ] as [string, Ticket[]][];
 
   return (
     <div className="h-full flex flex-col">
