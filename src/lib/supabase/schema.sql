@@ -55,11 +55,13 @@ CREATE POLICY "Allow all operations on team_members" ON team_members
 
 -- Insert default team members
 INSERT INTO team_members (name) VALUES
-  ('Ella'),
-  ('Yolanda'),
-  ('Claire'),
-  ('Amber'),
-  ('Rosie')
+  ('Raisa'),
+  ('Angelina'),
+  ('Grace'),
+  ('Selima'),
+  ('Olivia'),
+  ('Emily'),
+  ('Giorgia')
 ON CONFLICT (name) DO NOTHING;
 
 -- Insert sample tickets (optional - remove if you don't want sample data)
