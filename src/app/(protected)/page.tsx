@@ -2,19 +2,24 @@
 
 import { useState } from "react";
 import Link from "next/link";
-import { PlusCircle } from "lucide-react";
+import { PlusCircle, User } from "lucide-react";
 import { cn } from "@/lib/utils";
-import { Avatar } from "@/components/ui/avatar";
 import { PortfolioDot } from "@/components/ui/portfolio-dot";
 import { SkeletonColumn } from "@/components/ui/skeleton";
 import { useTickets } from "@/lib/ticket-context";
-import { useTeamMembers } from "@/lib/team-context";
-import { Ticket, Portfolio } from "@/types";
+import { Ticket, Portfolio, RequestStatus } from "@/types";
 
 const priorityOrder: Record<string, number> = { Urgent: 4, High: 3, Medium: 2, Low: 1 };
 
+const STATUS_COLUMNS: { status: RequestStatus; label: string; color: string }[] = [
+  { status: "Open", label: "Open", color: "text-navy-700" },
+  { status: "In Progress", label: "In Progress", color: "text-amber-700" },
+  { status: "In Review", label: "In Review", color: "text-blue-700" },
+  { status: "Completed", label: "Completed", color: "text-green-700" },
+];
+
 export default function BoardPage() {
-  const { tickets, moveTicket, addToBoard, loading } = useTickets();
+  const { tickets, loading, updateTicket } = useTickets();
   const [draggingId, setDraggingId] = useState<string | null>(null);
 
   const handleDragStart = (e: React.DragEvent, id: string) => {
@@ -23,32 +28,26 @@ export default function BoardPage() {
     e.dataTransfer.setData("text/plain", id);
   };
 
-  const handleDrop = (e: React.DragEvent, targetMember: string) => {
-    e.preventDefault();
-    const id = e.dataTransfer.getData("text/plain");
-    if (!id) return;
-    const source = e.dataTransfer.getData("source");
-    moveTicket(id, targetMember);
-    if (source === "sidebar") {
-      addToBoard(id);
-    }
-    setDraggingId(null);
-  };
-
   const handleDragOver = (e: React.DragEvent) => {
     e.preventDefault();
     e.dataTransfer.dropEffect = "move";
   };
 
-  const { members } = useTeamMembers();
-  const unassignedTickets = tickets.filter((t) => !t.assignedTo);
-  const columns = [
-    ["Unassigned", unassignedTickets],
-    ...members.map((m) => [
-      m.name,
-      tickets.filter((t) => t.assignedTo === m.name),
-    ]),
-  ] as [string, Ticket[]][];
+  const handleDrop = async (e: React.DragEvent, targetStatus: RequestStatus) => {
+    e.preventDefault();
+    const ticketId = e.dataTransfer.getData("text/plain");
+    if (!ticketId) return;
+    const ticket = tickets.find((t) => t.id === ticketId);
+    if (!ticket || ticket.status === targetStatus) return;
+    await updateTicket(ticketId, { status: targetStatus });
+    setDraggingId(null);
+  };
+
+  const columns = STATUS_COLUMNS.map(({ status, label, color }) => [
+    label,
+    tickets.filter((t) => t.status === status),
+    color,
+  ]) as [string, Ticket[], string][];
 
   return (
     <div className="h-full flex flex-col">
@@ -72,14 +71,13 @@ export default function BoardPage() {
             <SkeletonColumn />
             <SkeletonColumn />
             <SkeletonColumn />
-            <SkeletonColumn />
           </>
         ) : (
-          columns.map(([member, memberTickets]) => (
+          columns.map(([label, columnTickets, color], statusIdx) => (
             <div
-              key={member}
+              key={label}
               onDragOver={handleDragOver}
-              onDrop={(e) => handleDrop(e, member)}
+              onDrop={(e) => handleDrop(e, STATUS_COLUMNS[statusIdx].status)}
               className={cn(
                 "flex flex-col w-64 shrink-0 rounded-hand-xl bg-surface-100/60 transition-colors duration-200",
                 draggingId && "ring-2 ring-plum-300 ring-dashed"
@@ -87,16 +85,15 @@ export default function BoardPage() {
             >
               {/* Column header */}
               <div className="flex items-center gap-2 px-3 py-2.5 border-b border-surface-200/50">
-                <Avatar name={member} size="sm" />
                 <div className="flex-1 min-w-0">
-                  <p className="text-xs font-semibold text-navy-800 truncate">{member}</p>
-                  <p className="text-[10px] text-surface-400">{memberTickets.length} ticket{memberTickets.length !== 1 ? "s" : ""}</p>
+                  <p className={`text-xs font-semibold truncate ${color}`}>{label}</p>
+                  <p className="text-[10px] text-surface-400">{columnTickets.length} ticket{columnTickets.length !== 1 ? "s" : ""}</p>
                 </div>
               </div>
 
               {/* Cards */}
               <div className="flex-1 space-y-1.5 p-2 overflow-y-auto">
-                {(memberTickets as Ticket[])
+                {(columnTickets as Ticket[])
                   .sort((a, b) => priorityOrder[b.priority] - priorityOrder[a.priority])
                   .map((ticket) => (
                     <div
@@ -111,29 +108,38 @@ export default function BoardPage() {
                           : "hover:border-plum-300 hover:shadow-sm"
                       )}
                     >
-                      <div className="flex items-center gap-1.5 mb-1">
-                        <span className={cn(
-                          "text-[10px] font-medium px-1.5 py-0.5 rounded-full",
-                          ticket.priority === "Urgent" && "bg-red-50 text-red-600",
-                          ticket.priority === "High" && "bg-orange-50 text-orange-600",
-                          ticket.priority === "Medium" && "bg-amber-50 text-amber-600",
-                          ticket.priority === "Low" && "bg-emerald-50 text-emerald-600",
-                        )}>
-                          {ticket.priority}
-                        </span>
-                      </div>
-                      <Link href={`/requests/${ticket.id}`} className="block">
+                      <Link href={`/requests/${ticket.id}`} className="block cursor-pointer">
+                        <div className="flex items-center gap-1.5 mb-1">
+                          <span className={cn(
+                            "text-[10px] font-medium px-1.5 py-0.5 rounded-full",
+                            ticket.priority === "Urgent" && "bg-red-50 text-red-600",
+                            ticket.priority === "High" && "bg-orange-50 text-orange-600",
+                            ticket.priority === "Medium" && "bg-amber-50 text-amber-600",
+                            ticket.priority === "Low" && "bg-emerald-50 text-emerald-600",
+                          )}>
+                            {ticket.priority}
+                          </span>
+                        </div>
                         <p className="text-xs font-medium text-navy-800 leading-snug line-clamp-2 hover:text-plum-600 transition-colors">
                           {ticket.title}
                         </p>
                       </Link>
-                      <div className="flex items-center gap-2 mt-1.5">
+                      <div className="flex items-center gap-2 mt-1.5 border-t border-surface-100 pt-1.5">
                         <PortfolioDot portfolio={ticket.portfolio as Portfolio} />
                         <span className={cn(
                           "text-[10px]",
                           new Date(ticket.deadline) < new Date() ? "text-red-500" : "text-surface-400"
                         )}>
                           {new Date(ticket.deadline).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
+                        </span>
+                        <span className={cn(
+                          "ml-auto inline-flex items-center gap-1 text-[10px] font-medium px-1.5 py-0.5 rounded-full truncate max-w-[90px]",
+                          ticket.assignedTo
+                            ? "bg-plum-50 text-plum-700"
+                            : "bg-surface-100 text-surface-400"
+                        )}>
+                          <User className="w-2.5 h-2.5 shrink-0" />
+                          {ticket.assignedTo || "Unassigned"}
                         </span>
                       </div>
                     </div>

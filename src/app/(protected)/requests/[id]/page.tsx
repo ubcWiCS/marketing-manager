@@ -4,10 +4,11 @@ import { useState } from "react";
 import Link from "next/link";
 import { useParams } from "next/navigation";
 import {
-  ArrowLeft, Clock, Calendar, User,
+  ArrowLeft, Clock, Calendar, User, UserPlus, UserX,
   Edit3, Trash2,
 } from "lucide-react";
 import { useTickets } from "@/lib/ticket-context";
+import { useTeamMembers } from "@/lib/team-context";
 import { formatDate, formatDateTime, timeAgo } from "@/lib/utils";
 import { ConfirmDialog } from "@/components/ui/confirm-dialog";
 import { cn } from "@/lib/utils";
@@ -16,6 +17,7 @@ import { RequestStatus, REQUEST_STATUSES, Priority, PRIORITIES } from "@/types";
 export default function RequestDetailPage() {
   const params = useParams();
   const { tickets, updateTicket, deleteTicket } = useTickets();
+  const { members } = useTeamMembers();
   const ticket = tickets.find((t) => t.id === params.id);
   const [showDeleteDialog, setShowDeleteDialog] = useState(false);
 
@@ -105,11 +107,34 @@ export default function RequestDetailPage() {
             <User className="w-4 h-4" />
             <span>{ticket.pointOfContact}</span>
           </div>
-          <div className="flex items-center gap-1.5 text-navy-600">
+          <div className="flex items-center gap-1.5">
+            <label className="flex items-center gap-1.5 text-sm text-navy-600">
+              {ticket.assignedTo ? <UserPlus className="w-4 h-4" /> : <UserX className="w-4 h-4" />}
+              <span>Assigned to:</span>
+            </label>
+            <select
+              value={ticket.assignedTo || ""}
+              onChange={(e) => updateTicket(ticket.id, { assignedTo: e.target.value || undefined })}
+              className={cn(
+                "text-sm px-2 py-1 rounded-hand border border-surface-200 bg-white",
+                ticket.assignedTo
+                  ? "text-plum-700 font-medium"
+                  : "text-surface-400"
+              )}
+            >
+              <option value="">Unassigned</option>
+              {members.map((m) => (
+                <option key={m.id} value={m.name}>{m.name}</option>
+              ))}
+            </select>
+          </div>
+        </div>
+        <div className="flex items-center gap-4 flex-wrap text-sm mt-3 pt-3 border-t border-surface-100">
+          <div className="flex items-center gap-1.5 text-surface-500">
             <Calendar className="w-4 h-4" />
             <span>Created {formatDateTime(ticket.createdAt)}</span>
           </div>
-          <div className="flex items-center gap-1.5 text-navy-600">
+          <div className="flex items-center gap-1.5 text-surface-500">
             <Clock className="w-4 h-4" />
             <span>Updated {timeAgo(ticket.updatedAt)}</span>
           </div>
