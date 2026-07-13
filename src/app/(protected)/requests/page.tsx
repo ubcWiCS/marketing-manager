@@ -57,32 +57,10 @@ export default function RequestsPage() {
           <h1 className="text-lg md:text-xl font-bold text-navy-800">All Tickets</h1>
           <p className="text-xs text-surface-500">{filtered.length} result{filtered.length !== 1 ? "s" : ""}</p>
         </div>
-        <div className="flex items-center gap-2">
-          <div className="hidden md:flex items-center bg-white/60 rounded-lg p-0.5">
-            <button
-              onClick={() => setView("list")}
-              className={cn(
-                "p-1.5 rounded font-medium text-xs transition-all",
-                view === "list" ? "bg-plum-100 text-plum-700" : "text-surface-500 hover:bg-plum-50"
-              )}
-            >
-              <List className="w-4 h-4" />
-            </button>
-            <button
-              onClick={() => setView("board")}
-              className={cn(
-                "p-1.5 rounded font-medium text-xs transition-all",
-                view === "board" ? "bg-plum-100 text-plum-700" : "text-surface-500 hover:bg-plum-50"
-              )}
-            >
-              <Columns className="w-4 h-4" />
-            </button>
-          </div>
-          <Link href="/requests/new" className="btn-brutal-primary text-xs py-1.5 px-2.5 md:px-3">
-            <PlusCircle className="w-3.5 h-3.5" />
-            <span className="hidden md:inline">New Ticket</span>
-          </Link>
-        </div>
+        <Link href="/requests/new" className="btn-brutal-primary text-xs py-1.5 px-2.5 md:px-3">
+          <PlusCircle className="w-3.5 h-3.5" />
+          <span className="hidden md:inline">New Ticket</span>
+        </Link>
       </div>
 
       {/* Main Content (with standard padding) */}
