@@ -73,6 +73,7 @@ function NewRequestForm() {
   const [isEditing, setIsEditing] = useState(false);
   const [showSuccessModal, setShowSuccessModal] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
 
   useEffect(() => {
     if (editId) {
@@ -125,6 +126,31 @@ function NewRequestForm() {
       ...prev,
       references: prev.references.filter((_, i) => i !== idx),
     }));
+  };
+
+  const validateStep = (): boolean => {
+    const errors: Record<string, string> = {};
+
+    switch (step) {
+      case 1:
+        if (!form.portfolio) errors.portfolio = "Please select a portfolio";
+        if (!form.pointOfContact.trim()) errors.pointOfContact = "Please enter your name";
+        break;
+      case 2:
+        if (form.graphicTypes.length === 0) errors.graphicTypes = "Please select at least one graphic type";
+        break;
+      case 3:
+        if (!form.eventName.trim()) errors.eventName = "Please enter an event/title name";
+        if (!form.eventDate) errors.eventDate = "Please select an event date";
+        if (!form.deadline) errors.deadline = "Please select a marketing due date";
+        break;
+      case 4:
+        if (!form.creativeVision.trim()) errors.creativeVision = "Please describe your creative vision";
+        break;
+    }
+
+    setValidationErrors(errors);
+    return Object.keys(errors).length === 0;
   };
 
   const canProceed = (): boolean => {
@@ -273,6 +299,9 @@ function NewRequestForm() {
                 </button>
               ))}
             </div>
+            {validationErrors.portfolio && (
+              <p className="text-xs text-red-600">{validationErrors.portfolio}</p>
+            )}
             <div className="space-y-1">
               <label className="label-brutal">Point of Contact</label>
               <input
@@ -283,6 +312,9 @@ function NewRequestForm() {
                 onChange={(e) => setForm((prev) => ({ ...prev, pointOfContact: e.target.value }))}
               />
             </div>
+            {validationErrors.pointOfContact && (
+              <p className="text-xs text-red-600">{validationErrors.pointOfContact}</p>
+            )}
           </div>
         )}
 
@@ -317,6 +349,9 @@ function NewRequestForm() {
                 </button>
               ))}
             </div>
+            {validationErrors.graphicTypes && (
+              <p className="text-xs text-red-600">{validationErrors.graphicTypes}</p>
+            )}
             {form.graphicTypes.includes("Other") && (
               <div className="space-y-1">
                 <label className="label-brutal">Please specify</label>
@@ -349,6 +384,9 @@ function NewRequestForm() {
                   value={form.eventName}
                   onChange={(e) => setForm((prev) => ({ ...prev, eventName: e.target.value }))}
                 />
+                {validationErrors.eventName && (
+                  <p className="text-xs text-red-600">{validationErrors.eventName}</p>
+                )}
               </div>
               <div className="space-y-1">
                 <label className="label-brutal">Time (Optional)</label>
@@ -378,6 +416,9 @@ function NewRequestForm() {
                   value={form.eventDate}
                   onChange={(e) => setForm((prev) => ({ ...prev, eventDate: e.target.value }))}
                 />
+                {validationErrors.eventDate && (
+                  <p className="text-xs text-red-600">{validationErrors.eventDate}</p>
+                )}
               </div>
               <div className="space-y-1">
                 <label className="label-brutal">Marketing Due Date</label>
@@ -387,6 +428,9 @@ function NewRequestForm() {
                   value={form.deadline}
                   onChange={(e) => setForm((prev) => ({ ...prev, deadline: e.target.value }))}
                 />
+                {validationErrors.deadline && (
+                  <p className="text-xs text-red-600">{validationErrors.deadline}</p>
+                )}
               </div>
               <div className="col-span-2 space-y-1">
                 <label className="label-brutal">Summary</label>
@@ -416,6 +460,9 @@ function NewRequestForm() {
                 value={form.creativeVision}
                 onChange={(e) => setForm((prev) => ({ ...prev, creativeVision: e.target.value }))}
               />
+              {validationErrors.creativeVision && (
+                <p className="text-xs text-red-600">{validationErrors.creativeVision}</p>
+              )}
             </div>
             <div className="space-y-2">
               <label className="label-brutal">Additional Requests (Optional)</label>
@@ -548,8 +595,11 @@ function NewRequestForm() {
           </button>
           {step < 6 ? (
             <button
-              onClick={() => setStep((s) => s + 1)}
-              disabled={!canProceed()}
+              onClick={() => {
+                if (validateStep()) {
+                  setStep((s) => s + 1);
+                }
+              }}
               className="btn-brutal-primary text-sm py-1.5"
             >
               Continue

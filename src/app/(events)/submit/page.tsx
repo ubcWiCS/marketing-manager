@@ -16,7 +16,6 @@ import { TicketProvider } from "@/lib/ticket-context";
 
 const EVENT_PORTFOLIOS: Portfolio[] = ["Community", "Mentorship", "External"];
 
-
 const STEPS = [
   { num: 1, label: "Portfolio", desc: "Select portfolio & contact" },
   { num: 2, label: "Type", desc: "What do you need?" },
@@ -51,6 +50,7 @@ function SubmitForm() {
   });
   const [submitted, setSubmitted] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
+  const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
 
   const toggleGraphicType = (g: GraphicType) => {
     setForm((prev) => ({
@@ -75,6 +75,29 @@ function SubmitForm() {
       ...prev,
       references: prev.references.filter((_, i) => i !== idx),
     }));
+  };
+
+  const validateStep = (): boolean => {
+    const errors: Record<string, string> = {};
+    switch (step) {
+      case 1:
+        if (!form.portfolio) errors.portfolio = "Please select a portfolio";
+        if (!form.pointOfContact.trim()) errors.pointOfContact = "Please enter your name";
+        break;
+      case 2:
+        if (form.graphicTypes.length === 0) errors.graphicTypes = "Please select at least one graphic type";
+        break;
+      case 3:
+        if (!form.eventName.trim()) errors.eventName = "Please enter an event/title name";
+        if (!form.eventDate) errors.eventDate = "Please select an event date";
+        if (!form.deadline) errors.deadline = "Please select a marketing due date";
+        break;
+      case 4:
+        if (!form.creativeVision.trim()) errors.creativeVision = "Please describe your creative vision";
+        break;
+    }
+    setValidationErrors(errors);
+    return Object.keys(errors).length === 0;
   };
 
   const canProceed = (): boolean => {
@@ -236,6 +259,9 @@ function SubmitForm() {
                         </button>
                       ))}
                     </div>
+                    {validationErrors.portfolio && (
+                      <p className="text-xs text-red-600">{validationErrors.portfolio}</p>
+                    )}
                     <div className="space-y-1">
                       <label className="label-brutal">Point of Contact</label>
                       <input
@@ -246,6 +272,9 @@ function SubmitForm() {
                         onChange={(e) => setForm((prev) => ({ ...prev, pointOfContact: e.target.value }))}
                       />
                     </div>
+                    {validationErrors.pointOfContact && (
+                      <p className="text-xs text-red-600">{validationErrors.pointOfContact}</p>
+                    )}
                   </div>
                 )}
 
@@ -280,6 +309,9 @@ function SubmitForm() {
                         </button>
                       ))}
                     </div>
+                    {validationErrors.graphicTypes && (
+                      <p className="text-xs text-red-600">{validationErrors.graphicTypes}</p>
+                    )}
                     {form.graphicTypes.includes("Other") && (
                       <div className="space-y-1">
                         <label className="label-brutal">Please specify</label>
@@ -312,6 +344,9 @@ function SubmitForm() {
                           value={form.eventName}
                           onChange={(e) => setForm((prev) => ({ ...prev, eventName: e.target.value }))}
                         />
+                        {validationErrors.eventName && (
+                          <p className="text-xs text-red-600">{validationErrors.eventName}</p>
+                        )}
                       </div>
                       <div className="space-y-1">
                         <label className="label-brutal">Event Date</label>
@@ -321,6 +356,9 @@ function SubmitForm() {
                           value={form.eventDate}
                           onChange={(e) => setForm((prev) => ({ ...prev, eventDate: e.target.value }))}
                         />
+                        {validationErrors.eventDate && (
+                          <p className="text-xs text-red-600">{validationErrors.eventDate}</p>
+                        )}
                       </div>
                       <div className="space-y-1">
                         <label className="label-brutal">Event Time (Optional)</label>
@@ -350,6 +388,9 @@ function SubmitForm() {
                           value={form.deadline}
                           onChange={(e) => setForm((prev) => ({ ...prev, deadline: e.target.value }))}
                         />
+                        {validationErrors.deadline && (
+                          <p className="text-xs text-red-600">{validationErrors.deadline}</p>
+                        )}
                       </div>
                       <div className="col-span-2 space-y-1">
                         <label className="label-brutal">Summary</label>
@@ -363,7 +404,6 @@ function SubmitForm() {
                     </div>
                   </div>
                 )}
-
 
                 {/* Step 4: Creative Vision */}
                 {step === 4 && (
@@ -380,6 +420,9 @@ function SubmitForm() {
                         value={form.creativeVision}
                         onChange={(e) => setForm((prev) => ({ ...prev, creativeVision: e.target.value }))}
                       />
+                      {validationErrors.creativeVision && (
+                        <p className="text-xs text-red-600">{validationErrors.creativeVision}</p>
+                      )}
                     </div>
                     <div className="space-y-2">
                       <label className="label-brutal">Additional Requests (Optional)</label>
@@ -513,9 +556,12 @@ function SubmitForm() {
                   )}
                   {step < 6 ? (
                     <button
-                      onClick={() => setStep((s) => s + 1)}
-                      disabled={!canProceed()}
-                      className="btn-brutal-primary text-sm py-1.5 disabled:opacity-40 disabled:cursor-not-allowed"
+                      onClick={() => {
+                        if (validateStep()) {
+                          setStep((s) => s + 1);
+                        }
+                      }}
+                      className="btn-brutal-primary text-sm py-1.5"
                     >
                       Continue
                       <ChevronRight className="w-4 h-4 inline" />
