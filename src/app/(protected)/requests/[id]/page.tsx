@@ -26,7 +26,7 @@ export default function RequestDetailPage() {
       <div className="p-6 max-w-4xl mx-auto animate-fade-in">
         <Link href="/requests" className="text-sm font-medium text-navy-700 hover:text-plum-600 flex items-center gap-1 mb-4">
           <ArrowLeft className="w-4 h-4" />
-          Back to requests
+          Back
         </Link>
         <div className="rounded-hand-xl p-12 text-center bg-white/60">
           <p className="text-navy-700 font-medium">Request not found</p>
@@ -40,7 +40,7 @@ export default function RequestDetailPage() {
       {/* Back */}
       <Link href="/requests" className="text-sm font-medium text-navy-700 hover:text-plum-600 flex items-center gap-1 mb-3 md:mb-4">
         <ArrowLeft className="w-4 h-4" />
-        Back to requests
+        Back
       </Link>
 
       {/* Header */}

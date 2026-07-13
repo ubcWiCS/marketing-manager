@@ -199,7 +199,7 @@ function NewRequestForm() {
     <div className="p-3 md:p-6 max-w-3xl mx-auto animate-fade-in">
       <Link href="/requests" className="text-sm font-medium text-navy-700 hover:text-plum-600 flex items-center gap-1 mb-3 md:mb-4">
         <ArrowLeft className="w-4 h-4" />
-        Back to requests
+        Back
       </Link>
 
       {/* Progress indicator - simplified on mobile */}
