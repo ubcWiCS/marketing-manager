@@ -52,13 +52,13 @@ export default function RequestsPage() {
   return (
     <div className="h-full flex flex-col">
       {/* Page Header (same Y-level and styling as Board header) */}
-      <div className="flex items-center justify-between px-5 py-3 border-b border-surface-200 bg-white/80 shrink-0">
+      <div className="flex items-center justify-between px-3 md:px-5 py-3 border-b border-surface-200 bg-white/80 shrink-0">
         <div>
-          <h1 className="text-xl font-bold text-navy-800">All Tickets</h1>
+          <h1 className="text-lg md:text-xl font-bold text-navy-800">All Tickets</h1>
           <p className="text-xs text-surface-500">{filtered.length} result{filtered.length !== 1 ? "s" : ""}</p>
         </div>
         <div className="flex items-center gap-2">
-          <div className="flex items-center bg-white/60 rounded-lg p-0.5">
+          <div className="hidden md:flex items-center bg-white/60 rounded-lg p-0.5">
             <button
               onClick={() => setView("list")}
               className={cn(
@@ -78,17 +78,17 @@ export default function RequestsPage() {
               <Columns className="w-4 h-4" />
             </button>
           </div>
-          <Link href="/requests/new" className="btn-brutal-primary text-xs py-1.5 px-3">
+          <Link href="/requests/new" className="btn-brutal-primary text-xs py-1.5 px-2.5 md:px-3">
             <PlusCircle className="w-3.5 h-3.5" />
-            New Ticket
+            <span className="hidden md:inline">New Ticket</span>
           </Link>
         </div>
       </div>
 
       {/* Main Content (with standard padding) */}
-      <div className="flex-1 p-6 max-w-5xl w-full mx-auto animate-fade-in overflow-y-auto">
+      <div className="flex-1 p-3 md:p-6 max-w-5xl w-full mx-auto animate-fade-in overflow-y-auto">
         {/* Tabs */}
-        <div className="flex items-center gap-1 mb-4 bg-white/60 rounded-hand p-1 w-fit">
+        <div className="flex items-center gap-1 mb-3 md:mb-4 bg-white/60 rounded-hand p-1 w-fit">
           <button
             onClick={() => setActiveTab("active")}
             className={cn(
@@ -113,8 +113,8 @@ export default function RequestsPage() {
           </button>
         </div>
 
-        <div className="flex items-center gap-2 mb-4">
-          <div className="relative flex-1 max-w-xs">
+        <div className="flex flex-col md:flex-row items-stretch md:items-center gap-2 mb-4">
+          <div className="relative flex-1 max-w-full md:max-w-xs">
             <Search className="absolute left-2.5 top-1/2 -translate-y-1/2 w-4 h-4 text-surface-400" />
             <input
               type="text"
@@ -124,39 +124,42 @@ export default function RequestsPage() {
               onChange={(e) => setSearch(e.target.value)}
             />
           </div>
-          <select
-            className="input-brutal w-auto text-sm py-1.5"
-            value={filterPortfolio}
-            onChange={(e) => setFilterPortfolio(e.target.value as Portfolio | "All")}
-          >
-            <option value="All">All Portfolios</option>
-            {PORTFOLIOS.map((p) => (
-              <option key={p} value={p}>{p}</option>
-            ))}
-          </select>
-          <select
-            className="input-brutal w-auto text-sm py-1.5"
-            value={filterStatus}
-            onChange={(e) => setFilterStatus(e.target.value as RequestStatus | "All")}
-          >
-            <option value="All">All Statuses</option>
-            {REQUEST_STATUSES.map((s) => (
-              <option key={s} value={s}>{s}</option>
-            ))}
-          </select>
-          <select
-            className="input-brutal w-auto text-sm py-1.5"
-            value={filterMember}
-            onChange={(e) => setFilterMember(e.target.value)}
-          >
-            <option value="All">All Members</option>
-            {members.map((m) => (
-              <option key={m.id} value={m.name}>{m.name}</option>
-            ))}
-          </select>
+          <div className="flex gap-2 overflow-x-auto">
+            <select
+              className="input-brutal w-auto text-sm py-1.5 flex-1 md:flex-none"
+              value={filterPortfolio}
+              onChange={(e) => setFilterPortfolio(e.target.value as Portfolio | "All")}
+            >
+              <option value="All">All Portfolios</option>
+              {PORTFOLIOS.map((p) => (
+                <option key={p} value={p}>{p}</option>
+              ))}
+            </select>
+            <select
+              className="input-brutal w-auto text-sm py-1.5 flex-1 md:flex-none"
+              value={filterStatus}
+              onChange={(e) => setFilterStatus(e.target.value as RequestStatus | "All")}
+            >
+              <option value="All">All Statuses</option>
+              {REQUEST_STATUSES.map((s) => (
+                <option key={s} value={s}>{s}</option>
+              ))}
+            </select>
+            <select
+              className="input-brutal w-auto text-sm py-1.5 flex-1 md:flex-none"
+              value={filterMember}
+              onChange={(e) => setFilterMember(e.target.value)}
+            >
+              <option value="All">All Members</option>
+              {members.map((m) => (
+                <option key={m.id} value={m.name}>{m.name}</option>
+              ))}
+            </select>
+          </div>
         </div>
 
-        <div className="border border-surface-200 rounded-hand-xl bg-white/80 shadow-sm">
+        {/* Desktop table */}
+        <div className="hidden md:block border border-surface-200 rounded-hand-xl bg-white/80 shadow-sm">
           <table className="w-full">
             <thead>
               <tr className="border-b border-surface-200 bg-plum-50/50">
@@ -257,6 +260,83 @@ export default function RequestsPage() {
               )}
             </tbody>
           </table>
+        </div>
+
+        {/* Mobile card list */}
+        <div className="md:hidden space-y-2">
+          {loading ? (
+            <>
+              <SkeletonTableRow />
+              <SkeletonTableRow />
+              <SkeletonTableRow />
+            </>
+          ) : filtered.length === 0 ? (
+            <div className="text-center py-8 text-surface-500 text-sm">No tickets found</div>
+          ) : (
+            filtered.map((ticket) => (
+              <Link
+                key={ticket.id}
+                href={`/requests/${ticket.id}`}
+                className={cn(
+                  "block bg-white rounded-hand-xl border border-surface-200 px-3 py-3 shadow-sm hover:border-plum-300 transition-colors",
+                  ticket.status === "Archived" && "opacity-60"
+                )}
+              >
+                <div className="flex items-start justify-between gap-2 mb-1.5">
+                  <div className="flex items-center gap-2 min-w-0">
+                    <PortfolioDot portfolio={ticket.portfolio} />
+                    <span className="text-sm font-medium text-navy-800 truncate">{ticket.title}</span>
+                  </div>
+                  <span className={cn(
+                    "text-[10px] font-medium px-1.5 py-0.5 rounded-full shrink-0",
+                    ticket.priority === "Urgent" && "bg-red-50 text-red-600",
+                    ticket.priority === "High" && "bg-orange-50 text-orange-600",
+                    ticket.priority === "Medium" && "bg-amber-50 text-amber-600",
+                    ticket.priority === "Low" && "bg-emerald-50 text-emerald-600"
+                  )}>
+                    {ticket.priority}
+                  </span>
+                </div>
+                <div className="flex items-center gap-3 text-xs text-surface-500">
+                  <span className={cn(
+                    "text-[10px] font-medium px-1.5 py-0.5 rounded-full",
+                    ticket.status === "Open" && "bg-status-open text-navy-800",
+                    ticket.status === "In Progress" && "bg-status-in_progress text-navy-800",
+                    ticket.status === "In Review" && "bg-status-review text-navy-800",
+                    ticket.status === "Completed" && "bg-status-completed text-navy-800",
+                    ticket.status === "Archived" && "bg-status-archived text-navy-800"
+                  )}>
+                    {ticket.status}
+                  </span>
+                  <span className={cn(
+                    ticket.assignedTo ? "text-navy-700 font-medium" : "text-surface-400 italic"
+                  )}>
+                    {ticket.assignedTo || "Unassigned"}
+                  </span>
+                  <span className={cn(
+                    "ml-auto",
+                    new Date(ticket.deadline) < new Date() ? "text-red-500" : "text-surface-400"
+                  )}>
+                    {new Date(ticket.deadline).toLocaleDateString("en-US", { month: "short", day: "numeric" })}
+                  </span>
+                  {ticket.status === "Archived" && (
+                    <button
+                      onClick={(e) => {
+                        e.preventDefault();
+                        e.stopPropagation();
+                        setTicketToRestore(ticket.id);
+                        setRestoreDialogOpen(true);
+                      }}
+                      className="p-0.5 hover:text-plum-600 transition-colors"
+                      title="Restore ticket"
+                    >
+                      <RotateCcw className="w-3.5 h-3.5" />
+                    </button>
+                  )}
+                </div>
+              </Link>
+            ))
+          )}
         </div>
 
         {/* Restore Confirmation Dialog */}

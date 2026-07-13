@@ -500,15 +500,17 @@ function SubmitForm() {
 
                 {/* Navigation */}
                 <div className="flex items-center justify-between mt-6 pt-4 border-t border-surface-200">
-                  <button
-                    onClick={() => setStep((s) => Math.max(1, s - 1))}
-                    disabled={step === 1}
-                    className="text-sm font-medium text-navy-600 hover:text-plum-600 disabled:opacity-30 disabled:cursor-not-allowed"
-                  >
-                    <ChevronLeft className="w-4 h-4 inline" />
-                    Back
-                  </button>
-                  <span className="text-xs text-surface-500">Step {step} of 6</span>
+                  {step > 1 ? (
+                    <button
+                      onClick={() => setStep((s) => Math.max(1, s - 1))}
+                      className="text-sm font-medium text-navy-600 hover:text-plum-600"
+                    >
+                      <ChevronLeft className="w-4 h-4 inline" />
+                      Back
+                    </button>
+                  ) : (
+                    <div />
+                  )}
                   {step < 6 ? (
                     <button
                       onClick={() => setStep((s) => s + 1)}

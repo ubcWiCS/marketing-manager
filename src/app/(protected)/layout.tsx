@@ -18,7 +18,7 @@ export default function ProtectedLayout({
       <TicketProvider>
         <TeamProvider>
           <Sidebar />
-          <main className="flex-1 overflow-y-auto bg-gold-200">
+          <main className="flex-1 overflow-y-auto bg-gold-200 pt-12 md:pt-0">
             {children}
           </main>
         </TeamProvider>

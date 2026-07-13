@@ -52,19 +52,19 @@ export default function BoardPage() {
   return (
     <div className="h-full flex flex-col">
       {/* Board header */}
-      <div className="flex items-center justify-between px-5 py-3 border-b border-surface-200 bg-white/80">
+      <div className="flex items-center justify-between px-3 md:px-5 py-3 border-b border-surface-200 bg-white/80">
         <div className="flex items-center gap-3">
-          <h1 className="text-xl font-bold text-navy-800">Board</h1>
+          <h1 className="text-lg md:text-xl font-bold text-navy-800">Board</h1>
           <span className="text-xs text-surface-500">{tickets.length} tickets</span>
         </div>
-        <Link href="/requests/new" className="btn-brutal-primary text-xs py-1.5 px-3">
+        <Link href="/requests/new" className="btn-brutal-primary text-xs py-1.5 px-2.5 md:px-3">
           <PlusCircle className="w-3.5 h-3.5" />
-          New Ticket
+          <span className="hidden md:inline">New Ticket</span>
         </Link>
       </div>
 
       {/* Kanban columns */}
-      <div className="flex-1 flex gap-3 p-4 overflow-x-auto">
+      <div className="flex-1 flex gap-3 p-2 md:p-4 overflow-x-auto snap-x snap-mandatory">
         {loading ? (
           <>
             <SkeletonColumn />
@@ -79,7 +79,7 @@ export default function BoardPage() {
               onDragOver={handleDragOver}
               onDrop={(e) => handleDrop(e, STATUS_COLUMNS[statusIdx].status)}
               className={cn(
-                "flex flex-col w-64 shrink-0 rounded-hand-xl bg-surface-100/60 transition-colors duration-200",
+                "flex flex-col w-[85vw] sm:flex-1 sm:basis-0 sm:min-w-0 md:min-w-64 rounded-hand-xl bg-surface-100/60 transition-colors duration-200 snap-start",
                 draggingId && "ring-2 ring-plum-300 ring-dashed"
               )}
             >

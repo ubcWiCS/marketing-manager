@@ -196,14 +196,14 @@ function NewRequestForm() {
   };
 
   return (
-    <div className="p-6 max-w-3xl mx-auto animate-fade-in">
-      <Link href="/requests" className="text-sm font-medium text-navy-700 hover:text-plum-600 flex items-center gap-1 mb-4">
+    <div className="p-3 md:p-6 max-w-3xl mx-auto animate-fade-in">
+      <Link href="/requests" className="text-sm font-medium text-navy-700 hover:text-plum-600 flex items-center gap-1 mb-3 md:mb-4">
         <ArrowLeft className="w-4 h-4" />
         Back to requests
       </Link>
 
-      {/* Progress indicator */}
-      <div className="flex items-center justify-between mb-6 bg-white/60 rounded-hand-xl p-3">
+      {/* Progress indicator - simplified on mobile */}
+      <div className="hidden md:flex items-center justify-between mb-6 bg-white/60 rounded-hand-xl p-3">
         {STEPS.map((s, i) => (
           <div key={s.num} className="flex items-center">
             <div className="flex flex-col items-center">
@@ -234,16 +234,24 @@ function NewRequestForm() {
         ))}
       </div>
 
+      {/* Mobile step indicator */}
+      <div className="md:hidden flex items-center gap-2 mb-4 bg-white/60 rounded-hand-xl px-3 py-2">
+        <div className="w-6 h-6 rounded-full bg-plum-100 text-plum-700 font-medium text-xs flex items-center justify-center shrink-0">
+          {step}
+        </div>
+        <span className="text-xs font-medium text-navy-700">{STEPS[step - 1].label}</span>
+      </div>
+
       {/* Card container */}
-      <div className="rounded-hand-xl bg-white/80 p-6 shadow-sm">
+      <div className="rounded-hand-xl bg-white/80 p-4 md:p-6 shadow-sm">
         {/* Step 1: Portfolio & Contact */}
         {step === 1 && (
           <div className="space-y-4 animate-fade-in">
             <div>
-              <h2 className="text-lg font-medium text-navy-800">Select Portfolio</h2>
-              <p className="text-sm text-surface-500">Which portfolio does this request belong to?</p>
+              <h2 className="text-base md:text-lg font-medium text-navy-800">Select Portfolio</h2>
+              <p className="text-xs md:text-sm text-surface-500">Which portfolio does this request belong to?</p>
             </div>
-            <div className="grid grid-cols-3 gap-3">
+            <div className="grid grid-cols-3 gap-2 md:gap-3">
               {FORM_PORTFOLIOS.map((p) => (
                 <button
                   key={p}
@@ -285,7 +293,7 @@ function NewRequestForm() {
               <h2 className="text-lg font-medium text-navy-800">What do you need?</h2>
               <p className="text-sm text-surface-500">Select all that apply</p>
             </div>
-            <div className="grid grid-cols-2 gap-2">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
               {GRAPHIC_TYPES.map((g) => (
                 <button
                   key={g}
@@ -331,7 +339,7 @@ function NewRequestForm() {
               <h2 className="text-lg font-medium text-navy-800">Details</h2>
               <p className="text-sm text-surface-500">Tell us about your request</p>
             </div>
-            <div className="grid grid-cols-2 gap-3">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
               <div className="col-span-2 space-y-1">
                 <label className="label-brutal">Name / Title</label>
                 <input
@@ -538,7 +546,6 @@ function NewRequestForm() {
             <ChevronLeft className="w-4 h-4 inline" />
             Back
           </button>
-          <span className="text-xs text-surface-500">Step {step} of 6</span>
           {step < 6 ? (
             <button
               onClick={() => setStep((s) => s + 1)}
