@@ -29,10 +29,9 @@ WiCS Marketing Manager is a request management system designed to streamline the
 - **Portfolio Organization** — Categorize requests by portfolio (Community, Mentorship, External)
 - **Team Collaboration** — Assign points of contact to requests
 - **Priority Tracking** — Mark requests as Low, Medium, High, or Urgent priority
-- **Status Workflow** — Track requests through statuses: Open, In Progress, In Review, Completed, Archived
+- **Status Workflow** — Track requests through statuses: Open, In Progress, In Review, Completed
 - **Graphic Type Selection** — Specify request types including Instagram content, LinkedIn posts, certificates, and more
 - **Events Team Portal** — Dedicated submission form for Events team members with simplified portfolio options
-- **Dark Mode UI** — Modern interface built with Tailwind CSS
 
 ## Tech Stack
 
