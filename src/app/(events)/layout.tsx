@@ -1,4 +1,6 @@
 import type { Metadata } from "next";
+import { EventsHeader } from "@/components/layout/events-header";
+import { TicketProvider } from "@/lib/ticket-context";
 
 export const metadata: Metadata = {
   title: "WiCS Marketing Manager",
@@ -11,8 +13,11 @@ export default function EventsLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <div className="min-h-screen flex flex-col">
-      {children}
-    </div>
+    <TicketProvider>
+      <div className="flex min-h-screen flex-col">
+        <EventsHeader />
+        {children}
+      </div>
+    </TicketProvider>
   );
 }

@@ -1,9 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { Suspense, useEffect, useState } from "react";
+import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import {
   ChevronLeft, ChevronRight, Check,
-  X, Send, CheckCircle, LogOut,
+  X, Send, CheckCircle, ArrowLeft, Loader2,
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
@@ -12,7 +14,6 @@ import {
   NewTicketForm,
 } from "@/types";
 import { useTickets } from "@/lib/ticket-context";
-import { TicketProvider } from "@/lib/ticket-context";
 
 const EVENT_PORTFOLIOS: Portfolio[] = ["Community", "Mentorship", "External"];
 
@@ -42,7 +43,10 @@ const defaultFormValues: NewTicketForm = {
 };
 
 function SubmitForm() {
-  const { createTicket } = useTickets();
+  const searchParams = useSearchParams();
+  const editId = searchParams.get("edit");
+  const isEditing = Boolean(editId);
+  const { tickets, loading, createTicket, updateTicket } = useTickets();
   const [step, setStep] = useState(1);
   const [form, setForm] = useState<NewTicketForm>({
     ...defaultFormValues,
@@ -51,6 +55,31 @@ function SubmitForm() {
   const [submitted, setSubmitted] = useState(false);
   const [submitError, setSubmitError] = useState<string | null>(null);
   const [validationErrors, setValidationErrors] = useState<Record<string, string>>({});
+  const [loadedEditId, setLoadedEditId] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (!editId || loadedEditId === editId) return;
+
+    const ticket = tickets.find((item) => item.id === editId);
+    if (!ticket) return;
+
+    setForm({
+      portfolio: ticket.portfolio,
+      pointOfContact: ticket.pointOfContact,
+      graphicTypes: ticket.graphicTypes,
+      otherGraphicType: ticket.otherGraphicType,
+      eventName: ticket.eventName,
+      eventDate: ticket.eventDate || "",
+      eventTime: ticket.eventTime,
+      eventLocation: ticket.eventLocation,
+      summary: ticket.summary,
+      deadline: ticket.deadline,
+      creativeVision: ticket.creativeVision,
+      references: ticket.references,
+      additionalRequests: ticket.additionalRequests,
+    });
+    setLoadedEditId(editId);
+  }, [editId, loadedEditId, tickets]);
 
   const toggleGraphicType = (g: GraphicType) => {
     setForm((prev) => ({
@@ -113,12 +142,10 @@ function SubmitForm() {
   const handleSubmit = async () => {
     try {
       setSubmitError(null);
-      await createTicket({
+      const submissionFields = {
         title: form.eventName,
         portfolio: form.portfolio!,
         pointOfContact: form.pointOfContact,
-        isCollaboration: false,
-        collaborators: [],
         graphicTypes: form.graphicTypes,
         otherGraphicType: form.otherGraphicType,
         eventName: form.eventName,
@@ -130,11 +157,21 @@ function SubmitForm() {
         creativeVision: form.creativeVision,
         references: form.references,
         additionalRequests: form.additionalRequests,
-        createdBy: form.pointOfContact,
-      });
+      };
+
+      if (editId) {
+        await updateTicket(editId, submissionFields);
+      } else {
+        await createTicket({
+          ...submissionFields,
+          isCollaboration: false,
+          collaborators: [],
+          createdBy: form.pointOfContact,
+        });
+      }
       setSubmitted(true);
     } catch (err) {
-      setSubmitError(err instanceof Error ? err.message : "Failed to submit request");
+      setSubmitError(err instanceof Error ? err.message : "Failed to save request");
     }
   };
 
@@ -148,33 +185,51 @@ function SubmitForm() {
     setSubmitError(null);
   };
 
-  return (
-    <div className="flex flex-col min-h-screen">
-      {/* Header */}
-      <header className="flex items-center justify-between px-5 py-3 border-b border-surface-200 bg-white/80 shrink-0 backdrop-blur-sm sticky top-0 z-10">
-        <div className="flex items-center gap-3">
-          <div className="w-7 h-7 rounded bg-plum-400 flex items-center justify-center">
-            <span className="text-navy-950 text-xs font-black">M</span>
-          </div>
-          <div>
-            <h1 className="text-sm font-bold text-navy-800 leading-none">Marketing Requests</h1>
-            <p className="text-[10px] text-surface-500 leading-none mt-0.5">Events Team Portal</p>
-          </div>
+  if (editId && loading) {
+    return (
+      <main className="flex flex-1 items-center justify-center p-6">
+        <div className="flex items-center gap-2 text-sm font-medium text-surface-600">
+          <Loader2 className="h-4 w-4 animate-spin text-plum-600" />
+          Loading submission…
         </div>
-        <form action="/api/auth/logout" method="POST">
-          <button
-            type="submit"
-            className="flex items-center gap-1.5 text-xs font-medium text-surface-500 hover:text-navy-700 transition-colors px-2 py-1.5 rounded hover:bg-white/60"
-          >
-            <LogOut className="w-3.5 h-3.5" />
-            Log Out
-          </button>
-        </form>
-      </header>
+      </main>
+    );
+  }
 
-      {/* Content */}
-      <main className="flex-1 flex items-start justify-center p-6">
+  if (editId && !tickets.some((ticket) => ticket.id === editId)) {
+    return (
+      <main className="flex flex-1 items-center justify-center p-6">
+        <div className="card-brutal max-w-md p-8 text-center">
+          <h1 className="text-xl font-bold text-navy-800">Submission not found</h1>
+          <p className="mt-2 text-sm text-surface-500">
+            This ticket may have been removed or the link may be incorrect.
+          </p>
+          <Link href="/submissions" className="btn-brutal-primary mt-5 text-xs">
+            Back to ticket board
+          </Link>
+        </div>
+      </main>
+    );
+  }
+
+  return (
+    <div className="flex flex-1 flex-col">
+      <main className="flex flex-1 items-start justify-center p-4 md:p-6">
         <div className="w-full max-w-2xl">
+          {isEditing && (
+            <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
+              <Link
+                href="/submissions"
+                className="flex items-center gap-1 text-sm font-bold text-navy-700 transition-colors hover:text-plum-700"
+              >
+                <ArrowLeft className="h-4 w-4" />
+                Back to ticket board
+              </Link>
+              <div className="rounded-hand border border-plum-200 bg-plum-50 px-3 py-1.5 text-xs font-bold text-plum-700">
+                Editing submission · Workflow status will not change
+              </div>
+            </div>
+          )}
 
           {/* Success state */}
           {submitted ? (
@@ -182,16 +237,27 @@ function SubmitForm() {
               <div className="w-16 h-16 rounded-full bg-plum-100 flex items-center justify-center mb-4">
                 <CheckCircle className="w-8 h-8 text-plum-600" />
               </div>
-              <h2 className="text-2xl font-bold text-navy-800 mb-2">Request Submitted!</h2>
+              <h2 className="text-2xl font-bold text-navy-800 mb-2">
+                {isEditing ? "Submission Updated!" : "Request Submitted!"}
+              </h2>
               <p className="text-surface-600 mb-6 max-w-sm">
-                Your request has been sent to the Marketing team. You will hear from them with updates.
+                {isEditing
+                  ? "Your changes are saved. The Marketing team’s workflow status and assignment were preserved."
+                  : "Your request has been sent to the Marketing team. You can follow its progress on the ticket board."}
               </p>
-              <button
-                onClick={handleSubmitAnother}
-                className="btn-brutal-primary text-sm"
-              >
-                Submit Another Request
-              </button>
+              <div className="flex flex-wrap justify-center gap-3">
+                <Link href="/submissions" className="btn-brutal-primary text-sm">
+                  View ticket board
+                </Link>
+                {!isEditing && (
+                  <button
+                    onClick={handleSubmitAnother}
+                    className="btn-brutal-secondary text-sm"
+                  >
+                    Submit another request
+                  </button>
+                )}
+              </div>
             </div>
           ) : (
             <>
@@ -495,8 +561,12 @@ function SubmitForm() {
                 {step === 6 && (
                   <div className="space-y-4 animate-fade-in">
                     <div>
-                      <h2 className="text-lg font-medium text-navy-800">Review & Submit</h2>
-                      <p className="text-sm text-surface-500">Please review all details before submitting</p>
+                      <h2 className="text-lg font-medium text-navy-800">
+                        Review & {isEditing ? "Save" : "Submit"}
+                      </h2>
+                      <p className="text-sm text-surface-500">
+                        Review the submission details before {isEditing ? "saving" : "submitting"}
+                      </p>
                     </div>
                     <div className="grid grid-cols-2 gap-3 text-sm">
                       <div className="p-3 bg-plum-50/50 rounded-hand">
@@ -536,7 +606,7 @@ function SubmitForm() {
                 {/* Error banner */}
                 {submitError && (
                   <div className="mt-4 p-3 bg-red-50 border border-red-200 rounded-hand">
-                    <p className="text-sm font-medium text-red-700">Failed to submit request</p>
+                    <p className="text-sm font-medium text-red-700">Failed to save request</p>
                     <p className="text-xs text-red-600 mt-1">{submitError}</p>
                   </div>
                 )}
@@ -569,7 +639,7 @@ function SubmitForm() {
                   ) : (
                     <button onClick={handleSubmit} className="btn-brutal-primary text-sm py-1.5">
                       <Send className="w-4 h-4 inline" />
-                      Submit
+                      {isEditing ? "Save changes" : "Submit"}
                     </button>
                   )}
                 </div>
@@ -584,8 +654,12 @@ function SubmitForm() {
 
 export default function SubmitPage() {
   return (
-    <TicketProvider>
+    <Suspense fallback={
+      <main className="flex flex-1 items-center justify-center p-6">
+        <Loader2 className="h-5 w-5 animate-spin text-plum-600" />
+      </main>
+    }>
       <SubmitForm />
-    </TicketProvider>
+    </Suspense>
   );
 }
