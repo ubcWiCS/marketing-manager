@@ -2,7 +2,7 @@
 
 import { Suspense, useEffect, useState } from "react";
 import Link from "next/link";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import {
   ChevronLeft, ChevronRight, Check,
   X, Send, CheckCircle, ArrowLeft, Loader2,
@@ -43,6 +43,7 @@ const defaultFormValues: NewTicketForm = {
 };
 
 function SubmitForm() {
+  const router = useRouter();
   const searchParams = useSearchParams();
   const editId = searchParams.get("edit");
   const isEditing = Boolean(editId);
@@ -161,15 +162,19 @@ function SubmitForm() {
 
       if (editId) {
         await updateTicket(editId, submissionFields);
+        setSubmitted(true);
       } else {
-        await createTicket({
+        const createdTicket = await createTicket({
           ...submissionFields,
           isCollaboration: false,
           collaborators: [],
           createdBy: form.pointOfContact,
         });
+        if (!createdTicket) {
+          throw new Error("The request was saved, but its ticket could not be loaded");
+        }
+        router.push(`/submissions?created=${encodeURIComponent(createdTicket.id)}`);
       }
-      setSubmitted(true);
     } catch (err) {
       setSubmitError(err instanceof Error ? err.message : "Failed to save request");
     }

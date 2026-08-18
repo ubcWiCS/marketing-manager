@@ -1,8 +1,11 @@
 "use client";
 
+import { Suspense, useEffect, useState } from "react";
 import Link from "next/link";
+import { useRouter, useSearchParams } from "next/navigation";
 import {
   CalendarDays,
+  CheckCircle2,
   Clock3,
   Edit3,
   LockKeyhole,
@@ -41,8 +44,12 @@ function formatDate(value: string) {
   return date.toLocaleDateString("en-US", { month: "short", day: "numeric" });
 }
 
-export default function EventsSubmissionsPage() {
+function EventsSubmissionsBoard() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
   const { tickets, loading, error } = useTickets();
+  const createdTicketId = searchParams.get("created");
+  const [showCreatedHighlight, setShowCreatedHighlight] = useState(false);
 
   const columns = statusColumns.map((column) => ({
     ...column,
@@ -50,6 +57,24 @@ export default function EventsSubmissionsPage() {
       .filter((ticket) => ticket.status === column.status)
       .sort((a, b) => priorityOrder[b.priority] - priorityOrder[a.priority]),
   }));
+
+  useEffect(() => {
+    if (loading || !createdTicketId) return;
+
+    const createdTicket = tickets.find((ticket) => ticket.id === createdTicketId);
+    const card = document.getElementById(`ticket-${createdTicketId}`);
+    if (!createdTicket || !card) return;
+
+    setShowCreatedHighlight(true);
+    card.scrollIntoView({ behavior: "smooth", block: "center", inline: "center" });
+
+    const timer = window.setTimeout(() => {
+      setShowCreatedHighlight(false);
+      router.replace("/submissions", { scroll: false });
+    }, 6000);
+
+    return () => window.clearTimeout(timer);
+  }, [createdTicketId, loading, router, tickets]);
 
   return (
     <main className="flex min-h-0 flex-1 flex-col">
@@ -87,6 +112,13 @@ export default function EventsSubmissionsPage() {
         </div>
       )}
 
+      {showCreatedHighlight && (
+        <div className="mx-4 mt-4 flex items-center gap-2 rounded-hand border border-emerald-200 bg-emerald-50 px-4 py-3 text-sm font-medium text-emerald-700 md:mx-6">
+          <CheckCircle2 className="h-4 w-4 shrink-0" />
+          Request submitted. Your new ticket is highlighted below.
+        </div>
+      )}
+
       <div className="mx-auto flex w-full max-w-[1600px] flex-1 snap-x snap-mandatory gap-3 overflow-x-auto p-3 md:p-5">
         {loading ? (
           <>
@@ -120,7 +152,13 @@ export default function EventsSubmissionsPage() {
                   column.tickets.map((ticket) => (
                     <article
                       key={ticket.id}
-                      className="group rounded-hand-xl border border-surface-200 bg-white p-3 transition-all duration-200 hover:-translate-y-0.5 hover:border-plum-300 hover:shadow-sm"
+                      id={`ticket-${ticket.id}`}
+                      className={cn(
+                        "group rounded-hand-xl border border-surface-200 bg-white p-3 transition-all duration-200 hover:-translate-y-0.5 hover:border-plum-300 hover:shadow-sm",
+                        showCreatedHighlight &&
+                          ticket.id === createdTicketId &&
+                          "border-emerald-400 ring-2 ring-emerald-300 ring-offset-2",
+                      )}
                     >
                       <div className="mb-2 flex items-center justify-between gap-2">
                         <span
@@ -179,5 +217,19 @@ export default function EventsSubmissionsPage() {
         )}
       </div>
     </main>
+  );
+}
+
+export default function EventsSubmissionsPage() {
+  return (
+    <Suspense
+      fallback={
+        <main className="flex flex-1 items-center justify-center p-6 text-sm font-medium text-surface-500">
+          Loading ticket board…
+        </main>
+      }
+    >
+      <EventsSubmissionsBoard />
+    </Suspense>
   );
 }
