@@ -25,7 +25,7 @@ function LoginForm() {
 
       if (result.success) {
         if (result.role === "events") {
-          router.push("/submit");
+          router.push("/submissions");
         } else {
           router.push("/");
         }

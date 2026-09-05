@@ -12,8 +12,11 @@ export function middleware(request: NextRequest) {
   const isMarketingRoute =
     pathname === "/" || pathname.startsWith("/requests");
 
-  // Events submission portal
-  const isEventsRoute = pathname === "/submit";
+  // Events ticket board and submission portal
+  const isEventsRoute =
+    pathname === "/submit" ||
+    pathname === "/submissions" ||
+    pathname.startsWith("/submissions/");
 
   const isAuthenticated = authCookie?.value === "authenticated";
 
@@ -30,14 +33,14 @@ export function middleware(request: NextRequest) {
   // Already logged in visiting login page → redirect home
   if (isAuthenticated && isLoginPage) {
     if (role === "events") {
-      return NextResponse.redirect(new URL("/submit", request.url));
+      return NextResponse.redirect(new URL("/submissions", request.url));
     }
     return NextResponse.redirect(new URL("/", request.url));
   }
 
-  // Events user trying to access Marketing routes → send to /submit
+  // Events user trying to access Marketing routes → send to their board
   if (isAuthenticated && role === "events" && isMarketingRoute) {
-    return NextResponse.redirect(new URL("/submit", request.url));
+    return NextResponse.redirect(new URL("/submissions", request.url));
   }
 
   // Marketing user trying to access Events route → send to /
