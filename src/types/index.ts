@@ -18,15 +18,15 @@ export const PORTFOLIOS: Portfolio[] = [
   "IR (Internal Relations)",
 ];
 
-// Soft pastels aligned with the app's plum / pink / lavender palette
+// Mid-saturation colors: readable as dots, still soft with the pink/plum UI
 export const PORTFOLIO_COLORS: Record<Portfolio, string> = {
-  "Internal team": "#B2A1EC", // brand plum
-  External: "#A1C6F3", // soft blue
-  "First-year": "#F8BAD1", // soft pink
-  youCode: "#F0D5B0", // warm peach (not neon yellow)
-  Grad: "#C8C0F0", // light periwinkle
-  Developer: "#B8D9CC", // sage
-  "IR (Internal Relations)": "#E0C4E0", // dusty orchid
+  "Internal team": "#8B7BC8", // richer plum
+  External: "#6BA3D9", // clearer blue
+  "First-year": "#E88AAD", // stronger pink
+  youCode: "#E0B06A", // warmer gold/peach
+  Grad: "#8B8AD4", // deeper periwinkle
+  Developer: "#6BAF9A", // clearer sage
+  "IR (Internal Relations)": "#C48BB8", // richer orchid
 };
 
 // ─── Graphic Types ───
