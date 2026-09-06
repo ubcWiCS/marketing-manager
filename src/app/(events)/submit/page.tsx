@@ -9,13 +9,11 @@ import {
 } from "lucide-react";
 import { cn } from "@/lib/utils";
 import {
-  Portfolio, PORTFOLIO_COLORS,
+  Portfolio, PORTFOLIOS, PORTFOLIO_COLORS,
   GraphicType, GRAPHIC_TYPES,
   NewTicketForm,
 } from "@/types";
 import { useTickets } from "@/lib/ticket-context";
-
-const EVENT_PORTFOLIOS: Portfolio[] = ["Community", "Mentorship", "External"];
 
 const STEPS = [
   { num: 1, label: "Portfolio", desc: "Select portfolio & contact" },
@@ -308,8 +306,8 @@ function SubmitForm() {
                       <h2 className="text-lg font-medium text-navy-800">Select Portfolio</h2>
                       <p className="text-sm text-surface-500">Which portfolio does this request belong to?</p>
                     </div>
-                    <div className="grid grid-cols-3 gap-3">
-                      {EVENT_PORTFOLIOS.map((p) => (
+                    <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+                      {PORTFOLIOS.map((p) => (
                         <button
                           key={p}
                           onClick={() => setForm((prev) => ({ ...prev, portfolio: p }))}
@@ -326,7 +324,7 @@ function SubmitForm() {
                           >
                             <div className="w-3 h-3 rounded-full bg-white" />
                           </div>
-                          <span className="text-xs font-medium text-navy-700">{p}</span>
+                          <span className="text-xs font-medium text-navy-700 text-center leading-snug">{p}</span>
                         </button>
                       ))}
                     </div>

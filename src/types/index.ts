@@ -1,38 +1,32 @@
 // ─── Portfolio Types ───
 export type Portfolio =
-  | "Events"
-  | "Presidential"
-  | "Marketing"
-  | "Internal"
+  | "Internal team"
   | "External"
-  | "Tech"
+  | "First-year"
   | "youCode"
-  | "Data"
-  | "Community"
-  | "Mentorship";
+  | "Grad"
+  | "Developer"
+  | "IR (Internal Relations)";
 
 export const PORTFOLIOS: Portfolio[] = [
-  "Events",
-  "Presidential",
-  "Marketing",
-  "Internal",
+  "Internal team",
   "External",
-  "Tech",
+  "First-year",
   "youCode",
-  "Data",
+  "Grad",
+  "Developer",
+  "IR (Internal Relations)",
 ];
 
+// Soft pastels aligned with the app's plum / pink / lavender palette
 export const PORTFOLIO_COLORS: Record<Portfolio, string> = {
-  Events: "#f97316",
-  Presidential: "#8b5cf6",
-  Marketing: "#ec4899",
-  Internal: "#14b8a6",
-  External: "#3b82f6",
-  Tech: "#22c55e",
-  youCode: "#eab308",
-  Data: "#6366f1",
-  Community: "#f43f5e",
-  Mentorship: "#a855f7",
+  "Internal team": "#B2A1EC", // brand plum
+  External: "#A1C6F3", // soft blue
+  "First-year": "#F8BAD1", // soft pink
+  youCode: "#F0D5B0", // warm peach (not neon yellow)
+  Grad: "#C8C0F0", // light periwinkle
+  Developer: "#B8D9CC", // sage
+  "IR (Internal Relations)": "#E0C4E0", // dusty orchid
 };
 
 // ─── Graphic Types ───
