@@ -1,38 +1,32 @@
 // ─── Portfolio Types ───
 export type Portfolio =
-  | "Events"
-  | "Presidential"
-  | "Marketing"
-  | "Internal"
+  | "Internal team"
   | "External"
-  | "Tech"
+  | "First-year"
   | "youCode"
-  | "Data"
-  | "Community"
-  | "Mentorship";
+  | "Grad"
+  | "Developer"
+  | "IR (Internal Relations)";
 
 export const PORTFOLIOS: Portfolio[] = [
-  "Events",
-  "Presidential",
-  "Marketing",
-  "Internal",
+  "Internal team",
   "External",
-  "Tech",
+  "First-year",
   "youCode",
-  "Data",
+  "Grad",
+  "Developer",
+  "IR (Internal Relations)",
 ];
 
+// Mid-saturation colors: readable as dots, still soft with the pink/plum UI
 export const PORTFOLIO_COLORS: Record<Portfolio, string> = {
-  Events: "#f97316",
-  Presidential: "#8b5cf6",
-  Marketing: "#ec4899",
-  Internal: "#14b8a6",
-  External: "#3b82f6",
-  Tech: "#22c55e",
-  youCode: "#eab308",
-  Data: "#6366f1",
-  Community: "#f43f5e",
-  Mentorship: "#a855f7",
+  "Internal team": "#8B7BC8", // richer plum
+  External: "#6BA3D9", // clearer blue
+  "First-year": "#E88AAD", // stronger pink
+  youCode: "#E0B06A", // warmer gold/peach
+  Grad: "#8B8AD4", // deeper periwinkle
+  Developer: "#6BAF9A", // clearer sage
+  "IR (Internal Relations)": "#C48BB8", // richer orchid
 };
 
 // ─── Graphic Types ───

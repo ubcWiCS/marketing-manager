@@ -26,7 +26,7 @@ WiCS Marketing Manager is a request management system designed to streamline the
 
 - **Dashboard** — View portfolio-wide statistics including total requests, open items, in-progress work, and urgent priorities
 - **Request Management** — Create, view, and track design requests with comprehensive details
-- **Portfolio Organization** — Categorize requests by portfolio (Community, Mentorship, External)
+- **Portfolio Organization** — Categorize requests by portfolio (Internal team, External, First-year, youCode, Grad, Developer, IR)
 - **Team Collaboration** — Assign points of contact to requests
 - **Priority Tracking** — Mark requests as Low, Medium, High, or Urgent priority
 - **Status Workflow** — Track requests through statuses: Open, In Progress, In Review, Completed
@@ -142,7 +142,7 @@ marketing-manager/
 
 1. Navigate to "New Request" from the sidebar
 2. Fill in the request form with:
-   - Portfolio selection (Community, Mentorship, or External)
+   - Portfolio selection (Internal team, External, First-year, youCode, Grad, Developer, or IR)
    - Point of contact
    - Graphic type(s) needed
    - Event details (name, date, time, location)
@@ -155,7 +155,7 @@ marketing-manager/
 
 1. Navigate to the Events Team Portal
 2. Fill in the submission form with:
-   - Portfolio selection (Community, Mentorship, or External)
+   - Portfolio selection (Internal team, External, First-year, youCode, Grad, Developer, or IR)
    - Point of contact
    - Graphic type(s) needed
    - Event details (name, date, time, location)

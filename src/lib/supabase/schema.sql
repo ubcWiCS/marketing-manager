@@ -71,7 +71,7 @@ INSERT INTO tickets (
   deadline, summary, creative_vision, status, priority, created_by
 ) VALUES (
   'Fall Recruitment Instagram Campaign',
-  'Marketing',
+  'Internal team',
   'Sarah Chen',
   ARRAY['Instagram Post', 'Instagram Story'],
   'Fall 2025 Recruitment',
