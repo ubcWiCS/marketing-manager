@@ -2,7 +2,49 @@
 
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import { Ticket } from "@/types";
-import { supabase } from "@/lib/supabase/client";
+import {
+  collection,
+  doc,
+  getDocs,
+  addDoc,
+  updateDoc,
+  deleteDoc,
+  query,
+  where,
+  writeBatch,
+  DocumentData,
+} from "firebase/firestore";
+import { db } from "@/lib/firebase/client";
+
+const ticketsRef = collection(db, "tickets");
+
+// Firestore docs store the same camelCase shape as the Ticket type (minus id).
+const toTicket = (id: string, d: DocumentData): Ticket => ({
+  id,
+  title: d.title,
+  portfolio: d.portfolio,
+  pointOfContact: d.pointOfContact,
+  isCollaboration: false,
+  collaborators: [],
+  graphicTypes: d.graphicTypes || [],
+  otherGraphicType: d.otherGraphicType || "",
+  eventName: d.eventName,
+  eventDate: d.eventDate || "",
+  eventTime: d.eventTime || "",
+  eventLocation: d.eventLocation || "",
+  summary: d.summary,
+  deadline: d.deadline,
+  creativeVision: d.creativeVision,
+  references: d.references || [],
+  additionalRequests: d.additionalRequests || "",
+  status: d.status,
+  priority: d.priority,
+  createdAt: d.createdAt,
+  updatedAt: d.updatedAt,
+  createdBy: d.createdBy,
+  assignedTo: d.assignedTo || undefined,
+  isOnBoard: !!d.isOnBoard,
+});
 
 interface TicketContextType {
   tickets: Ticket[];
@@ -26,7 +68,7 @@ export function TicketProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Fetch tickets from Supabase
+  // Fetch tickets from Firestore
   useEffect(() => {
     fetchTickets();
   }, []);
@@ -34,47 +76,11 @@ export function TicketProvider({ children }: { children: ReactNode }) {
   const fetchTickets = async () => {
     try {
       setLoading(true);
-      const { data, error } = await supabase
-        .from('tickets')
-        .select('*')
-        .order('created_at', { ascending: false });
-
-      if (error) throw error;
-
-      if (data) {
-        // Deduplicate by ID to prevent duplicate tickets
-        const uniqueData = data.filter((t: any, index: number, self: any[]) =>
-          index === self.findIndex((ticket: any) => ticket.id === t.id)
-        );
-        
-        const formattedTickets: Ticket[] = uniqueData.map((t: any) => ({
-          id: t.id,
-          title: t.title,
-          portfolio: t.portfolio,
-          pointOfContact: t.point_of_contact,
-          isCollaboration: false,
-          collaborators: [],
-          graphicTypes: t.graphic_types,
-          otherGraphicType: t.other_graphic_type || "",
-          eventName: t.event_name,
-          eventDate: t.event_date || "",
-          eventTime: t.event_time || "",
-          eventLocation: t.event_location || "",
-          summary: t.summary,
-          deadline: t.deadline,
-          creativeVision: t.creative_vision,
-          references: t.reference_urls || [],
-          additionalRequests: t.additional_requests || "",
-          status: t.status,
-          priority: t.priority,
-          createdAt: t.created_at,
-          updatedAt: t.updated_at,
-          createdBy: t.created_by,
-          assignedTo: t.assigned_to || undefined,
-          isOnBoard: t.is_on_board,
-        }));
-        setTickets(formattedTickets);
-      }
+      const snapshot = await getDocs(ticketsRef);
+      const formattedTickets = snapshot.docs
+        .map((d) => toTicket(d.id, d.data()))
+        .sort((x, y) => (y.createdAt || "").localeCompare(x.createdAt || ""));
+      setTickets(formattedTickets);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to fetch tickets');
     } finally {
@@ -85,64 +91,34 @@ export function TicketProvider({ children }: { children: ReactNode }) {
   const createTicket = async (ticket: Omit<Ticket, "id" | "createdAt" | "updatedAt" | "status" | "priority" | "isOnBoard">): Promise<Ticket | null> => {
     try {
       setError(null);
-      const { data, error } = await supabase
-        .from('tickets')
-        .insert([{
-          title: ticket.title,
-          portfolio: ticket.portfolio,
-          point_of_contact: ticket.pointOfContact,
-          graphic_types: ticket.graphicTypes,
-          other_graphic_type: ticket.otherGraphicType || null,
-          event_name: ticket.eventName,
-          event_date: ticket.eventDate || null,
-          event_time: ticket.eventTime || null,
-          event_location: ticket.eventLocation || null,
-          deadline: ticket.deadline,
-          summary: ticket.summary,
-          creative_vision: ticket.creativeVision,
-          reference_urls: ticket.references,
-          additional_requests: ticket.additionalRequests || null,
-          created_by: ticket.pointOfContact,
-          status: 'Open',
-          priority: 'Medium',
-          is_on_board: false,
-        }])
-        .select()
-        .single();
-
-      if (error) throw error;
-
-      if (data) {
-        const newTicket: Ticket = {
-          id: data.id,
-          title: data.title,
-          portfolio: data.portfolio,
-          pointOfContact: data.point_of_contact,
-          isCollaboration: false,
-          collaborators: [],
-          graphicTypes: data.graphic_types,
-          otherGraphicType: data.other_graphic_type || "",
-          eventName: data.event_name,
-          eventDate: data.event_date || "",
-          eventTime: data.event_time || "",
-          eventLocation: data.event_location || "",
-          summary: data.summary,
-          deadline: data.deadline,
-          creativeVision: data.creative_vision,
-          references: data.reference_urls || [],
-          additionalRequests: data.additional_requests || "",
-          status: data.status,
-          priority: data.priority,
-          createdAt: data.created_at,
-          updatedAt: data.updated_at,
-          createdBy: data.created_by,
-          assignedTo: data.assigned_to || undefined,
-          isOnBoard: data.is_on_board,
-        };
-        setTickets((prev) => [newTicket, ...prev]);
-        return newTicket;
-      }
-      return null;
+      const now = new Date().toISOString();
+      const data = {
+        title: ticket.title,
+        portfolio: ticket.portfolio,
+        pointOfContact: ticket.pointOfContact,
+        graphicTypes: ticket.graphicTypes,
+        otherGraphicType: ticket.otherGraphicType || null,
+        eventName: ticket.eventName,
+        eventDate: ticket.eventDate || null,
+        eventTime: ticket.eventTime || null,
+        eventLocation: ticket.eventLocation || null,
+        deadline: ticket.deadline,
+        summary: ticket.summary,
+        creativeVision: ticket.creativeVision,
+        references: ticket.references || [],
+        additionalRequests: ticket.additionalRequests || null,
+        createdBy: ticket.pointOfContact,
+        assignedTo: null,
+        status: "Open",
+        priority: "Medium",
+        isOnBoard: false,
+        createdAt: now,
+        updatedAt: now,
+      };
+      const ref = await addDoc(ticketsRef, data);
+      const newTicket = toTicket(ref.id, data);
+      setTickets((prev) => [newTicket, ...prev]);
+      return newTicket;
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to create ticket');
       throw err;
@@ -152,12 +128,7 @@ export function TicketProvider({ children }: { children: ReactNode }) {
   const moveTicket = async (id: string, targetMember: string) => {
     try {
       setError(null);
-      const { error } = await supabase
-        .from('tickets')
-        .update({ assigned_to: targetMember })
-        .eq('id', id);
-
-      if (error) throw error;
+      await updateDoc(doc(db, "tickets", id), { assignedTo: targetMember, updatedAt: new Date().toISOString() });
       setTickets((prev) =>
         prev.map((t) =>
           t.id === id ? { ...t, assignedTo: targetMember } : t
@@ -172,12 +143,7 @@ export function TicketProvider({ children }: { children: ReactNode }) {
   const addToBoard = async (id: string) => {
     try {
       setError(null);
-      const { error } = await supabase
-        .from('tickets')
-        .update({ is_on_board: true })
-        .eq('id', id);
-
-      if (error) throw error;
+      await updateDoc(doc(db, "tickets", id), { isOnBoard: true, updatedAt: new Date().toISOString() });
       setTickets((prev) =>
         prev.map((t) =>
           t.id === id ? { ...t, isOnBoard: true } : t
@@ -193,33 +159,15 @@ export function TicketProvider({ children }: { children: ReactNode }) {
     try {
       setError(null);
       
-      // Map frontend field names to database column names
-      const dbUpdates: any = {};
-      if (updates.title !== undefined) dbUpdates.title = updates.title;
-      if (updates.portfolio !== undefined) dbUpdates.portfolio = updates.portfolio;
-      if (updates.pointOfContact !== undefined) dbUpdates.point_of_contact = updates.pointOfContact;
-      if (updates.graphicTypes !== undefined) dbUpdates.graphic_types = updates.graphicTypes;
-      if (updates.otherGraphicType !== undefined) dbUpdates.other_graphic_type = updates.otherGraphicType;
-      if (updates.eventName !== undefined) dbUpdates.event_name = updates.eventName;
-      if (updates.eventDate !== undefined) dbUpdates.event_date = updates.eventDate;
-      if (updates.eventTime !== undefined) dbUpdates.event_time = updates.eventTime;
-      if (updates.eventLocation !== undefined) dbUpdates.event_location = updates.eventLocation;
-      if (updates.deadline !== undefined) dbUpdates.deadline = updates.deadline;
-      if (updates.summary !== undefined) dbUpdates.summary = updates.summary;
-      if (updates.creativeVision !== undefined) dbUpdates.creative_vision = updates.creativeVision;
-      if (updates.references !== undefined) dbUpdates.reference_urls = updates.references;
-      if (updates.additionalRequests !== undefined) dbUpdates.additional_requests = updates.additionalRequests;
-      if (updates.status !== undefined) dbUpdates.status = updates.status;
-      if (updates.priority !== undefined) dbUpdates.priority = updates.priority;
-      if (updates.assignedTo !== undefined) dbUpdates.assigned_to = updates.assignedTo;
-      if (updates.isOnBoard !== undefined) dbUpdates.is_on_board = updates.isOnBoard;
-
-      const { error } = await supabase
-        .from('tickets')
-        .update(dbUpdates)
-        .eq('id', id);
-
-      if (error) throw error;
+      // Drop undefined values (Firestore rejects them) and never write the id
+      const { id: _ignored, ...rest } = updates;
+      const dbUpdates: Record<string, unknown> = Object.fromEntries(
+        Object.entries(rest).filter(([, v]) => v !== undefined)
+      );
+      await updateDoc(doc(db, "tickets", id), {
+        ...dbUpdates,
+        updatedAt: new Date().toISOString(),
+      });
       setTickets((prev) =>
         prev.map((t) =>
           t.id === id ? { ...t, ...updates } : t
@@ -234,12 +182,10 @@ export function TicketProvider({ children }: { children: ReactNode }) {
   const unassignMember = async (memberName: string) => {
     try {
       setError(null);
-      const { error } = await supabase
-        .from('tickets')
-        .update({ point_of_contact: '', is_on_board: false })
-        .eq('point_of_contact', memberName);
-
-      if (error) throw error;
+      const snapshot = await getDocs(query(ticketsRef, where("pointOfContact", "==", memberName)));
+      const batch = writeBatch(db);
+      snapshot.docs.forEach((d) => batch.update(d.ref, { pointOfContact: "", isOnBoard: false }));
+      await batch.commit();
       setTickets((prev) =>
         prev.map((t) =>
           t.pointOfContact === memberName
@@ -256,12 +202,7 @@ export function TicketProvider({ children }: { children: ReactNode }) {
   const unassignFromBoard = async (id: string) => {
     try {
       setError(null);
-      const { error } = await supabase
-        .from('tickets')
-        .update({ assigned_to: null, is_on_board: false })
-        .eq('id', id);
-
-      if (error) throw error;
+      await updateDoc(doc(db, "tickets", id), { assignedTo: null, isOnBoard: false, updatedAt: new Date().toISOString() });
       setTickets((prev) =>
         prev.map((t) =>
           t.id === id ? { ...t, assignedTo: undefined, isOnBoard: false } : t
@@ -276,12 +217,7 @@ export function TicketProvider({ children }: { children: ReactNode }) {
   const completeTicket = async (id: string) => {
     try {
       setError(null);
-      const { error } = await supabase
-        .from('tickets')
-        .update({ status: 'Completed', is_on_board: false })
-        .eq('id', id);
-
-      if (error) throw error;
+      await updateDoc(doc(db, "tickets", id), { status: 'Completed', isOnBoard: false, updatedAt: new Date().toISOString() });
       setTickets((prev) =>
         prev.map((t) =>
           t.id === id ? { ...t, status: "Completed" as const, isOnBoard: false } : t
@@ -296,12 +232,7 @@ export function TicketProvider({ children }: { children: ReactNode }) {
   const deleteTicket = async (id: string) => {
     try {
       setError(null);
-      const { error } = await supabase
-        .from('tickets')
-        .delete()
-        .eq('id', id);
-
-      if (error) throw error;
+      await deleteDoc(doc(db, "tickets", id));
       setTickets((prev) => prev.filter((t) => t.id !== id));
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to delete ticket');
@@ -312,12 +243,7 @@ export function TicketProvider({ children }: { children: ReactNode }) {
   const restoreTicket = async (id: string) => {
     try {
       setError(null);
-      const { error } = await supabase
-        .from('tickets')
-        .update({ status: 'Open', is_on_board: false })
-        .eq('id', id);
-
-      if (error) throw error;
+      await updateDoc(doc(db, "tickets", id), { status: 'Open', isOnBoard: false, updatedAt: new Date().toISOString() });
       setTickets((prev) =>
         prev.map((t) =>
           t.id === id ? { ...t, status: "Open" as const, isOnBoard: false } : t

@@ -1,0 +1,9 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    // Matches the previous Supabase setup (open access). Anyone with the site's
+    // Firebase config can read/write. Tighten before storing anything sensitive.
+    match /tickets/{id} { allow read, write: if true; }
+    match /team_members/{id} { allow read, write: if true; }
+  }
+}

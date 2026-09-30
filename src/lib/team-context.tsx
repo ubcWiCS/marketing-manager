@@ -2,7 +2,10 @@
 
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
 import { TeamMember } from "@/types";
-import { supabase } from "@/lib/supabase/client";
+import { collection, doc, getDocs, addDoc, updateDoc, deleteDoc } from "firebase/firestore";
+import { db } from "@/lib/firebase/client";
+
+const membersRef = collection(db, "team_members");
 
 interface TeamContextType {
   members: TeamMember[];
@@ -20,7 +23,7 @@ export function TeamProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
 
-  // Fetch team members from Supabase
+  // Fetch team members from Firestore
   useEffect(() => {
     fetchTeamMembers();
   }, []);
@@ -28,16 +31,12 @@ export function TeamProvider({ children }: { children: ReactNode }) {
   const fetchTeamMembers = async () => {
     try {
       setLoading(true);
-      const { data, error } = await supabase
-        .from('team_members')
-        .select('*')
-        .order('name');
-
-      if (error) throw error;
-
-      if (data) {
-        setMembers(data.map((m: any) => ({ id: m.id, name: m.name })));
-      }
+      const snapshot = await getDocs(membersRef);
+      setMembers(
+        snapshot.docs
+          .map((d) => ({ id: d.id, name: d.data().name as string }))
+          .sort((a, b) => a.name.localeCompare(b.name))
+      );
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to fetch team members');
     } finally {
@@ -48,16 +47,12 @@ export function TeamProvider({ children }: { children: ReactNode }) {
   const addMember = async (name: string) => {
     try {
       setError(null);
-      const { data, error } = await supabase
-        .from('team_members')
-        .insert([{ name: name.trim() }])
-        .select()
-        .single();
-
-      if (error) throw error;
-      if (data) {
-        setMembers((prev) => [...prev, { id: data.id, name: data.name }]);
+      const trimmed = name.trim();
+      if (members.some((m) => m.name.toLowerCase() === trimmed.toLowerCase())) {
+        throw new Error(`Team member "${trimmed}" already exists`);
       }
+      const ref = await addDoc(membersRef, { name: trimmed, createdAt: new Date().toISOString() });
+      setMembers((prev) => [...prev, { id: ref.id, name: trimmed }]);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to add team member');
       throw err;
@@ -67,12 +62,7 @@ export function TeamProvider({ children }: { children: ReactNode }) {
   const removeMember = async (id: string) => {
     try {
       setError(null);
-      const { error } = await supabase
-        .from('team_members')
-        .delete()
-        .eq('id', id);
-
-      if (error) throw error;
+      await deleteDoc(doc(db, "team_members", id));
       setMembers((prev) => prev.filter((m) => m.id !== id));
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to remove team member');
@@ -83,19 +73,9 @@ export function TeamProvider({ children }: { children: ReactNode }) {
   const renameMember = async (id: string, name: string) => {
     try {
       setError(null);
-      const { data, error } = await supabase
-        .from('team_members')
-        .update({ name: name.trim() })
-        .eq('id', id)
-        .select()
-        .single();
-
-      if (error) throw error;
-      if (data) {
-        setMembers((prev) =>
-          prev.map((m) => (m.id === id ? { id: data.id, name: data.name } : m))
-        );
-      }
+      const trimmed = name.trim();
+      await updateDoc(doc(db, "team_members", id), { name: trimmed });
+      setMembers((prev) => prev.map((m) => (m.id === id ? { id, name: trimmed } : m)));
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Failed to rename team member');
       throw err;

@@ -35,3 +35,6 @@ coverage
 
 # Misc
 *.pem
+
+# Local data backups
+/backup

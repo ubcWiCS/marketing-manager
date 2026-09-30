@@ -40,7 +40,7 @@ WiCS Marketing Manager is a request management system designed to streamline the
 | Framework | Next.js 14 with React 18 |
 | Language | TypeScript |
 | Styling | Tailwind CSS with shadcn/ui components |
-| Backend | Supabase (PostgreSQL database) |
+| Backend | Firebase (Firestore) |
 | Icons | Lucide React |
 | Date Handling | date-fns |
 
@@ -49,7 +49,7 @@ WiCS Marketing Manager is a request management system designed to streamline the
 ### Prerequisites
 
 - Node.js 18+ installed
-- A Supabase account (free tier works)
+- A Firebase account (free Spark plan works)
 
 ### Installation
 
@@ -64,11 +64,10 @@ WiCS Marketing Manager is a request management system designed to streamline the
    npm install
    ```
 
-3. Set up Supabase:
-   - Follow the detailed guide in [SUPABASE_SETUP.md](./SUPABASE_SETUP.md)
-   - Create a new Supabase project
+3. Set up Firebase:
+   - Follow the detailed guide in [FIREBASE_SETUP.md](./FIREBASE_SETUP.md)
+   - Create a new Firebase project and enable Firestore
    - Configure environment variables (see below)
-   - Run the database schema
 
 4. Configure environment variables:
    ```bash
@@ -77,9 +76,9 @@ WiCS Marketing Manager is a request management system designed to streamline the
 
    Edit `.env.local` and add your credentials:
    ```env
-   # Supabase
-   NEXT_PUBLIC_SUPABASE_URL=your-project-url
-   NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key
+   # Firebase (see .env.local.example for all keys)
+   NEXT_PUBLIC_FIREBASE_API_KEY=your-api-key
+   NEXT_PUBLIC_FIREBASE_PROJECT_ID=your-project-id
    
    # Authentication (optional but recommended)
    AUTH_USER=admin
@@ -127,12 +126,12 @@ marketing-manager/
 │   │   ├── layout/             # Sidebar, topbar, dialogs
 │   │   └── ui/                 # Reusable UI components
 │   ├── lib/
-│   │   ├── supabase/           # Supabase client and schema
+│   │   ├── firebase/           # Firebase client
 │   │   ├── ticket-context.tsx  # Ticket state management
 │   │   └── team-context.tsx    # Team state management
 │   └── types/                  # TypeScript type definitions
 ├── scripts/
-│   └── seed-supabase.mjs       # Database seeding script
+│   └── export-supabase.mjs / import-firestore.mjs  # One-off data migration
 └── SUPABASE_SETUP.md           # Detailed setup guide
 ```
 
