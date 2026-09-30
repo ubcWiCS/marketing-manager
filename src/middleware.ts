@@ -1,50 +1,28 @@
 import { NextRequest, NextResponse } from "next/server";
 
 export function middleware(request: NextRequest) {
-  const authCookie = request.cookies.get("auth");
-  const roleCookie = request.cookies.get("role");
-  const role = roleCookie?.value; // "marketing" | "events" | undefined
+  const isAuthenticated = request.cookies.get("auth")?.value === "authenticated";
 
   const { pathname } = request.nextUrl;
   const isLoginPage = pathname === "/login";
 
-  // Routes only for marketing team
-  const isMarketingRoute =
-    pathname === "/" || pathname.startsWith("/requests");
+  // Admin-only routes (dashboard and ticket management)
+  const isAdminRoute = pathname === "/" || pathname.startsWith("/requests");
 
-  // Events ticket board and submission portal
-  const isEventsRoute =
-    pathname === "/submit" ||
-    pathname === "/submissions" ||
-    pathname.startsWith("/submissions/");
+  // /submit and /submissions are public: anyone can view the board and submit a request
 
-  const isAuthenticated = authCookie?.value === "authenticated";
-
-  // Not logged in at all → send to login (for protected routes)
-  if (!isAuthenticated && !isLoginPage) {
-    if (isMarketingRoute || isEventsRoute) {
-      const loginUrl = new URL("/login", request.url);
-      loginUrl.searchParams.set("redirect", pathname);
-      return NextResponse.redirect(loginUrl);
-    }
-    return NextResponse.next();
-  }
-
-  // Already logged in visiting login page → redirect home
-  if (isAuthenticated && isLoginPage) {
-    if (role === "events") {
+  if (!isAuthenticated && isAdminRoute) {
+    // Visitors landing on the home page see the public ticket board
+    if (pathname === "/") {
       return NextResponse.redirect(new URL("/submissions", request.url));
     }
-    return NextResponse.redirect(new URL("/", request.url));
+    const loginUrl = new URL("/login", request.url);
+    loginUrl.searchParams.set("redirect", pathname);
+    return NextResponse.redirect(loginUrl);
   }
 
-  // Events user trying to access Marketing routes → send to their board
-  if (isAuthenticated && role === "events" && isMarketingRoute) {
-    return NextResponse.redirect(new URL("/submissions", request.url));
-  }
-
-  // Marketing user trying to access Events route → send to /
-  if (isAuthenticated && role === "marketing" && isEventsRoute) {
+  // Already logged in visiting login page → admin dashboard
+  if (isAuthenticated && isLoginPage) {
     return NextResponse.redirect(new URL("/", request.url));
   }
 

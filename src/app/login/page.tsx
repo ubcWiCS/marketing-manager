@@ -24,11 +24,7 @@ function LoginForm() {
       const result = await response.json();
 
       if (result.success) {
-        if (result.role === "events") {
-          router.push("/submissions");
-        } else {
-          router.push("/");
-        }
+        router.push("/");
       } else {
         router.push("/login?error=1");
       }
@@ -47,8 +43,8 @@ function LoginForm() {
 
       <div className="card-brutal w-full max-w-sm p-8 relative z-10">
         <div className="text-center mb-6">
-          <h1 className="text-2xl font-black text-navy-800 mb-2 uppercase">Welcome!</h1>
-          <p className="text-sm text-surface-600 font-medium">Sign in to continue</p>
+          <h1 className="text-2xl font-black text-navy-800 mb-2 uppercase">Admin Login</h1>
+          <p className="text-sm text-surface-600 font-medium">Marketing team only. Submitting a request does not need an account.</p>
         </div>
 
         <form onSubmit={handleSubmit} className="space-y-4">

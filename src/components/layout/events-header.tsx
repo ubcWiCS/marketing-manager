@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { ClipboardList, LogOut, PlusCircle } from "lucide-react";
+import { ClipboardList, LogIn, PlusCircle } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 const links = [
@@ -23,7 +23,7 @@ export function EventsHeader() {
           <div>
             <p className="text-sm font-bold leading-none text-navy-800">Marketing Requests</p>
             <p className="mt-1 text-[10px] font-medium uppercase tracking-[0.16em] text-surface-500">
-              Events Team Portal
+              Request Portal
             </p>
           </div>
         </Link>
@@ -52,15 +52,13 @@ export function EventsHeader() {
           })}
         </div>
 
-        <form action="/api/auth/logout" method="POST" className="order-2 sm:order-3">
-          <button
-            type="submit"
-            className="flex items-center gap-1.5 rounded px-2 py-1.5 text-xs font-medium text-surface-500 transition-colors hover:bg-surface-100 hover:text-navy-700"
-          >
-            <LogOut className="h-3.5 w-3.5" />
-            Log out
-          </button>
-        </form>
+        <Link
+          href="/login"
+          className="order-2 flex items-center gap-1.5 rounded px-2 py-1.5 text-xs font-medium text-surface-500 transition-colors hover:bg-surface-100 hover:text-navy-700 sm:order-3"
+        >
+          <LogIn className="h-3.5 w-3.5" />
+          Admin login
+        </Link>
       </div>
     </header>
   );
